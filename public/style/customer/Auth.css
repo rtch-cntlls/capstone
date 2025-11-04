@@ -1,0 +1,39 @@
+.split-left {
+    background-image: url('/images/login-background.jpg'); 
+    background-size: cover;
+}
+.split-right {
+    background-color: #ffffff;
+}
+.text-danger{
+    font-size: 12px;
+    margin: 0;
+}
+input::placeholder{
+    font-size: 14px;
+}
+.logo {
+    font-family: 'Impact', sans-serif;
+    letter-spacing: 1.5px;
+    color: white;
+    text-shadow: 1px 1px 2px black;
+}
+.btn-orange {
+    background-color: darkorange;
+    color: white;
+    border: none;
+}
+.btn-orange:hover {
+    background-color: darkorange;
+}
+@media (max-width: 767.98px) { 
+    .auth-card {
+        width: 100% !important;
+    }
+    .logo {
+        font-family: sans-serif;
+        letter-spacing: 1.5px;
+        color: black;
+        text-shadow: none;
+    }
+}

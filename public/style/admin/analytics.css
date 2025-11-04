@@ -1,0 +1,10 @@
+.fake-chart {
+    width: 60px;
+    height: 40px;
+    gap: 3px;
+}
+.fake-chart .bar {
+    width: 6px;
+    border-radius: 3px;
+    opacity: 0.7;
+}

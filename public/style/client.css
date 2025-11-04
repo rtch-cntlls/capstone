@@ -1,0 +1,110 @@
+*{
+    font-family: sans-serif;
+}
+.product-name {
+    font-size: 14px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;     
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 2.8em;          
+    line-height: 1.4em;
+}
+.expiry{
+    font-size: 12px;
+}
+.btn{
+    font-size: 13px;
+}
+input, label{
+    font-size: 14px;
+}
+input::placeholder{
+    font-size: 14px;
+}
+.profile{
+    min-width: 270px;
+    font-size: 14px;
+}
+.profile li{
+    margin-bottom: 3px;
+    padding: 3px 0px;
+}
+.filter{
+    position: sticky;
+    top: 0;
+}
+table td{
+    vertical-align: middle;
+}
+.wishlist th{
+    background-color: #ffbd16;
+}
+.wishlist tr td{
+    padding: 10px;
+}
+/* .banner {
+    position: relative;
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+} */
+
+/* .banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+} */
+
+/* .banner-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+} */
+
+.timeline {
+    position: relative;
+    margin-top: 40px;
+}
+
+.timeline::after {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: #dee2e6;
+    z-index: 0;
+}
+
+.circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #dee2e6;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    position: relative;
+    font-weight: bold;
+    color: #fff;
+}
+
+.circle.cancelled {
+    background-color: #dc3545;
+}
+
+.circle.completed {
+    background: #28a745;
+}
+
+.timeline .text-center {
+    position: relative;
+    z-index: 2;
+}
+

@@ -1,0 +1,57 @@
+
+.table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.table-wrapper table {
+    width: auto !important;
+    min-width: 100%;
+    table-layout: auto;
+}
+.table-wrapper th,
+.table-wrapper td {
+    white-space: nowrap;
+}
+@media (max-width: 768px) {
+    .table-wrapper table {
+        font-size: 12px;
+    }
+    .card-title, h4, h5{
+        font-size: 14px;
+    }
+    .card-text, .title, .nav, .search, .search::placeholder, promo{
+        font-size: 12px;
+    }
+    .form-select, option {
+        font-size: 12px !important;
+    }
+    .booking-nav{
+        font-size: 8px;
+    }
+    .paginate{
+        display: flex;
+        justify-content: end;
+    }
+    .image {
+        max-width: 150px;
+        max-height: 150px;
+        display: block;
+        margin: 0 auto 1rem auto;
+    }
+    #chatArea {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        height: 100%;
+        z-index: 10;
+    }
+    #chatArea.active {
+        display: flex;
+    }
+    #customerList.hide {
+        display: none;
+    }
+}

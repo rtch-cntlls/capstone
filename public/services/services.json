@@ -1,0 +1,98 @@
+[
+  {
+    "category": "Preventive Maintenance",
+    "services": [
+      "Oil Change (Engine Oil / Gear Oil)",
+      "Tune-up (Spark Plug, Air Filter, Carb/Injector Cleaning)",
+      "Chain Cleaning, Adjustment & Lubrication",
+      "Brake Adjustment (Front / Rear)",
+      "Tire Pressure Check",
+      "Battery Check / Charging",
+      "General Check-up / Diagnostics"
+    ]
+  },
+  {
+    "category": "Electrical Services",
+    "services": [
+      "Battery Replacement",
+      "Charging System Check",
+      "Starter Motor Repair / Replacement",
+      "Lighting System Check (Headlight, Signal, Taillight)",
+      "Horn Installation / Repair",
+      "Wiring Troubleshooting",
+      "ECU Diagnostics / Tuning",
+      "ABS System Check"
+    ]
+  },
+  {
+    "category": "Tires & Wheels",
+    "services": [
+      "Tire Replacement (Front / Rear)",
+      "Tire Patching (Vulcanizing)",
+      "Wheel Balancing",
+      "Spoke Tightening / Wheel Alignment",
+      "Tube Replacement"
+    ]
+  },
+  {
+    "category": "Brake Services",
+    "services": [
+      "Brake Pad Replacement (Disc)",
+      "Brake Shoe Replacement (Drum)",
+      "Brake Fluid Replacement / Bleeding",
+      "Disc Rotor Resurfacing / Replacement"
+    ]
+  },
+  {
+    "category": "Engine & Transmission",
+    "services": [
+      "Engine Overhaul",
+      "Valve Adjustment",
+      "Carburetor Cleaning / Repair",
+      "Fuel Injection Cleaning",
+      "Clutch Plate Replacement",
+      "Transmission Gear Adjustment / Repair",
+      "Fuel Filter Replacement",
+      "Fuel Pump Check / Repair",
+      "Throttle Body Cleaning"
+    ]
+  },
+  {
+    "category": "Cooling System",
+    "services": [
+      "Radiator Cleaning",
+      "Coolant Flush / Replacement",
+      "Thermostat Check / Replacement"
+    ]
+  },
+  {
+    "category": "Exhaust / Muffler",
+    "services": [
+      "Muffler Repair / Replacement",
+      "Exhaust Pipe Cleaning / Polishing"
+    ]
+  },
+  {
+    "category": "Suspension & Steering",
+    "services": [
+      "Front Fork Oil Change / Repair",
+      "Rear Shock Absorber Replacement",
+      "Steering Bearing Adjustment / Replacement",
+      "Suspension Tuning / Aftermarket Parts Installation"
+    ]
+  },
+  {
+    "category": "Customization / Extra Services",
+    "services": [
+      "Accessory Installation (Side Mirrors, Grips, Guards, etc.)",
+      "Decals & Stickers Application",
+      "Seat Cover Replacement",
+      "Paint Jobs / Repainting",
+      "Performance Exhaust Installation",
+      "Engine Remapping / Tuning",
+      "Full Motorcycle Wash",
+      "Polishing and Waxing",
+      "Rust Prevention Treatment"
+    ]
+  }
+]

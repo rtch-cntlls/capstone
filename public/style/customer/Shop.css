@@ -1,0 +1,215 @@
+/* Shop */
+.mobile-filter-sidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 280px;
+    background: white;
+    max-height: 800px;
+    transform: translateX(-100%);
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 1050;
+}
+.mobile-filter-sidebar.open {
+    transform: translateX(0);
+    opacity: 1;
+}
+.filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #ddd;
+    background-color: #f8f9fa;
+}
+.filter-body {
+    padding: 1rem;
+}
+.product-img {
+    height: 200px;
+    object-fit: contain;
+}
+.product-detail-img {
+    height: 300px;
+    object-fit: contain;
+}
+/* Shop */
+
+/* Maintenance */
+.icon-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.bg-light-primary { background-color: #eaf2ff; }
+.bg-light-success { background-color: #e7f8ef; }
+.bg-light-warning { background-color: #fff6e5; }
+.bg-light-info { background-color: #e8f7fb; }
+/* Maintenance */
+
+/* Service Schedule */
+.hover-card {
+    transition: all 0.3s ease;
+}
+.hover-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+.icon-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #eaf2ff; 
+    flex-shrink: 0;
+}
+.icon-circle i {
+    font-size: 20px;
+    color: #0d6efd;
+    line-height: 1;
+}
+.d-flex.align-items-start {
+    gap: 0.75rem;
+}
+.card-header {
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+/* Service Schedule */
+
+/* Common Issues & troubleshooting */
+.img-fluid {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+.section-overlay {
+    position: absolute;
+    inset: 0;
+    background: #fff;
+    z-index: 10;
+    text-align: center;
+    border-radius: 12px;
+}
+.icon-circle {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.bg-light-primary {
+    background-color: #eaf2ff;
+}
+.bg-light-danger {
+    background-color: #fdecea;
+}
+.carousel-item .card {
+    transition: all 0.3s ease;
+}
+.carousel-item .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+/* Common Issues & troubleshooting */
+
+/* Delivery Option */
+.option-card {
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.delivery-option input:checked + .option-card {
+    border-color: #0d6efd;
+    background-color: #e7f1ff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.delivery-option input {
+    display: none;
+}
+/* Delivery Option */
+
+/* Address */
+select.form-control, input.form-control {
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+}
+small.text-danger {
+    display: block;
+    margin-top: 2px;
+}
+/* Address */
+
+/* Personal */
+.form-select:disabled, .form-control:disabled {
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+}
+/* Personal */
+
+/* Payment */
+.payment-option {
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+}
+.btn-check:checked + .payment-option {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+}
+.payment-option:hover {
+    box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.08);
+}
+.payment-option img {
+    max-height: 40px;
+}
+/* Payment */
+
+/* Help Center */
+.icon-circle {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+.hover-shadow-sm:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+}
+.transition {
+    transition: all 0.2s ease-in-out;
+}
+/* Help Center */
+
+@media (max-width: 576px) {
+    .row.g-2 > [class*="col-"] {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+@media (max-width: 767px) {
+    .product-img {
+        height: 140px;
+    }
+    .product-detail-img {
+        height: 200px;
+    }
+    .btn-lg {
+        font-size: 1rem;
+        padding: 0.6rem 1rem;
+    }
+}
