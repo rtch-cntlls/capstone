@@ -10,9 +10,11 @@
             <h6 class="fw-semibold text-dark">Product Specs</h6>
             <div class="mt-2 p-3 bg-light rounded">
                 @php
-                    $specs = json_decode($product->specs, true) ?? [];
+                    $specs = collect(json_decode($product->specs, true) ?? [])
+                        ->reject(fn($value) => $value === '-' || $value === null || trim($value) === '');
                 @endphp
-                @if(count($specs) > 0 || $product->weight_kg || $product->material || $product->color_finish)
+
+                @if($product->weight_kg || $product->material || $product->color_finish || $specs->isNotEmpty())
                     <ul class="list-unstyled mb-0 small text-muted">
                         @if($product->weight_kg)
                             <li class="d-flex justify-content-between mb-1">
@@ -35,7 +37,7 @@
                         @foreach($specs as $key => $value)
                             <li class="d-flex justify-content-between mb-1">
                                 <span>{{ ucwords(str_replace('_', ' ', $key)) }}:</span>
-                                <span class="text-dark">{{ $value ?: '-' }}</span>
+                                <span class="text-dark">{{ $value }}</span>
                             </li>
                         @endforeach
                     </ul>
