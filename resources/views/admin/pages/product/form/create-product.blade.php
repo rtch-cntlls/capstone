@@ -18,11 +18,62 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <label for="weight_kg" class="form-label fw-bold">Weight (kg)</label>
+                    <input type="number" step="0.001" id="weight_kg" name="weight_kg"
+                           value="{{ old('weight_kg') }}" class="form-control @error('weight_kg') is-invalid @enderror"
+                           placeholder="e.g. 1.250">
+                    @error('weight_kg')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="col-md-4">
+                    <label for="material" class="form-label fw-bold">Material</label>
+                    <select id="material" name="material" class="form-select @error('material') is-invalid @enderror">
+                        <option value="">Select Material</option>
+                        <option value="Steel" {{ old('material') == 'Steel' ? 'selected' : '' }}>Steel</option>
+                        <option value="Aluminum" {{ old('material') == 'Aluminum' ? 'selected' : '' }}>Aluminum</option>
+                        <option value="Plastic" {{ old('material') == 'Plastic' ? 'selected' : '' }}>Plastic</option>
+                        <option value="Rubber" {{ old('material') == 'Rubber' ? 'selected' : '' }}>Rubber</option>
+                        <option value="Carbon Fiber" {{ old('material') == 'Carbon Fiber' ? 'selected' : '' }}>Carbon Fiber</option>
+                        <option value="Titanium" {{ old('material') == 'Titanium' ? 'selected' : '' }}>Titanium</option>
+                        <option value="Copper" {{ old('material') == 'Copper' ? 'selected' : '' }}>Copper</option>
+                        <option value="Brass" {{ old('material') == 'Brass' ? 'selected' : '' }}>Brass</option>
+                        <option value="Leather" {{ old('material') == 'Leather' ? 'selected' : '' }}>Leather</option>
+                        <option value="Glass" {{ old('material') == 'Glass' ? 'selected' : '' }}>Glass</option>
+                        <option value="Other" {{ old('material') == 'Other' ? 'selected' : '' }}>Other</option>
+                    </select>
+                    @error('material')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="col-md-4">
+                    <label for="color_finish" class="form-label fw-bold">Color / Finish</label>
+                    <select id="color_finish" name="color_finish" class="form-select @error('color_finish') is-invalid @enderror">
+                        <option value="">Select Color / Finish</option>
+                        <option value="Black" {{ old('color_finish') == 'Black' ? 'selected' : '' }}>Black</option>
+                        <option value="Silver" {{ old('color_finish') == 'Silver' ? 'selected' : '' }}>Silver</option>
+                        <option value="Chrome" {{ old('color_finish') == 'Chrome' ? 'selected' : '' }}>Chrome</option>
+                        <option value="Red" {{ old('color_finish') == 'Red' ? 'selected' : '' }}>Red</option>
+                        <option value="Blue" {{ old('color_finish') == 'Blue' ? 'selected' : '' }}>Blue</option>
+                        <option value="Yellow" {{ old('color_finish') == 'Yellow' ? 'selected' : '' }}>Yellow</option>
+                        <option value="Matte Black" {{ old('color_finish') == 'Matte Black' ? 'selected' : '' }}>Matte Black</option>
+                        <option value="Other" {{ old('color_finish') == 'Other' ? 'selected' : '' }}>Other</option>
+                    </select>
+                    @error('color_finish')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+            <div id="specific-specs" class="mb-4"></div>
+            <input type="hidden" id="product_specs" name="specs" value="">
             <div class="mb-4">
                 <label for="description" class="form-label fw-bold">Product Description <small class="text-muted">(optional)</small></label>
                 <textarea id="description" name="description" rows="6" style="resize:none"
                           class="form-control @error('description') is-invalid @enderror"
-                          placeholder="Write a description... AI will auto-generate if left blank.">{{ old('description') }}</textarea>
+                          placeholder="Write a description...">{{ old('description') }}</textarea>
                 @error('description')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -79,15 +130,6 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="mt-3">
-                        <label for="weight_kg" class="form-label fw-bold">Weight (kg) <small class="text-muted">(optional)</small></label>
-                        <input type="number" step="0.001" id="weight_kg" name="weight_kg"
-                               value="{{ old('weight_kg') }}" class="form-control @error('weight_kg') is-invalid @enderror"
-                               placeholder="e.g. 1.250">
-                        @error('weight_kg')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
                 </div>
             </div>
             <div class="card shadow-sm">
@@ -106,3 +148,4 @@
         </div>
     </div>
 </form>
+<script type="module" src="{{ asset('script/product-specs.js') }}"></script>

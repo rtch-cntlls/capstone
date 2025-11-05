@@ -21,6 +21,7 @@ class OrderManagementController extends Controller
             [$orders, $cards] = $this->orderService->getOrdersAndCards($request);
 
             $localOrders = $orders->where('order_type', 'local');
+            $provinceOrders = $orders->where('order_type', 'province');
             $nationwideOrders = $orders->where('order_type', 'nationwide');
 
             return view('admin.pages.order.index', compact('orders', 'cards', 'localOrders', 'nationwideOrders'));

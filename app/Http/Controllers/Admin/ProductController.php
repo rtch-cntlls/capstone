@@ -47,9 +47,12 @@ class ProductController extends Controller
             'category_id'   => 'required|exists:categories,category_id',
             'cost_price'    => 'required|numeric',
             'sale_price'    => 'required|numeric|gte:cost_price',
-            'weight_kg'     => 'nullable|numeric|min:0',
+            'weight_kg'     => 'required|numeric|min:0',
             'quantity'      => 'required|integer',
             'image'         => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'material'      => 'nullable|string|max:255',
+            'color_finish'  => 'nullable|string|max:255',
+            'specs'         => 'nullable|string',
         ], [], [
             'category_id' => 'category',
         ]);        
@@ -69,7 +72,7 @@ class ProductController extends Controller
         $request->validate([
             'cost_price' => 'required|numeric|min:0',
             'sale_price' => 'required|numeric|gte:cost_price',
-            'weight_kg'  => 'nullable|numeric|min:0',
+            'weight_kg'  => 'required|numeric|min:0',
         ], [
             'sale_price.gte' => 'The sale price must be greater than or equal to the cost price.',
         ]);

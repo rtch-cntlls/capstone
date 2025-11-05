@@ -17,6 +17,13 @@ class Product extends Model
         'sale_price',
         'weight_kg',
         'image',
+        'material',
+        'color_finish',
+        'specs',
+    ];
+
+    protected $casts = [
+        'specs' => 'array',
     ];
 
     public function category()

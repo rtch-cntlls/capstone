@@ -15,11 +15,6 @@
                 <p class="mb-0 text-muted small d-flex justify-content-between">Cost Price:
                     <strong class="text-dark">₱{{ number_format($product->cost_price, 2) }}</strong>
                 </p>
-                @if(!is_null($product->weight_kg))
-                <p class="mt-2 mb-0 text-muted small d-flex justify-content-between">Weight:
-                    <strong class="text-dark">{{ number_format($product->weight_kg, 3) }} kg</strong>
-                </p>
-                @endif
             </div>
         </div>
     </div>

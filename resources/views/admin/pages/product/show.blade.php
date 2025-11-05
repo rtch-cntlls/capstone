@@ -38,6 +38,7 @@
                     <div class="col-md-6">
                         <ul class="list-unstyled position-relative timeline m-2">
                             @include('admin.pages.product.includes.product-info')
+                            @include('admin.pages.product.includes.specs')
                             @include('admin.pages.product.includes.discount')
                         </ul>
                     </div>

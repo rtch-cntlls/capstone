@@ -81,7 +81,9 @@ class ProductService
                 $aiService = app(MotorcycleAIService::class);
                 $description = $aiService->generateDescription($request->name);
             }
-    
+            
+            $specs = $request->input('specs') ? json_encode(json_decode($request->input('specs'))) : null;
+
             $product = Product::create([
                 'product_name' => $request->name,
                 'description'  => $description,
@@ -89,6 +91,9 @@ class ProductService
                 'cost_price'   => $request->cost_price,
                 'sale_price'   => $request->sale_price,
                 'weight_kg'    => $request->weight_kg,
+                'material'     => $request->material,
+                'color_finish' => $request->color_finish,
+                'specs'        => $specs,
                 'image'        => $imagePath,
                 'status'       => 'active', 
             ]);
@@ -105,7 +110,6 @@ class ProductService
             return $product;
         });
     }
-
    
     
     public function toggleStatus(Product $product): Product

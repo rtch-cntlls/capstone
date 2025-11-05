@@ -54,21 +54,33 @@ class InventoryService
             ]
         ];
     }
-
-    public function storeProduct(Product $product, int $quantity,string $stockStatus): Inventory
+ 
+    public function storeProduct(Product $product, int $quantity, string $stockStatus): Inventory
     {
-        return DB::transaction(fn() => Inventory::create([
-            'product_id'      => $product->product_id,
-            'instock'         => $quantity,
-            'available_stock' => $quantity,
-            'stock_status'    => $stockStatus,  
-        ]));
+        return DB::transaction(function () use ($product, $quantity, $stockStatus) {
+            $inventory = Inventory::create([
+                'product_id'      => $product->product_id,
+                'instock'         => $quantity,
+                'available_stock' => $quantity,
+                'stock_status'    => $stockStatus,
+            ]);
+
+            InventoryHistory::create([
+                'inventory_id'   => $inventory->inventory_id,
+                'quantity'       => $quantity,
+                'action_date'    => now(),
+            ]);
+
+            return $inventory;
+        });
     }
 
     public function addStock(int $inventoryId, int $quantity): Inventory
     {
         return DB::transaction(function () use ($inventoryId, $quantity) {
             $inventory = Inventory::findOrFail($inventoryId);
+
+            $previousStock = $inventory->instock;
 
             $inventory->instock += $quantity;
             $inventory->available_stock += $quantity;
@@ -80,19 +92,19 @@ class InventoryService
             } else {
                 $inventory->stock_status = 'in_stock';
             }
-    
+
             $inventory->save();
 
             InventoryHistory::create([
                 'inventory_id'    => $inventory->inventory_id,
+                'starting_stock'  => $previousStock,
                 'quantity'        => $quantity,
-                'available_stock' => $inventory->available_stock,
                 'action_date'     => now(),
             ]);
-    
+
             return $inventory;
         });
-    }    
+    }
     
     public function getStockHistory(int $id): Inventory
     {

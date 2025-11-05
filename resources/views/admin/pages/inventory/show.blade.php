@@ -23,9 +23,6 @@
                 <img src="{{ $inventory->product->image ? asset($inventory->product->image) : asset('images/placeholder.png') }}" class="card-img-top image">
                 <div class="card-body">
                     <h6 class="card-title">{{  $inventory->product->product_name }}</h6>
-                    @if(!is_null($inventory->product->weight_kg))
-                    <p class="mb-0 text-muted small">Weight: <strong class="text-dark">{{ number_format($inventory->product->weight_kg, 3) }} kg</strong></p>
-                    @endif
                 </div>
             </div>
         </div>
@@ -73,14 +70,14 @@
                                     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center bg-light rounded p-2 mb-2">
                                         <div class="me-md-3">
                                             <span class="fw-bold">Date Added:</span> 
-                                            <span class="text-success">{{ $history->action_date->format('M d, Y (h:i A)') }}</span>
+                                            <span class="text-success">{{ $history->action_date?->format('M d, Y (h:i A)') ?? 'N/A' }}</span>
                                         </div>
                                         <div>
                                             <span class="fw-bold">Quantity Added:</span> 
                                             <span class="text-primary">{{ $history->quantity }} {{ Str::plural('item', $history->quantity) }}</span>
                                         </div>
                                     </div>
-                                @endforeach
+                                @endforeach                            
                             </div>                        
                         </div>
                     </div>

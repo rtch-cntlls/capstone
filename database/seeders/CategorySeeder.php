@@ -14,19 +14,19 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $names = [
-            'Engine Components',
-            'Transmission & Drivetrain',
-            'Electrical & Lighting',
-            'Fuel System',
-            'Braking System',
-            'Suspension & Steering',
-            'Exhaust System',
+            'Accessories & Apparel',
             'Body & Frame',
-            'Handlebars & Controls',
-            'Wheels & Tires',
-            'Mirrors & Accessories',
+            'Braking System',
             'Cooling System',
+            'Electrical & Lighting',
+            'Engine Components',
+            'Exhaust System',
+            'Fuel System',
+            'Handlebars & Controls',
             'Lubricants & Fluids',
+            'Suspension & Steering',
+            'Transmission & Drivetrain',
+            'Wheels & Tires',
         ];
 
         $rows = collect($names)->map(fn ($name) => [

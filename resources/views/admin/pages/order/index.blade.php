@@ -20,6 +20,7 @@
                 <select name="order_type" class="form-select form-select-sm" onchange="this.form.submit()">
                     <option value="">All Order Types</option>
                     <option value="local" @if(request('order_type')=='local') selected @endif>Local</option>
+                    <option value="province" @if(request('order_type')=='province') selected @endif>Province</option>
                     <option value="nationwide" @if(request('order_type')=='nationwide') selected @endif>Nationwide</option>
                 </select>
                 <input type="hidden" name="search" value="{{ request('search') }}">
