@@ -9,18 +9,49 @@
         <div class="col p-2">
             <h6 class="fw-semibold text-dark">Product Description</h6>
             <div class="mt-2 p-3 bg-light rounded">
-                <p class="mb-1 text-muted small d-flex justify-content-between">Category:
+                <p class="mb-1 text-muted small d-flex justify-content-between">
+                    Category:
                     <strong class="text-dark">{{ $product->category->name }}</strong>
                 </p>
-                <p class="mb-0 text-muted small">Description:
-                    <span class="text-dark">{{ $description }}</span>
-                    @if(!$full && strlen($product->description) > 100)
-                    <a href="{{ request()->url() }}?full=1" class="text-primary">See more</a>
-                @elseif($full)
-                    <a href="{{ request()->url() }}" class="text-primary">See less</a>
-                @endif
+                @php
+                    $fullDescription = $product->description;
+                    $shortDescription = Str::limit($product->description, 100);
+                    $isLong = strlen($product->description) > 100;
+                @endphp
+                <p class="mb-0 text-muted small">
+                    Description:
+                    <span class="text-dark" id="desc-{{ $product->product_id }}">
+                        {{ $shortDescription }}
+                    </span>
+                    @if($isLong)
+                        <button type="button"
+                                class="btn btn-link btn-sm p-0 text-primary text-decoration-none see-more-desc"
+                                data-full="{{ e($fullDescription) }}"
+                                data-short="{{ e($shortDescription) }}"
+                                data-target="desc-{{ $product->product_id }}">
+                            See more
+                        </button>
+                    @endif
                 </p>
             </div>
         </div>
     </div>
 </li>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.see-more-desc').forEach(button => {
+            button.addEventListener('click', function () {
+                const targetId = this.getAttribute('data-target');
+                const descElement = document.getElementById(targetId);
+                const isExpanded = this.textContent.trim() === 'See less';
+                const fullText = this.getAttribute('data-full');
+                const shortText = this.getAttribute('data-short');
+
+                descElement.textContent = isExpanded ? shortText : fullText;
+
+                this.textContent = isExpanded ? 'See more' : 'See less';
+            });
+        });
+    });
+</script>
+    

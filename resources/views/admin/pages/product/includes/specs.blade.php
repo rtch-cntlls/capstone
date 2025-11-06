@@ -12,35 +12,43 @@
                 @php
                     $specs = collect(json_decode($product->specs, true) ?? [])
                         ->reject(fn($value) => $value === '-' || $value === null || trim($value) === '');
+
+                    $specList = collect([
+                        'Weight' => $product->weight_kg ? $product->weight_kg . ' kg' : null,
+                        'Material' => $product->material,
+                        'Color / Finish' => $product->color_finish,
+                    ])->filter()->merge($specs);
+
+                    $id = 'specList-' . $product->id;
                 @endphp
 
-                @if($product->weight_kg || $product->material || $product->color_finish || $specs->isNotEmpty())
+                @if($specList->isNotEmpty())
                     <ul class="list-unstyled mb-0 small text-muted">
-                        @if($product->weight_kg)
-                            <li class="d-flex justify-content-between mb-1">
-                                <span>Weight:</span>
-                                <span class="text-dark">{{ $product->weight_kg }} kg</span>
-                            </li>
-                        @endif
-                        @if($product->material)
-                            <li class="d-flex justify-content-between mb-1">
-                                <span>Material:</span>
-                                <span class="text-dark">{{ $product->material }}</span>
-                            </li>
-                        @endif
-                        @if($product->color_finish)
-                            <li class="d-flex justify-content-between mb-1">
-                                <span>Color / Finish:</span>
-                                <span class="text-dark">{{ $product->color_finish }}</span>
-                            </li>
-                        @endif
-                        @foreach($specs as $key => $value)
+                        @foreach($specList->take(5) as $key => $value)
                             <li class="d-flex justify-content-between mb-1">
                                 <span>{{ ucwords(str_replace('_', ' ', $key)) }}:</span>
                                 <span class="text-dark">{{ $value }}</span>
                             </li>
                         @endforeach
                     </ul>
+
+                    @if($specList->count() > 5)
+                        <div class="collapse" id="{{ $id }}">
+                            <ul class="list-unstyled mb-0 small text-muted mt-2">
+                                @foreach($specList->slice(5) as $key => $value)
+                                    <li class="d-flex justify-content-between mb-1">
+                                        <span>{{ ucwords(str_replace('_', ' ', $key)) }}:</span>
+                                        <span class="text-dark">{{ $value }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+
+                        <button class="btn btn-sm btn-link p-0 mt-2 text-decoration-none see-more-btn"
+                                type="button" data-bs-toggle="collapse" data-bs-target="#{{ $id }}" aria-expanded="false"
+                                aria-controls="{{ $id }}"> See more
+                        </button>
+                    @endif
                 @else
                     <p class="mb-0 text-muted small">No specific specs available.</p>
                 @endif
@@ -48,3 +56,17 @@
         </div>
     </div>
 </li>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.see-more-btn').forEach(button => {
+            const collapseTarget = document.querySelector(button.dataset.bsTarget);
+            collapseTarget.addEventListener('shown.bs.collapse', () => {
+                button.textContent = 'See less';
+            });
+            collapseTarget.addEventListener('hidden.bs.collapse', () => {
+                button.textContent = 'See more';
+            });
+        });
+    });
+    </script>
+    

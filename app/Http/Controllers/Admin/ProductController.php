@@ -72,7 +72,6 @@ class ProductController extends Controller
         $request->validate([
             'cost_price' => 'required|numeric|min:0',
             'sale_price' => 'required|numeric|gte:cost_price',
-            'weight_kg'  => 'required|numeric|min:0',
         ], [
             'sale_price.gte' => 'The sale price must be greater than or equal to the cost price.',
         ]);
@@ -83,9 +82,6 @@ class ProductController extends Controller
                 'cost_price' => $request->cost_price,
                 'sale_price' => $request->sale_price,
             ];
-            if ($request->filled('weight_kg')) {
-                $payload['weight_kg'] = $request->weight_kg;
-            }
             $product->update($payload);
 
             return back()->with('success', 'Pricing updated successfully.');
@@ -112,10 +108,9 @@ class ProductController extends Controller
     {
         try {
             $product = Product::findOrFail($id);
-            $full = $request->query('full');
-            $insights = $this->productService->calculateProductInsights($product, $full);
+            $insights = $this->productService->calculateProductInsights($product);
     
-            return view('admin.pages.product.show', array_merge(['product' => $product, 'full' => $full], $insights));
+            return view('admin.pages.product.show', array_merge(['product' => $product], $insights));
         } catch (\Exception) {
             return response()->view('error.admin500');
         }

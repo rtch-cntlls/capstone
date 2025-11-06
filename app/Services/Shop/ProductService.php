@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 
 class ProductService
 {
-    public function getProductDetails($product_id, $fullDescription = false)
+    public function getProductDetails($product_id)
     {
         $shop = Shop::first();
         $product = Product::with('discounts', 'category')->findOrFail($product_id);
@@ -26,11 +26,6 @@ class ProductService
         $promoDate = $discount?->expiry_date
             ? Carbon::parse($discount->expiry_date)->format('M d, Y')
             : '';
-
-        $description = $fullDescription
-            ? $product->description
-            : \Illuminate\Support\Str::limit($product->description, 100);
-
 
         $recommendedProducts = Product::with('discounts')
             ->where('category_id', $product->category_id)
@@ -57,7 +52,7 @@ class ProductService
             });
 
         return compact( 'shop', 'product', 'discountedPrice', 'discountPercentage',
-            'originalPrice', 'promoDate', 'description', 'fullDescription', 'discountAmount', 'recommendedProducts'
+            'originalPrice', 'promoDate', 'discountAmount', 'recommendedProducts'
         );
     }    
 }

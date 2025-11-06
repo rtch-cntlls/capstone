@@ -7,7 +7,6 @@
                 </h6>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            
             <form action="{{ route('admin.product.updatePricing', $product->product_id) }}" method="POST">
                 @csrf
                 <div class="modal-body">
@@ -20,7 +19,6 @@
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
-
                     <div class="mb-3">
                         <label for="sale_price" class="form-label fw-semibold">Sale Price</label>
                         <input type="number" name="sale_price" id="sale_price" step="0.01" min="0"
@@ -30,18 +28,7 @@
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
-
-                    <div class="mb-0">
-                        <label for="weight_kg" class="form-label fw-semibold">Weight (kg) <small class="text-muted">(optional)</small></label>
-                        <input type="number" name="weight_kg" id="weight_kg" step="0.001" min="0"
-                            value="{{ old('weight_kg', $product->weight_kg) }}"
-                            class="form-control @error('weight_kg') is-invalid @enderror">
-                        @error('weight_kg')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
                 </div>
-
                 <div class="modal-footer border-0">
                     <button type="button" class="btn btn-light border" data-bs-dismiss="modal">
                         Cancel

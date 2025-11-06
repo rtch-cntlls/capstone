@@ -110,7 +110,6 @@ class ProductService
             return $product;
         });
     }
-   
     
     public function toggleStatus(Product $product): Product
     {
@@ -120,11 +119,9 @@ class ProductService
         return $product;
     }
 
-    public function calculateProductInsights(Product $product, $full = false): array
+    public function calculateProductInsights(Product $product): array
     {
-        $description = $full
-            ? $product->description
-            : Str::limit($product->description, 100);
+        $description = $product->description;
 
         $instock     = $product->inventory->instock ?? 0;
         $unitPrice   = $product->sale_price ?? 0;
