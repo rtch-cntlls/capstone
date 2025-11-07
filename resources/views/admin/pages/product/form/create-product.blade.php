@@ -20,7 +20,7 @@
             </div>
 
             <div class="row g-3 mb-4">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label for="weight_kg" class="form-label fw-bold">Weight (kg)</label>
                     <input type="number" step="0.001" id="weight_kg" name="weight_kg"
                            value="{{ old('weight_kg') }}" class="form-control @error('weight_kg') is-invalid @enderror"
@@ -29,43 +29,60 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="col-md-4">
-                    <label for="material" class="form-label fw-bold">Material</label>
-                    <select id="material" name="material" class="form-select @error('material') is-invalid @enderror">
-                        <option value="">Select Material</option>
-                        <option value="Steel" {{ old('material') == 'Steel' ? 'selected' : '' }}>Steel</option>
-                        <option value="Aluminum" {{ old('material') == 'Aluminum' ? 'selected' : '' }}>Aluminum</option>
-                        <option value="Plastic" {{ old('material') == 'Plastic' ? 'selected' : '' }}>Plastic</option>
-                        <option value="Rubber" {{ old('material') == 'Rubber' ? 'selected' : '' }}>Rubber</option>
-                        <option value="Carbon Fiber" {{ old('material') == 'Carbon Fiber' ? 'selected' : '' }}>Carbon Fiber</option>
-                        <option value="Titanium" {{ old('material') == 'Titanium' ? 'selected' : '' }}>Titanium</option>
-                        <option value="Copper" {{ old('material') == 'Copper' ? 'selected' : '' }}>Copper</option>
-                        <option value="Brass" {{ old('material') == 'Brass' ? 'selected' : '' }}>Brass</option>
-                        <option value="Leather" {{ old('material') == 'Leather' ? 'selected' : '' }}>Leather</option>
-                        <option value="Glass" {{ old('material') == 'Glass' ? 'selected' : '' }}>Glass</option>
-                        <option value="Other" {{ old('material') == 'Other' ? 'selected' : '' }}>Other</option>
-                    </select>
+                <div class="col-md-6">
+                    <label for="image" class="form-label fw-bold">Product Image</label>
+                    <input type="file" id="image" name="image" accept="image/*"
+                           class="form-control @error('image') is-invalid @enderror">
+                    @error('image')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
+                        <label class="form-label fw-bold">Material</label>
+                        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#materialModal">
+                            <i class="fas fa-cubes me-1"></i> Select Materials
+                        </button>
+                    </div>
+                    <div class="d-flex flex-wrap align-items-center gap-2">
+                        <div id="selectedMaterials" class="d-flex flex-wrap gap-2">
+                            @if(old('material'))
+                                @foreach(explode(',', old('material')) as $mat)
+                                    <span class="badge bg-secondary">{{ $mat }}</span>
+                                @endforeach
+                            @endif
+                        </div>
+                    </div>
+                    <input type="hidden" id="material" name="material" value="{{ old('material') }}">
                     @error('material')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="text-danger small mt-1">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="col-md-4">
-                    <label for="color_finish" class="form-label fw-bold">Color / Finish</label>
-                    <select id="color_finish" name="color_finish" class="form-select @error('color_finish') is-invalid @enderror">
-                        <option value="">Select Color / Finish</option>
-                        <option value="Black" {{ old('color_finish') == 'Black' ? 'selected' : '' }}>Black</option>
-                        <option value="Silver" {{ old('color_finish') == 'Silver' ? 'selected' : '' }}>Silver</option>
-                        <option value="Chrome" {{ old('color_finish') == 'Chrome' ? 'selected' : '' }}>Chrome</option>
-                        <option value="Red" {{ old('color_finish') == 'Red' ? 'selected' : '' }}>Red</option>
-                        <option value="Blue" {{ old('color_finish') == 'Blue' ? 'selected' : '' }}>Blue</option>
-                        <option value="Yellow" {{ old('color_finish') == 'Yellow' ? 'selected' : '' }}>Yellow</option>
-                        <option value="Matte Black" {{ old('color_finish') == 'Matte Black' ? 'selected' : '' }}>Matte Black</option>
-                        <option value="Other" {{ old('color_finish') == 'Other' ? 'selected' : '' }}>Other</option>
-                    </select>
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
+                        <label class="form-label fw-bold">Color / Finish</label>
+                        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#colorModal">
+                            <i class="fas fa-palette me-1"></i> Select Colors
+                        </button>
+                    </div>
+                    <div class="d-flex flex-wrap align-items-center gap-2">
+                        <div id="selectedColors" class="d-flex flex-wrap gap-2">
+                            @if(old('color_finish'))
+                                @foreach(explode(',', old('color_finish')) as $col)
+                                    <span class="badge bg-secondary">{{ $col }}</span>
+                                @endforeach
+                            @endif
+                        </div>
+                    </div>
+                    <input type="hidden" id="color_finish" name="color_finish" value="{{ old('color_finish') }}">
                     @error('color_finish')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="text-danger small mt-1">{{ $message }}</div>
                     @enderror
                 </div>
+
+                @include('admin.pages.product.form.materials')
+                @include('admin.pages.product.form.colors')
+
             </div>
             <div id="specific-specs" class="mb-4"></div>
             <input type="hidden" id="product_specs" name="specs" value="">
@@ -78,15 +95,8 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
-            <div class="mb-4">
-                <label for="image" class="form-label fw-bold">Product Image</label>
-                <input type="file" id="image" name="image" accept="image/*"
-                       class="form-control @error('image') is-invalid @enderror">
-                @error('image')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
         </div>
+
         <div class="col-lg-4">
             <div class="card mb-4 shadow-sm">
                 <div class="card-header d-flex justify-content-between align-items-center bg-white">
@@ -107,6 +117,7 @@
                     @enderror
                 </div>
             </div>
+
             <div class="card mb-4 shadow-sm">
                 <div class="card-header d-flex justify-content-between align-items-center bg-white">
                     <p class="m-0 fw-bold text-secondary"><i class="fas fa-tags me-1"></i>Pricing</p>
@@ -132,6 +143,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="card shadow-sm">
                 <div class="card-header d-flex justify-content-between align-items-center bg-white">
                     <p class="m-0 fw-bold text-secondary"><i class="fas fa-boxes me-1"></i>Inventory</p>
@@ -149,3 +161,43 @@
     </div>
 </form>
 <script type="module" src="{{ asset('script/product-specs.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const materialButtons = document.querySelectorAll('.material-btn');
+        const selectedMaterials = document.getElementById('selectedMaterials');
+        const materialInput = document.getElementById('material');
+    
+        materialButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.classList.toggle('btn-secondary');
+                btn.classList.toggle('btn-outline-secondary');
+                btn.classList.toggle('active');
+                updateSelected(materialButtons, materialInput, selectedMaterials);
+            });
+        });
+    
+        const colorButtons = document.querySelectorAll('.color-btn');
+        const selectedColors = document.getElementById('selectedColors');
+        const colorInput = document.getElementById('color_finish');
+    
+        colorButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.classList.toggle('btn-secondary');
+                btn.classList.toggle('btn-outline-secondary');
+                btn.classList.toggle('active');
+                updateSelected(colorButtons, colorInput, selectedColors);
+            });
+        });
+    
+        function updateSelected(buttons, hiddenInput, displayContainer) {
+            const selectedValues = Array.from(buttons)
+                .filter(b => b.classList.contains('active'))
+                .map(b => b.dataset.value);
+            hiddenInput.value = selectedValues.join(',');
+            displayContainer.innerHTML = selectedValues
+                .map(v => `<span class="btn btn-secondary">${v}</span>`)
+                .join('');
+        }
+    });
+    </script>
+    

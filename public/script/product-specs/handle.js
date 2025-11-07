@@ -1,90 +1,129 @@
 export const handlebarsSpecs = `
- <h5>Controls & Handlebars</h5>
- <div class="row g-3 mb-2">
-     <div class="col-md-6">
-         <label>Handlebar Type</label>
-         <select name="handlebar_type" class="form-select">
-             <option value="">Select</option>
-             <option value="Standard / OEM">Standard / OEM</option>
-             <option value="Clip-On">Clip-On</option>
-             <option value="Ape Hanger">Ape Hanger</option>
-             <option value="Drag Bar">Drag Bar</option>
-             <option value="Motocross">Motocross</option>
-             <option value="Café Racer">Café Racer</option>
-             <option value="Tracker / Flat Bar">Tracker / Flat Bar</option>
-             <option value="Riser Bar">Riser Bar</option>
-             <option value="Other">Other</option>
-         </select>
-     </div>
-     <div class="col-md-6">
-         <label>Material</label>
-         <select name="handlebar_material" class="form-select">
-             <option value="">Select</option>
-             <option value="Steel">Steel</option>
-             <option value="Aluminum Alloy">Aluminum Alloy</option>
-             <option value="Carbon Fiber">Carbon Fiber</option>
-             <option value="Chromed Steel">Chromed Steel</option>
-             <option value="Other">Other</option>
-         </select>
-     </div>
-     <div class="col-md-6">
-         <label>Handlebar Diameter (mm)</label>
-         <input type="number" name="handlebar_diameter" class="form-control" placeholder="e.g. 22 or 28.6">
-     </div>
-     <div class="col-md-6">
-         <label>Handlebar Width (mm)</label>
-         <input type="number" name="handlebar_width" class="form-control" placeholder="e.g. 720">
-     </div>
-     <div class="col-md-6">
-         <label>Control Type</label>
-         <select name="control_type" class="form-select">
-             <option value="">Select</option>
-             <option value="Mechanical">Mechanical</option>
-             <option value="Hydraulic">Hydraulic</option>
-             <option value="Electronic">Electronic</option>
-         </select>
-     </div>
-     <div class="col-md-6">
-         <label>Control Features</label>
-         <input type="text" name="control_features" class="form-control" placeholder="e.g. Cruise Control, ABS, Traction Control">
-     </div>
-     <div class="col-md-6">
-         <label>Grip Type</label>
-         <select name="grip_type" class="form-select">
-             <option value="">Select</option>
-             <option value="Rubber">Rubber</option>
-             <option value="Foam">Foam</option>
-             <option value="Leather">Leather</option>
-             <option value="Heated Grip">Heated Grip</option>
-         </select>
-     </div>
-     <div class="col-md-6">
-         <label>Switch Assembly Type</label>
-         <select name="switch_type" class="form-select">
-             <option value="">Select</option>
-             <option value="OEM Standard">OEM Standard</option>
-             <option value="Aftermarket">Aftermarket</option>
-             <option value="Integrated Control Unit">Integrated Control Unit</option>
-         </select>
-     </div>
-     <div class="col-md-6">
-         <label>Lever Material</label>
-         <select name="lever_material" class="form-select">
-             <option value="">Select</option>
-             <option value="Aluminum">Aluminum</option>
-             <option value="Steel">Steel</option>
-             <option value="Carbon Fiber">Carbon Fiber</option>
-             <option value="Adjustable CNC Alloy">Adjustable CNC Alloy</option>
-         </select>
-     </div>
-     <div class="col-md-6">
-         <label>Mirror Mount Compatibility</label>
-         <select name="mirror_mount" class="form-select">
-             <option value="">Select</option>
-             <option value="Bar-End">Bar-End</option>
-             <option value="Clamp-On">Clamp-On</option>
-             <option value="Integrated">Integrated</option>
-         </select>
-     </div>
- </div>
+<h5 class="fw-bold">Handlebars & Controls</h5>
+<div class="row g-3 mb-2">
+
+    <div class="col-md-6">
+        <label>Handlebar Type / Style</label>
+        <select name="handlebar_type" class="form-select">
+            <option value="">Select</option>
+            <option value="Standard / OEM">Standard / OEM</option>
+            <option value="T-Bar Integrated">T-Bar Integrated</option>
+            <option value="Clip-On Below Triple Tree">Clip-On Below Triple Tree</option>
+            <option value="Clip-On Above Triple Tree">Clip-On Above Triple Tree</option>
+            <option value="Ape Hanger">Ape Hanger</option>
+            <option value="Drag Bar / Flat Bar">Drag Bar / Flat Bar</option>
+            <option value="Motocross / Dirt Bar">Motocross / Dirt Bar</option>
+            <option value="Fat Bar / Oversize">Fat Bar / Oversize</option>
+            <option value="Riser Bar / High Rise">Riser Bar / High Rise</option>
+            <option value="Mini-Z Bar / Z-Bar">Mini-Z Bar / Z-Bar</option>
+            <option value="Custom Bent / Chopper">Custom Bent / Chopper</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+
+    <div class="col-md-6">
+        <label>Handlebar Material</label>
+        <select name="handlebar_material" class="form-select">
+            <option value="">Select</option>
+            <option value="Steel">Steel</option>
+            <option value="Aluminum Alloy">Aluminum Alloy</option>
+            <option value="High-Strength Aluminum">High-Strength Aluminum</option>
+            <option value="Carbon Fiber">Carbon Fiber</option>
+            <option value="Chromed Steel">Chromed Steel</option>
+            <option value="Titanium Alloy">Titanium Alloy</option>
+            <option value="CNC Alloy">CNC Alloy</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+
+    <div class="col-md-6">
+        <label>Handlebar Diameter (Clamping Area)</label>
+        <select name="handlebar_diameter" class="form-select">
+            <option value="">Select</option>
+            <option value="22mm">22mm</option>
+            <option value="25.4mm">25.4mm</option>
+            <option value="28.6mm">28.6mm</option>
+            <option value="Other / Custom">Other / Custom</option>
+        </select>
+    </div>
+
+    <div class="col-md-6">
+        <label>Handlebar Grip Diameter (mm)</label>
+        <select name="handlebar_grip_diameter" class="form-select">
+            <option value="">Select</option>
+            <option value="22mm">22mm</option>
+            <option value="25.4mm">25.4mm</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+
+    <!-- GRIPS & MIRRORS -->
+    <div class="col-md-6">
+        <label>Grip Type</label>
+        <select name="grip_type" class="form-select">
+            <option value="">Select</option>
+            <option value="Standard Rubber">Standard Rubber</option>
+            <option value="Foam / Sponge">Foam / Sponge</option>
+            <option value="Gel / Cushion">Gel / Cushion</option>
+            <option value="Leather / Vinyl">Leather / Vinyl</option>
+            <option value="Heated Grip">Heated Grip</option>
+            <option value="Racing Grip">Racing Grip</option>
+            <option value="Bar-End Grip">Bar-End Grip</option>
+        </select>
+    </div>
+
+    <div class="col-md-6">
+        <label>Mirror Mount Type</label>
+        <select name="mirror_mount" class="form-select">
+            <option value="">Select</option>
+            <option value="Handlebar Clamp Mount">Handlebar Clamp Mount</option>
+            <option value="Bar-End Mirror">Bar-End Mirror</option>
+            <option value="Fairing Mount / Integrated">Fairing Mount / Integrated</option>
+            <option value="Stem Mount">Stem Mount</option>
+            <option value="Adjustable / Foldable">Adjustable / Foldable</option>
+        </select>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="col-md-6">
+        <label>Primary Control Mechanism</label>
+        <select name="control_type" class="form-select">
+            <option value="">Select</option>
+            <option value="Cable-Actuated">Cable-Actuated</option>
+            <option value="Hydraulic Brake">Hydraulic Brake</option>
+            <option value="Hydraulic Clutch">Hydraulic Clutch</option>
+            <option value="Throttle-by-Wire">Throttle-by-Wire</option>
+            <option value="Electronic / Integrated">Electronic / Integrated</option>
+            <option value="Adjustable Control">Adjustable Control</option>
+        </select>
+    </div>
+
+    <div class="col-md-6">
+        <label>Brake/Clutch Lever Features</label>
+        <select name="lever_features" class="form-select">
+            <option value="">Select</option>
+            <option value="Fixed Length">Fixed Length</option>
+            <option value="Adjustable Span">Adjustable Span</option>
+            <option value="Foldable / Extendable">Foldable / Extendable</option>
+            <option value="Shorty Lever">Shorty Lever</option>
+            <option value="CNC Alloy">CNC Alloy</option>
+            <option value="Carbon Fiber / Titanium">Carbon Fiber / Titanium</option>
+            <option value="Racing Alloy">Racing Alloy</option>
+        </select>
+    </div>
+
+    <div class="col-md-6">
+        <label>Switch Assembly Type</label>
+        <select name="switch_type" class="form-select">
+            <option value="">Select</option>
+            <option value="OEM Standard">OEM Standard</option>
+            <option value="Aftermarket Replacement">Aftermarket Replacement</option>
+            <option value="Integrated Control Unit">Integrated Control Unit</option>
+            <option value="Custom Racing Switch">Custom Racing Switch</option>
+            <option value="Hazard Switch Addition">Hazard Switch Addition</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+
+</div>
 `;

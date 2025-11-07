@@ -50,8 +50,8 @@ class ProductController extends Controller
             'weight_kg'     => 'required|numeric|min:0',
             'quantity'      => 'required|integer',
             'image'         => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'material'      => 'nullable|string|max:255',
-            'color_finish'  => 'nullable|string|max:255',
+            'material'      => 'nullable',
+            'color_finish'  => 'nullable',
             'specs'         => 'nullable|string',
         ], [], [
             'category_id' => 'category',

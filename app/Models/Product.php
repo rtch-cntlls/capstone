@@ -23,9 +23,10 @@ class Product extends Model
     ];
 
     protected $casts = [
+        'material' => 'array',
+        'color_finish' => 'array',
         'specs' => 'array',
     ];
-
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id', 'category_id');

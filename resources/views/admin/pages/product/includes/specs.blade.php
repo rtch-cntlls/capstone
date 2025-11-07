@@ -13,40 +13,58 @@
                     $specs = collect(json_decode($product->specs, true) ?? [])
                         ->reject(fn($value) => $value === '-' || $value === null || trim($value) === '');
 
+                    $material = $product->material;
+                    if (is_string($material) && str_starts_with($material, '[')) {
+                        $decoded = json_decode($material, true);
+                        $material = is_array($decoded) ? implode(', ', $decoded) : $material;
+                    } elseif (is_array($material)) {
+                        $material = implode(', ', $material);
+                    }
+
+                    $color = $product->color_finish;
+                    if (is_string($color) && str_starts_with($color, '[')) {
+                        $decoded = json_decode($color, true);
+                        $color = is_array($decoded) ? implode(', ', $decoded) : $color;
+                    } elseif (is_array($color)) {
+                        $color = implode(', ', $color);
+                    }
+
                     $specList = collect([
-                        'Weight' => $product->weight_kg ? $product->weight_kg . ' kg' : null,
-                        'Material' => $product->material,
-                        'Color / Finish' => $product->color_finish,
+                        'Weight' => $product->weight_kg ? number_format($product->weight_kg, 2) . ' kg' : null,
+                        'Material' => $material,
+                        'Color / Finish' => $color,
                     ])->filter()->merge($specs);
 
                     $id = 'specList-' . $product->id;
                 @endphp
-
                 @if($specList->isNotEmpty())
                     <ul class="list-unstyled mb-0 small text-muted">
                         @foreach($specList->take(5) as $key => $value)
                             <li class="d-flex justify-content-between mb-1">
                                 <span>{{ ucwords(str_replace('_', ' ', $key)) }}:</span>
-                                <span class="text-dark">{{ $value }}</span>
+                                <span class="text-dark text-end" style="max-width: 200px; word-wrap: break-word;">
+                                    {{ $value }}
+                                </span>
                             </li>
                         @endforeach
                     </ul>
-
                     @if($specList->count() > 5)
                         <div class="collapse" id="{{ $id }}">
                             <ul class="list-unstyled mb-0 small text-muted mt-2">
                                 @foreach($specList->slice(5) as $key => $value)
                                     <li class="d-flex justify-content-between mb-1">
                                         <span>{{ ucwords(str_replace('_', ' ', $key)) }}:</span>
-                                        <span class="text-dark">{{ $value }}</span>
+                                        <span class="text-dark text-end" style="max-width: 200px; word-wrap: break-word;">
+                                            {{ $value }}
+                                        </span>
                                     </li>
                                 @endforeach
                             </ul>
                         </div>
-
                         <button class="btn btn-sm btn-link p-0 mt-2 text-decoration-none see-more-btn"
-                                type="button" data-bs-toggle="collapse" data-bs-target="#{{ $id }}" aria-expanded="false"
-                                aria-controls="{{ $id }}"> See more
+                                type="button" data-bs-toggle="collapse" data-bs-target="#{{ $id }}"
+                                aria-expanded="false" aria-controls="{{ $id }}">
+                            See more
                         </button>
                     @endif
                 @else
@@ -56,17 +74,19 @@
         </div>
     </div>
 </li>
+
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.see-more-btn').forEach(button => {
-            const collapseTarget = document.querySelector(button.dataset.bsTarget);
-            collapseTarget.addEventListener('shown.bs.collapse', () => {
-                button.textContent = 'See less';
-            });
-            collapseTarget.addEventListener('hidden.bs.collapse', () => {
-                button.textContent = 'See more';
-            });
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.see-more-btn').forEach(button => {
+        const collapseTarget = document.querySelector(button.dataset.bsTarget);
+        if (!collapseTarget) return;
+
+        collapseTarget.addEventListener('shown.bs.collapse', () => {
+            button.textContent = 'See less';
+        });
+        collapseTarget.addEventListener('hidden.bs.collapse', () => {
+            button.textContent = 'See more';
         });
     });
-    </script>
-    
+});
+</script>

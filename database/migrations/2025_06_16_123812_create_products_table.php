@@ -21,8 +21,8 @@ return new class extends Migration
             $table->decimal('cost_price', 10, 2);
             $table->decimal('sale_price', 10, 2);
             $table->decimal('weight_kg', 8, 3);
-            $table->string('material')->nullable();
-            $table->string('color_finish')->nullable();
+            $table->json('material')->nullable();
+            $table->json('color_finish')->nullable();
             $table->json('specs')->nullable();
             $table->string('image')->nullable();
             $table->timestamps();
