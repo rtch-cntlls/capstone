@@ -52,8 +52,17 @@ class ShopController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate(['content'=>'required|string|max:1000']);
-        $this->chatService->sendMessage($request->receiver_id, $request->content);
+        $request->validate([
+            'content' => 'nullable|string|max:1000',
+            'attachments' => 'nullable|array',
+            'attachments.*' => 'file|mimes:jpeg,jpg,png,gif,webp,mp4,mov,avi,wmv,mpeg,3gp|max:20480',
+        ]);
+
+        if (!$request->filled('content') && !$request->hasFile('attachments')) {
+            return back()->withErrors(['content' => 'Please type a message or attach a file.'])->with('chat_open', true);
+        }
+
+        $this->chatService->sendMessage($request->receiver_id, $request->content, $request->file('attachments', []));
         return back()->with('chat_open', true);
     }
 

@@ -32,8 +32,17 @@ class MessagesController extends Controller
 
     public function send(Request $request, User $user)
     {
-        $request->validate(['content' => 'required|string|max:1000']);
-        $this->messageService->sendMessage($user, $request->content);
+        $request->validate([
+            'content' => 'nullable|string|max:1000',
+            'attachments' => 'nullable|array',
+            'attachments.*' => 'file|mimes:jpeg,jpg,png,gif,webp,mp4,mov,avi,wmv,mpeg,3gp|max:20480',
+        ]);
+
+        if (!$request->filled('content') && !$request->hasFile('attachments')) {
+            return back()->withErrors(['content' => 'Please provide a message or choose a file.']);
+        }
+
+        $this->messageService->sendMessage($user, $request->content, $request->file('attachments', []));
 
         return redirect()->route('admin.messages.index', $user->user_id);
     }
@@ -44,3 +53,4 @@ class MessagesController extends Controller
         return response()->json($messages);
     }
 }
+
