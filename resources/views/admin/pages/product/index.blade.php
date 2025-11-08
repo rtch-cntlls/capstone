@@ -37,9 +37,9 @@
                         @foreach ($products as $product)
                         <tr>
                             <td>
-                                <img src="{{ $product->image ? asset($product->image) : asset('images/placeholder.png') }}" 
+                                <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/placeholder.png') }}" 
                                      width="40" class="rounded">
-                            </td>
+                            </td>                            
                             <td>
                                 <a href="{{ route('admin.product.show', ['id' => $product->product_id]) }}" class="text-decoration-none">
                                     {{ $product->product_name }}

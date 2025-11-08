@@ -26,9 +26,10 @@
                         <div class="col-12 col-md-6">
                             <div class="d-flex p-3 border rounded shadow-sm h-100">
                                 <div style="flex-shrink:0; width:100px; height:100px;" class="d-flex align-items-center justify-content-center">
-                                    <img src="{{ $item['image'] ? asset($item['image']) : asset('images/placeholder.png') }}" 
-                                         alt="{{ $item['product_name'] }}" 
-                                         class="img-fluid" style="max-height:100%; object-fit:contain;">
+                                    <img src="{{ $item['image'] ? asset('storage/' . $item['image']) : asset('images/placeholder.png') }}" 
+                                        alt="{{ $item['product_name'] }}" 
+                                        class="img-fluid" 
+                                        style="max-height:100%; object-fit:contain;">                               
                                 </div>
                                 <div class="flex-grow-1 ms-3 d-flex flex-column justify-content-between">
                                     <div>

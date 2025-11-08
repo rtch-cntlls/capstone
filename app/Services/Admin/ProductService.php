@@ -73,7 +73,7 @@ class ProductService
         return DB::transaction(function () use ($request) {
             $imagePath = null;
             if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('products', 'public_root');
+                $imagePath = $request->file('image')->store('products', 'public');
             }
     
             $description = $request->description;

@@ -37,7 +37,8 @@
                                     @php $total += $item['subtotal']; @endphp
                                     <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
                                         <div class="d-flex align-items-center gap-2">
-                                            <img src="{{ !empty($item['image']) ? asset($item['image']) : asset('images/placeholder.png') }}" width="40" class="rounded">
+                                            <img src="{{ !empty($item['image']) ? asset('storage/' . $item['image']) : asset('images/placeholder.png') }}" 
+                                                width="40" class="rounded">
                                             <div style="font-size:13px; max-width:160px;">{{ $item['product_name'] }}</div>
                                         </div>
                                         <div class="d-flex gap-2 align-items-center">
@@ -50,7 +51,8 @@
                                 @php $total = $order['subtotal']; @endphp
                                 <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
                                     <div class="d-flex align-items-center gap-2">
-                                        <img src="{{ !empty($order['image']) ? asset($order['image']) : asset('images/placeholder.png') }}" width="40" class="rounded">
+                                        <img src="{{ !empty($order['image']) ? asset('storage/' . $order['image']) : asset('storage/images/placeholder.png') }}" 
+                                             width="40" class="rounded" alt="">
                                         <div style="font-size:13px; max-width:160px;">{{ $order['product_name'] }}</div>
                                     </div>
                                     <div class="d-flex gap-2 align-items-center">
@@ -103,7 +105,8 @@
                         @foreach($order as $item)
                             <div class="d-flex justify-content-between py-2 border-bottom align-items-center">
                                 <div class="d-flex align-items-center gap-2">
-                                    <img src="{{ !empty($item['image']) ? asset($item['image']) : asset('images/placeholder.png') }}" width="35" class="rounded">
+                                    <img src="{{ !empty($item['image']) ? asset('storage/' . $item['image']) : asset('images/placeholder.png') }}" 
+                                         width="35" class="rounded">
                                     <div style="font-size:12px; max-width:150px;">{{ $item['product_name'] }}</div>
                                 </div>
                                 <div class="d-flex gap-2">

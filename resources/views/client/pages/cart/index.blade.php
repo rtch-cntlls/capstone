@@ -43,10 +43,10 @@
                                     </td>
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            <img src="{{ $item->product->image ? asset($item->product->image) : asset('images/placeholder.png') }}"
+                                            <img src="{{ $item->product->image ? asset('storage/' . $item->product->image) : asset('images/placeholder.png') }}"
                                                 alt="{{ $item->product->product_name }}"
                                                 class="me-2 rounded border"
-                                                style="width:50px;height:50px;object-fit:cover;">
+                                                style="width:50px;height:50px;object-fit:cover;">                                       
                                             <span class="fw-semibold small text-truncate" style="max-width:180px;" title="{{ $item->product->product_name }}">
                                                 {{ $item->product->product_name }}
                                             </span>

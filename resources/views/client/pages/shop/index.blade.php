@@ -1,6 +1,5 @@
 @extends('client.layouts.client')
 @section('content')
-@include('components.toastAlert')
 @include('components.ModalAlertError')
 @include('components.ModalAlertSuccess')
 @include('client.pages.chat.index')

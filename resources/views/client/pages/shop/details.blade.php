@@ -9,9 +9,9 @@
     <div class="row g-4">
         <div class="col-12 col-md-5">
             <div class="card p-3 shadow-sm">
-                <img src="{{  $product->image ? asset($product->image) : asset('images/placeholder.png') }}"
-                     class="w-100 product-detail-img rounded"
-                     alt="">
+                <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('storage/images/placeholder.png') }}"
+                class="w-100 product-detail-img rounded"
+                alt="">
             </div>
         </div>
         <div class="col-12 col-md-7">
@@ -150,10 +150,10 @@
                     <div class="col-6 col-md-4">
                         <div class="card h-100 shadow-sm border-0">
                             <a href="{{ route('shop.details', $rec['product_id']) }}" class="text-decoration-none text-dark">
-                                <img src="{{ $rec['image'] ? asset($rec['image']) : asset('images/placeholder.png') }}"
+                                <img src="{{ $rec['image'] ? asset('storage/' . $rec['image']) : asset('images/placeholder.png') }}"
                                     alt="{{ $rec['product_name'] }}" 
                                     class="card-img-top rounded-top" 
-                                    style="height:180px; object-fit:cover;">
+                                    style="height:180px; object-fit:cover;">                           
                                 <div class="card-body text-center">
                                     <h6 class="fw-bold">{{ Str::limit($rec['product_name'], 40) }}</h6>
                                     <div class="mt-1">

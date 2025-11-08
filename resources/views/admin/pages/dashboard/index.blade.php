@@ -57,11 +57,6 @@
                 @include('admin.pages.dashboard.analytics.product-share')
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card mb-4 p-3">
-                @include('admin.pages.dashboard.monthly-revenue')
-            </div>
-        </div>
     </div>
     <div class="row">
         <div class="col-md-6">

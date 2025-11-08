@@ -200,7 +200,7 @@ class OrderService
     private function handleOutForDelivery(Order $order, ?string $estimatedDate, ?string $courier, ?string $trackingNumber): void
     {
         
-        if ($order->order_type === 'province') {
+        if ($order->order_type === 'province' || $order->order_type === 'local') {
             $shipment = Shipment::create([
                 'order_id'               => $order->order_id,
                 'courier'                => $courier,

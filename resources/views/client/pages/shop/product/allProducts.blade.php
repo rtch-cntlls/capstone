@@ -64,10 +64,10 @@
                                         </button>
                                     </form>
                                 </span>
-                                <img src="${product.image ? '/' + product.image : '/images/placeholder.png'}"
-                                     class="card-img-top product-img img-fluid"
-                                     style="object-fit: cover; max-height: 200px;"
-                                     onerror="this.src='/images/placeholder.png'">
+                                <img src="${product.image ? '/storage/' + product.image : 'storage/images/placeholder.png'}"
+                                    class="card-img-top product-img img-fluid"
+                                    style="object-fit: cover; max-height: 200px;"
+                                    onerror="this.src='/images/placeholder.png'">
                                 ${conditionBadge}
                                 <div class="card-body d-flex flex-column justify-content-between px-2 py-1">
                                     <h6 class="card-title product-name text-truncate">${product.product_name}</h6>

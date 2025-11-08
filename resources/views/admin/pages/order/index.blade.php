@@ -29,7 +29,7 @@
     </div>
     @if ($orders->isEmpty())
         <div class="text-center my-5">
-            <img src="{{ asset('images/empty.gif') }}" alt="No Orders" style="width: 160px;" class="mb-3">
+            <img src="{{ asset('storage/images/empty.gif') }}" alt="No Orders" style="width: 160px;" class="mb-3">
             <p class="m-0 text-muted">No orders found</p>
         </div>
     @else

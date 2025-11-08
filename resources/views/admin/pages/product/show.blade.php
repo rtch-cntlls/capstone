@@ -26,11 +26,12 @@
     <div class="row p-3">
         <div class="col-md-3">
             <div class="card p-3 text-center">
-                <img src="{{ $product->image ? asset($product->image) : asset('images/placeholder.png') }}" class="card-img-top image">
+                <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/placeholder.png') }}" 
+                     class="card-img-top image">
                 <div class="card-body">
                     <h6 class="card-title">{{ $product->product_name }}</h6>
                 </div>
-            </div>
+            </div>            
         </div>
         <div class="col-md-9"> 
             <div class="p-3 position-relative">

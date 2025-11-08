@@ -31,14 +31,8 @@ class OverviewController extends Controller
         $recentSoldProducts = $this->overviewService->getRecentSoldProducts();
 
         return view('admin.pages.overview.index', compact(
-            'cards', 
-            'salesTrends', 
-            'month', 
-            'year', 
-            'mode', 
-            'topProducts',
-            'categoryRevenue',
-            'recentSoldProducts' 
+            'cards', 'salesTrends', 'month', 'year', 
+            'mode', 'topProducts', 'categoryRevenue', 'recentSoldProducts' 
         ));
     }
 }

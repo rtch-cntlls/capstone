@@ -1,11 +1,7 @@
 @php
-    $EcommerceSubmenuRoutes = ['product.*', 'order-management.*', 'customer.*', 'refund.*', 'promo.*'];
-@endphp
-@php
-    $ServiceSubmenuRoutes = ['services.*' , 'bookings.*' , 'service-logs.*'];
-@endphp
-@php
-    $AnalyticsSubmenuRoutes =  ['overview.*' , 'sales-report.*' , 'service-report.*'];
+    $EcommerceSubmenuRoutes = ['product.*', 'orders.*', 'customer.*', 'refund.*', 'promo.*'];
+    $ServiceSubmenuRoutes = ['services.*', 'bookings.*', 'service-logs.*'];
+    $AnalyticsSubmenuRoutes = ['overview.*', 'sales-report.*', 'service-report.*'];
 @endphp
 <div id="sidebarWrapper">
     <aside>

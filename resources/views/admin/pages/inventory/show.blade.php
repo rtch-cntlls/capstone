@@ -20,11 +20,14 @@
     <div class="row g-3">
          <div class="col-md-3">
             <div class="card p-3 text-center">
-                <img src="{{ $inventory->product->image ? asset($inventory->product->image) : asset('images/placeholder.png') }}" class="card-img-top image">
+                <img src="{{ $inventory->product->image 
+                    ? asset('storage/' . $inventory->product->image) 
+                    : asset('images/placeholder.png') }}" 
+                    class="card-img-top image">
                 <div class="card-body">
-                    <h6 class="card-title">{{  $inventory->product->product_name }}</h6>
+                    <h6 class="card-title">{{ $inventory->product->product_name }}</h6>
                 </div>
-            </div>
+            </div>            
         </div>
         <div class="col-12 col-md-9">
             <div class="row g-3">

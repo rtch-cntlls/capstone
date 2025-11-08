@@ -170,11 +170,11 @@
                     @foreach($order->orderItems as $item)
                         <tr>
                             <td style="width: 90px;">
-                                <img src="{{ $item->product->image ? asset($item->product->image) : asset('images/placeholder.png') }}" 
+                                <img src="{{ $item->product->image ? asset('storage/' . $item->product->image) : asset('storage/images/placeholder.png') }}" 
                                      alt="Product image" 
                                      class="rounded shadow-sm" 
                                      style="width: 70px; height: 70px; object-fit: cover;">
-                            </td>
+                            </td>                            
                             <td class="fw-semibold text-dark">{{ $item->product->product_name ?? 'N/A' }}</td>
                             <td class="text-center">{{ $item->quantity }}</td>
                             <td class="text-end">₱{{ number_format($item->price, 2) }}</td>

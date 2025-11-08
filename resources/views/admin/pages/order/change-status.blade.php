@@ -31,11 +31,10 @@
                         $statuses = ['processing', 'shipped', 'completed', 'failed', 'cancelled'];
                     } elseif ($order->delivery_type === 'pick-up') {
                         $statuses = ['ready_for_pick_up', 'completed', 'cancelled'];
-                    } elseif  ($order->order_type === 'province') {
+                    } elseif ($order->order_type === 'province' || $order->order_type === 'local') {
                         $statuses = ['processing', 'out_for_delivery', 'completed', 'cancelled'];
                     }
-                @endphp
-
+                @endphp            
                 <form method="POST" action="{{ route('admin.orders.update', $order->order_id) }}">
                     @csrf
                     <label class="form-label fw-semibold d-block mb-2">Update Order Status</label>
@@ -232,7 +231,7 @@
                         </div>
                     @endif
 
-                    @if($order->order_type !== 'nationwide')
+                    @if($order->order_type === 'province' || $order->order_type === 'local')
                         <div id="deliveryDateWrapper_{{ $order->order_id }}" class="mt-3 d-none">
                             <label class="form-label fw-semibold">Courier</label>
                             <input type="text" class="form-control mb-2" name="courier" value="J&T Express" readonly>                              

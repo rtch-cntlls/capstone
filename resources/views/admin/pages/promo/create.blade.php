@@ -78,8 +78,9 @@
                                             class="form-check-input product-checkbox"
                                             {{ in_array($product->product_id, old('product_ids', [])) ? 'checked' : '' }}>
                                     </div>
-                                    <img src="{{ $product->image ? asset($product->image) : asset('images/placeholder.png') }}"
-                                        class="card-img-top" style="height: 150px; object-fit: cover;">
+                                    <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/placeholder.png') }}"
+                                        class="card-img-top" 
+                                        style="height: 150px; object-fit: cover;">                               
                                     <div class="card-body d-flex flex-column">
                                         <h6 class="card-title mb-2" style="font-size: 12px;">{{ $product->product_name }}</h6>
                                         <p class="card-text fw-bold text-success mt-auto mb-0">
@@ -127,8 +128,9 @@
                                 {{ in_array($product->product_id, old('product_ids', [])) ? 'checked' : '' }}>
                             
                             </div>
-                            <img src="{{ $product->image ? asset($product->image) : asset('images/placeholder.png') }}"
-                                class="card-img-top" style="height: 120px; object-fit: cover;">
+                            <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/placeholder.png') }}"
+                                class="card-img-top" 
+                                style="height: 120px; object-fit: cover;">
                             <div class="card-body d-flex flex-column">
                                 <h6 class="card-title mb-2" style="font-size: 12px;">{{ $product->product_name }}</h6>
                                 <p class="card-text fw-bold text-success mt-auto mb-0">

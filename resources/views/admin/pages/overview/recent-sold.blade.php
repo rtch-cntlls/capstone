@@ -22,7 +22,8 @@
                             @foreach ($recentSoldProducts as $item)
                                 <tr>
                                     <td class="d-flex align-items-center gap-2">
-                                        <img src="{{ $item->product && $item->product->image ? asset($item->product->image) : asset('images/placeholder.png') }}" width="50" class="rounded">
+                                        <img src="{{ $item->product && $item->product->image ? asset('storage/' . $item->product->image) : asset('images/placeholder.png') }}" 
+                                            width="50" class="rounded">                                   
                                        <div>
                                             <div class="fw-semibold">
                                                 {{ $item->product->product_name}}

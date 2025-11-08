@@ -22,9 +22,9 @@
                                 @foreach($promos->products as $product)
                                     <tr>
                                         <td class="fw-medium">
-                                            <img src="{{ $product->image ? asset($product->image) : asset('images/placeholder.png') }}" 
+                                            <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/placeholder.png') }}" 
                                             width="50" class="me-2">
-                                            {{ $product->product_name }}
+                                            {{ $product->product_name }}                                       
                                         </td>
                                         <td class="text-center">
                                             <a href="{{ route('admin.product.show', ['id' => $product->product_id]) }}" 

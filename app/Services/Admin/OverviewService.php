@@ -135,6 +135,19 @@ class OverviewService
         });
     }
 
+    private function formatNumber(float $number): string
+    {
+        if ($number >= 1_000_000) {
+            return number_format($number / 1_000_000, 1) . 'M';
+        }
+
+        if ($number >= 1_000) {
+            return number_format($number / 1_000, 1) . 'K';
+        }
+
+        return number_format($number, 2);
+    }
+
     private function buildCards(array $data): array
     {
         $growth = fn($current, $previous) => [
@@ -147,13 +160,13 @@ class OverviewService
         return [
             [
                 'title' => 'Total Sales',
-                'value' => number_format($data['totalSales'], 2),
+                'value' => $this->formatNumber($data['totalSales']),
                 'type' => '₱',
                 'growth' => $growth($data['this']['sales'], $data['last']['sales']),
             ],
             [
                 'title' => 'Total Revenue',
-                'value' => number_format($data['totalRevenue'], 2),
+                'value' => $this->formatNumber($data['totalRevenue']),
                 'type' => '₱',
                 'growth' => $growth($data['this']['revenue'], $data['last']['revenue']),
             ],

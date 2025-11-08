@@ -10,7 +10,8 @@
             <div>
                 <div class=" d-flex justify-content-between align-items-center p-1">
                     <div class="d-flex align-items-center gap-2">
-                        <img src="{{ $product->image ? asset($product->image) : asset('images/placeholder.png') }}" width="35">
+                        <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/placeholder.png') }}" 
+                        width="35">                   
                         <div>
                             <div  class="fw-semibold text-truncate" style="max-width: 150px;">
                                 {{ $product->product_name }}
