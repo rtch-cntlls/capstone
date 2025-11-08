@@ -13,21 +13,8 @@
                     $specs = collect(json_decode($product->specs, true) ?? [])
                         ->reject(fn($value) => $value === '-' || $value === null || trim($value) === '');
 
-                    $material = $product->material;
-                    if (is_string($material) && str_starts_with($material, '[')) {
-                        $decoded = json_decode($material, true);
-                        $material = is_array($decoded) ? implode(', ', $decoded) : $material;
-                    } elseif (is_array($material)) {
-                        $material = implode(', ', $material);
-                    }
-
-                    $color = $product->color_finish;
-                    if (is_string($color) && str_starts_with($color, '[')) {
-                        $decoded = json_decode($color, true);
-                        $color = is_array($decoded) ? implode(', ', $decoded) : $color;
-                    } elseif (is_array($color)) {
-                        $color = implode(', ', $color);
-                    }
+                    $material = $product->material ?: null;
+                    $color    = $product->color_finish ?: null;
 
                     $specList = collect([
                         'Weight' => $product->weight_kg ? number_format($product->weight_kg, 2) . ' kg' : null,
@@ -37,6 +24,7 @@
 
                     $id = 'specList-' . $product->id;
                 @endphp
+
                 @if($specList->isNotEmpty())
                     <ul class="list-unstyled mb-0 small text-muted">
                         @foreach($specList->take(5) as $key => $value)

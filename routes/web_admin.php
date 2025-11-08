@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\{
     DashboardController,
     InventoryController,
     ProductController,
+    ProductVariantController,
     POSController,
     SalesController,
     CustomerController,

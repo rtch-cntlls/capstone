@@ -37,52 +37,7 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="col-md-6">
-                    <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
-                        <label class="form-label fw-bold">Material</label>
-                        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#materialModal">
-                            <i class="fas fa-cubes me-1"></i> Select Materials
-                        </button>
-                    </div>
-                    <div class="d-flex flex-wrap align-items-center gap-2">
-                        <div id="selectedMaterials" class="d-flex flex-wrap gap-2">
-                            @if(old('material'))
-                                @foreach(explode(',', old('material')) as $mat)
-                                    <span class="badge bg-secondary">{{ $mat }}</span>
-                                @endforeach
-                            @endif
-                        </div>
-                    </div>
-                    <input type="hidden" id="material" name="material" value="{{ old('material') }}">
-                    @error('material')
-                        <div class="text-danger small mt-1">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="col-md-6">
-                    <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
-                        <label class="form-label fw-bold">Color / Finish</label>
-                        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#colorModal">
-                            <i class="fas fa-palette me-1"></i> Select Colors
-                        </button>
-                    </div>
-                    <div class="d-flex flex-wrap align-items-center gap-2">
-                        <div id="selectedColors" class="d-flex flex-wrap gap-2">
-                            @if(old('color_finish'))
-                                @foreach(explode(',', old('color_finish')) as $col)
-                                    <span class="badge bg-secondary">{{ $col }}</span>
-                                @endforeach
-                            @endif
-                        </div>
-                    </div>
-                    <input type="hidden" id="color_finish" name="color_finish" value="{{ old('color_finish') }}">
-                    @error('color_finish')
-                        <div class="text-danger small mt-1">{{ $message }}</div>
-                    @enderror
-                </div>
-
                 @include('admin.pages.product.form.materials')
-                @include('admin.pages.product.form.colors')
-
             </div>
             <div id="specific-specs" class="mb-4"></div>
             <input type="hidden" id="product_specs" name="specs" value="">
@@ -161,43 +116,3 @@
     </div>
 </form>
 <script type="module" src="{{ asset('script/product-specs.js') }}"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const materialButtons = document.querySelectorAll('.material-btn');
-        const selectedMaterials = document.getElementById('selectedMaterials');
-        const materialInput = document.getElementById('material');
-    
-        materialButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                btn.classList.toggle('btn-secondary');
-                btn.classList.toggle('btn-outline-secondary');
-                btn.classList.toggle('active');
-                updateSelected(materialButtons, materialInput, selectedMaterials);
-            });
-        });
-    
-        const colorButtons = document.querySelectorAll('.color-btn');
-        const selectedColors = document.getElementById('selectedColors');
-        const colorInput = document.getElementById('color_finish');
-    
-        colorButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                btn.classList.toggle('btn-secondary');
-                btn.classList.toggle('btn-outline-secondary');
-                btn.classList.toggle('active');
-                updateSelected(colorButtons, colorInput, selectedColors);
-            });
-        });
-    
-        function updateSelected(buttons, hiddenInput, displayContainer) {
-            const selectedValues = Array.from(buttons)
-                .filter(b => b.classList.contains('active'))
-                .map(b => b.dataset.value);
-            hiddenInput.value = selectedValues.join(',');
-            displayContainer.innerHTML = selectedValues
-                .map(v => `<span class="btn btn-secondary">${v}</span>`)
-                .join('');
-        }
-    });
-    </script>
-    

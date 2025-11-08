@@ -50,8 +50,8 @@ class ProductController extends Controller
             'weight_kg'     => 'required|numeric|min:0',
             'quantity'      => 'required|integer',
             'image'         => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'material'      => 'nullable',
-            'color_finish'  => 'nullable',
+            'material'      => 'nullable|string',
+            'color_finish'  => 'nullable|string',
             'specs'         => 'nullable|string',
         ], [], [
             'category_id' => 'category',
@@ -107,11 +107,12 @@ class ProductController extends Controller
     public function show($id, Request $request)
     {
         try {
-            $product = Product::findOrFail($id);
+            $product = Product::with(['variants.inventory'])->findOrFail($id);
             $insights = $this->productService->calculateProductInsights($product);
-    
+
             return view('admin.pages.product.show', array_merge(['product' => $product], $insights));
-        } catch (\Exception) {
+        } catch (\Exception $e) {
+            report($e);
             return response()->view('error.admin500');
         }
     }

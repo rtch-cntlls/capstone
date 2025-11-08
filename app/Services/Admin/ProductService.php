@@ -91,12 +91,8 @@ class ProductService
                 'cost_price'   => $request->cost_price,
                 'sale_price'   => $request->sale_price,
                 'weight_kg'    => $request->weight_kg,
-                'material'     => $request->filled('material') 
-                    ? json_encode(explode(',', $request->material)) 
-                    : null,
-                'color_finish' => $request->filled('color_finish') 
-                    ? json_encode(explode(',', $request->color_finish)) 
-                    : null,
+                'material'     => $request->material, 
+                'color_finish' => $request->color_finish,
                 'specs'        => $specs,
                 'image'        => $imagePath,
                 'status'       => 'active', 

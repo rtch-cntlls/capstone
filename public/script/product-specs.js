@@ -28,31 +28,45 @@ const specs = {
     'Suspension & Steering': suspensionSpecs,
 };
 
-const categorySelect = document.getElementById('category_id');
-const specsContainer = document.getElementById('specific-specs');
-const productSpecsInput = document.getElementById('product_specs');
-const productForm = document.getElementById('productForm');
+document.addEventListener('DOMContentLoaded', () => {
+    const categorySelect = document.getElementById('category_id');
+    const specsContainer = document.getElementById('specific-specs');
+    const productSpecsInput = document.getElementById('product_specs');
+    const productForm = document.getElementById('productForm');
 
-function updateSpecsInput() {
-    const specValues = {};
-    specsContainer.querySelectorAll('input, select, textarea').forEach(el => {
-        specValues[el.name] = el.value;
-    });
-    productSpecsInput.value = JSON.stringify(specValues);
-}
+    function updateSpecsInput() {
+        const specValues = {};
+        specsContainer.querySelectorAll('input, select, textarea').forEach(el => {
+            specValues[el.name] = el.value;
+        });
+        if (productSpecsInput) productSpecsInput.value = JSON.stringify(specValues);
+    }
 
-categorySelect.addEventListener('change', function() {
-    const selectedText = categorySelect.options[categorySelect.selectedIndex].text;
-    specsContainer.innerHTML = specs[selectedText] || '';
+    function renderSpecs(categoryName) {
+        if (!specsContainer) return;
+        specsContainer.innerHTML = specs[categoryName] || '';
+        updateSpecsInput();
 
-    updateSpecsInput();
+        specsContainer.querySelectorAll('input, select, textarea').forEach(el => {
+            el.addEventListener('change', updateSpecsInput);
+        });
+    }
 
-    specsContainer.querySelectorAll('input, select, textarea').forEach(el => {
-        el.addEventListener('change', updateSpecsInput);
-    });
+    if (categorySelect) {
+        categorySelect.addEventListener('change', function() {
+            const selectedText = categorySelect.options[categorySelect.selectedIndex].text;
+            renderSpecs(selectedText);
+        });
+
+        const initialCategory = categorySelect.options[categorySelect.selectedIndex]?.text;
+        if (initialCategory) renderSpecs(initialCategory);
+    }
+
+    if (!categorySelect && specsContainer?.dataset.category) {
+        renderSpecs(specsContainer.dataset.category);
+    }
+
+    if (productForm) {
+        productForm.addEventListener('submit', updateSpecsInput);
+    }
 });
-
-productForm.addEventListener('submit', function() {
-    updateSpecsInput();
-});
-
