@@ -97,46 +97,38 @@
     @php
         $specs = collect(json_decode($product->specs, true) ?? [])
             ->reject(fn($value) => $value === '-' || $value === null || trim($value) === '');
+
+        $allSpecs = collect([
+            'Weight' => $product->weight_kg ? number_format($product->weight_kg, 2) . ' kg' : null,
+            'Material' => $product->material,
+            'Color / Finish' => $product->color_finish,
+        ])->merge($specs)->reject(fn($v) => empty($v));
     @endphp
-    @if($product->weight_kg || $product->material || $product->color_finish || $specs->isNotEmpty())
-        <div class="m-3">
-            <h6 class="fw-semibold text-dark mb-3">Product Specifications</h6>
-            @php
-                $allSpecs = collect([
-                    'Weight' => $product->weight_kg ? number_format($product->weight_kg, 2) . ' kg' : null,
-                    'Material' => $product->material,
-                    'Color / Finish' => $product->color_finish,
-                ])->merge($specs)->reject(fn($v) => empty($v));
-            @endphp
-            <div class="table-responsive d-none d-md-block">
-                <table class="table table-bordered align-middle small mb-0">
-                    <tbody>
-                        @php
-                            $rows = $allSpecs->chunk(3);
-                        @endphp
-                        @foreach($rows as $chunk)
-                            <tr>
-                                @foreach($chunk as $key => $value)
-                                    <td class="text-muted fw-medium bg-light px-3 py-2 w-25">{{ ucwords(str_replace('_', ' ', $key)) }}</td>
-                                    <td class="fw-semibold text-dark px-3 py-2">{{ $value }}</td>
-                                @endforeach
-                                @for($i = $chunk->count(); $i < 3; $i++)
-                                    <td class="bg-light px-3 py-2"></td>
-                                    <td class="px-3 py-2"></td>
-                                @endfor
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+
+    @if($allSpecs->isNotEmpty())
+        <div class="my-4">
+            <h5 class="fw-bold text-dark mb-3">
+                <i class="fas fa-info-circle me-2 text-primary"></i>Product Specifications
+            </h5>
+
+            <div class="d-none d-md-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
+                @foreach($allSpecs as $key => $value)
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body text-center p-3">
+                            <div class="text-muted small mb-1">{{ ucwords(str_replace('_', ' ', $key)) }}</div>
+                            <div class="fw-semibold">{{ $value }}</div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
-            <div class="d-block d-md-none">
+            <div class="d-md-none">
                 <div class="row g-2">
                     @foreach($allSpecs as $key => $value)
-                        <div class="col-12">
+                        <div class="col-6">
                             <div class="card shadow-sm border-0">
-                                <div class="card-body d-flex justify-content-between align-items-center py-2 px-3">
-                                    <span class="text-muted fw-medium">{{ ucwords(str_replace('_', ' ', $key)) }}</span>
-                                    <span class="fw-semibold text-dark">{{ $value }}</span>
+                                <div class="card-body text-center py-2">
+                                    <div class="text-muted small mb-1">{{ ucwords(str_replace('_', ' ', $key)) }}</div>
+                                    <div class="fw-semibold">{{ $value }}</div>
                                 </div>
                             </div>
                         </div>
@@ -145,61 +137,81 @@
             </div>
         </div>
     @endif
-    <div class="mt-5" id="ratingsSection">
-        <h5 class="fw-bold mb-3">Product Ratings</h5>
-        <div class="border rounded p-3 mb-3">
-            <div class="d-flex align-items-center gap-3 flex-wrap">
-                <div class="display-6 fw-bold text-danger">{{ $averageRating ?: '0.0' }}</div>
-                <div class="text-muted">out of 5</div>
-                <div class="ms-auto small text-muted">{{ $totalReviews }} ratings</div>
+
+    <div class="mt-3" id="ratingsSection">
+        <h5 class="fw-bold mb-4">
+            <i class="fas fa-star text-warning me-2"></i> Product Ratings
+        </h5>
+        <div id="reviewAlert" class="alert alert-success d-none mt-2"></div>
+        <div class="row g-3">
+            <div class="col-12 col-md-4">
+                <div class="card shadow-sm border-0 h-100 text-center p-3">
+                    <div class="display-4 fw-bold text-warning">{{ $averageRating ?: '0.0' }}</div>
+                    <div class="text-muted mb-2">out of 5</div>
+                    <div class="progress rounded-pill" style="height: 10px;">
+                        <div class="progress-bar bg-warning" role="progressbar"
+                             style="width: {{ ($averageRating/5)*100 }}%;"
+                             aria-valuenow="{{ $averageRating }}" aria-valuemin="0" aria-valuemax="5">
+                        </div>
+                    </div>
+                    <small class="text-muted mt-2 d-block">{{ $totalReviews }} Rating/Reviews</small>
+                </div>
             </div>
-            <div class="mt-3 d-flex flex-wrap gap-2">
-                <button class="btn btn-sm btn-outline-secondary filter-btn" data-stars="">All</button>
-                <button class="btn btn-sm btn-outline-secondary filter-btn" data-stars="5">5 Star ({{ $starCounts[5] ?? 0 }})</button>
-                <button class="btn btn-sm btn-outline-secondary filter-btn" data-stars="4">4 Star ({{ $starCounts[4] ?? 0 }})</button>
-                <button class="btn btn-sm btn-outline-secondary filter-btn" data-stars="3">3 Star ({{ $starCounts[3] ?? 0 }})</button>
-                <button class="btn btn-sm btn-outline-secondary filter-btn" data-stars="2">2 Star ({{ $starCounts[2] ?? 0 }})</button>
-                <button class="btn btn-sm btn-outline-secondary filter-btn" data-stars="1">1 Star ({{ $starCounts[1] ?? 0 }})</button>
-                <button class="btn btn-sm btn-outline-secondary" id="btnWithComments">With Comments ({{ $withCommentsCount }})</button>
+            <div class="col-12 col-md-8">
+                <div class="card shadow-sm border-0 p-3">
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <button class="btn btn-sm btn-outline-secondary filter-btn" data-stars="">All</button>
+                        @for($i=5;$i>=1;$i--)
+                            <button class="btn btn-sm btn-outline-secondary filter-btn" data-stars="{{ $i }}">
+                                {{ $i }} Star ({{ $starCounts[$i] ?? 0 }})
+                            </button>
+                        @endfor
+                        <button class="btn btn-sm btn-outline-secondary" id="btnWithComments">
+                            With Comments ({{ $withCommentsCount }})
+                        </button>
+                    </div>
+                    <div id="reviewsList" class="vstack gap-3 mt-2"></div>
+                    @php $oiq = request('order_item_id'); @endphp
+                    @if(($canRate && $rateableOrderItemId) || $oiq)
+                        <div class="mt-3">
+                            <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#reviewModal">
+                                <i class="fas fa-star me-1"></i> Add Your Rating
+                            </button>
+                        </div>
+                    @endif
+                </div>
             </div>
         </div>
-
-        <div id="reviewAlert" class="alert alert-success d-none" role="alert">Commented successfully.</div>
-        <div id="reviewsList" class="vstack gap-3"></div>
-
-        @php $oiq = request('order_item_id'); @endphp
+    
         @if(($canRate && $rateableOrderItemId) || $oiq)
-            <div class="mt-3">
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal">
-                    <i class="fas fa-star me-1"></i> Add your rating
-                </button>
-            </div>
             <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Rate this product</h5>
+                    <div class="modal-content rounded-4 shadow-lg">
+                        <div class="modal-header border-bottom-0">
+                            <h5 class="modal-title fw-bold">Rate This Product</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <form id="reviewForm">
                                 <input type="hidden" name="order_item_id" value="{{ $oiq ?: $rateableOrderItemId }}">
                                 <div class="mb-3">
-                                    <label class="form-label">Rating</label>
-                                    <div class="d-flex gap-1" id="starPicker">
+                                    <label class="form-label fw-bold">Rating</label>
+                                    <div class="d-flex gap-2" id="starPicker">
                                         @for($i=1;$i<=5;$i++)
-                                            <button class="btn btn-sm btn-outline-warning star" type="button" data-value="{{ $i }}"><i class="fas fa-star"></i></button>
+                                            <button type="button" class="btn btn-outline-warning star rounded-circle p-2" data-value="{{ $i }}">
+                                                <i class="fas fa-star"></i>
+                                            </button>
                                         @endfor
                                     </div>
                                     <input type="hidden" name="rating" id="ratingValue" value="5">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Comment (optional)</label>
+                                    <label class="form-label fw-bold">Comment (optional)</label>
                                     <textarea class="form-control" name="comment" rows="3" placeholder="Share your experience..."></textarea>
                                 </div>
                             </form>
                         </div>
-                        <div class="modal-footer">
+                        <div class="modal-footer border-top-0">
                             @csrf
                             <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button class="btn btn-primary" id="submitReviewBtn">Submit</button>
@@ -210,7 +222,7 @@
         @endif
     </div>
 
-    @if ($recommendedProducts->count())
+     @if ($recommendedProducts->count())
         <div class="mt-5">
             <h5 class="fw-bold mb-3">
                 <i class="fas fa-lightbulb me-2 text-warning"></i>Recommended for You
@@ -220,7 +232,7 @@
                     <div class="col-6 col-md-4">
                         <div class="card h-100 shadow-sm border-0">
                             <a href="{{ route('shop.details', $rec['product_id']) }}" class="text-decoration-none text-dark">
-                                <img src="{{ $rec['image'] ? asset('storage/' . $rec['image']) : asset('images/placeholder.png') }}"
+                                <img src="{{ $rec['image'] ? asset('storage/' . $rec['image']) : asset('storage/images/placeholder.png') }}"
                                     alt="{{ $rec['product_name'] }}" 
                                     class="card-img-top rounded-top" 
                                     style="height:180px; object-fit:cover;">                           
@@ -242,6 +254,7 @@
             </div>
         </div>
     @endif
+
 </div>
 <script src="{{asset('script/customer/quantity.js')}}"></script>
 <script>
@@ -267,38 +280,72 @@
             isFull = !isFull;
         });
     });
-    // Ratings fetch and submit
     const reviewsApi = `{{ route('shop.reviews.index', $product->product_id) }}`;
     const reviewsList = document.getElementById('reviewsList');
     const filterButtons = document.querySelectorAll('.filter-btn');
     let withComments = false;
     let activeStars = '';
+    let showAllReviews = false;
 
     function renderReviews(data){
-        reviewsList.innerHTML = '';
-        const items = data.reviews.data || [];
-        if(items.length === 0){
-            reviewsList.innerHTML = '<div class="text-muted">No reviews yet.</div>';
-            return;
-        }
-        items.forEach(r => {
-            const name = r.customer?.user?.firstname ? `${r.customer.user.firstname} ${r.customer.user.lastname}` : 'Customer';
-            const stars = '★★★★★'.slice(0, r.rating) + '☆☆☆☆☆'.slice(r.rating);
-            const imgs = (r.images || []).map(u => `<img src="${u.startsWith('http')?u:('<?= asset('storage/') ?>'+'/'+u) }" class="rounded me-2 mb-2" style="width:70px;height:70px;object-fit:cover;">`).join('');
-            const replies = (r.replies || []).map(rep => `<div class="ms-3 mt-2 p-2 bg-light rounded small"><strong>Admin:</strong> ${rep.comment}</div>`).join('');
+    reviewsList.innerHTML = '';
+    const items = data.reviews.data || [];
+    if(items.length === 0){
+        reviewsList.innerHTML = '<div class="text-muted">No reviews yet.</div>';
+        return;
+    }
+
+    const displayedItems = showAllReviews ? items : items.slice(0, 1);
+
+    displayedItems.forEach(r => {
+    const name = r.customer?.user 
+            ? `${r.customer.user.firstname ? r.customer.user.firstname[0] + '*****' : ''} \
+    ${r.customer.user.lastname ? r.customer.user.lastname[0] + '*****' : ''}`.trim()
+                : 'Customer';
+
+            function renderStars(rating) {
+                let html = '';
+                for (let i = 1; i <= 5; i++) {
+                    html += i <= rating 
+                        ? '<i class="fas fa-star text-warning"></i> ' 
+                        : '<i class="far fa-star text-muted"></i> ';
+                }
+                return html;
+            }
+
+            const stars = renderStars(r.rating);
+            const imgs = (r.images || []).map(u => 
+                `<img src="${u.startsWith('http') ? u : ('<?= asset('storage/') ?>'+'/'+u) }" class="rounded me-2 mb-2" style="width:70px;height:70px;object-fit:cover;">`
+            ).join('');
+            const replies = (r.replies || []).map(rep => 
+                `<div class="ms-3 mt-2 p-2 bg-light rounded small"><strong>Admin:</strong> ${rep.comment}</div>`
+            ).join('');
+
             const card = document.createElement('div');
             card.className = 'card border-0 shadow-sm';
             card.innerHTML = `<div class="card-body">
-                <div class="d-flex justify-content-between">
+                <div class="d-flex align-items-center gap-2">
+                    <img src="{{ asset("storage/profile/customer.webp") }}" class="rounded-circle" style="width:40px; height:40px; object-fit:cover;">
                     <div class="fw-semibold">${name}</div>
-                    <div class="text-warning">${stars}</div>
+                    <div class="text-warning ms-auto">${stars}</div>
                 </div>
-                ${r.comment ? `<div class="mt-2">${r.comment}</div>` : ''}
+                ${r.comment ? `<div class="mx-3">${r.comment}</div>` : ''}
                 ${imgs ? `<div class="mt-2">${imgs}</div>` : ''}
                 ${replies}
             </div>`;
             reviewsList.appendChild(card);
         });
+
+        if(items.length > 1){
+            const toggleBtn = document.createElement('button');
+            toggleBtn.className = 'btn btn-link p-0 mt-2';
+            toggleBtn.textContent = showAllReviews ? 'Show Less' : `Show All (${items.length})`;
+            toggleBtn.addEventListener('click', ()=>{
+                showAllReviews = !showAllReviews;
+                renderReviews(data);
+            });
+            reviewsList.appendChild(toggleBtn);
+        }
     }
 
     async function loadReviews(){
@@ -362,7 +409,6 @@
         });
     }
 
-    // Auto-open rating modal if coming from My Orders with rate=1
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('rate') === '1') {
         const modalEl = document.getElementById('reviewModal');

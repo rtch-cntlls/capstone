@@ -14,7 +14,7 @@
             </div>
             @if($orders->isEmpty())
                 <div class="text-center py-5 bg-white border rounded shadow-sm">
-                    <img src="{{ asset('images/order.jpg') }}" alt="No orders" width="160" class="mb-3">
+                    <img src="{{ asset('storage/images/order.jpg') }}" alt="No orders" width="160" class="mb-3">
                     <h5 class="fw-semibold mb-2">No Orders Found</h5>
                     <p class="text-muted small mb-3">You don’t have any orders yet. Explore motorcycle parts products to get started.</p>
                     <a href="{{ route('shop.product') }}" class="btn btn-success">Order Parts Now</a>

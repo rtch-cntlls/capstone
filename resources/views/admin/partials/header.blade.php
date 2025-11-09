@@ -25,41 +25,60 @@
                     @endif
                 </a>
 
-                <ul class="dropdown-menu dropdown-menu-end p-0 shadow-lg" aria-labelledby="notificationDropdown" style="width: 320px; max-height: 400px; overflow-y: auto;">
-                    <li class="dropdown-header fw-bold bg-light py-2 px-3">Notifications</li>
-                    <li><hr class="dropdown-divider m-0"></li>
-
-                    @if($totalNotifications === 0)
-                        <li class="text-center py-3 text-muted">
-                            <i class="fas fa-bell-slash fa-lg mb-1"></i><br>
-                            No new notifications
+                @php
+                $totalNotifications = ($notifications['newOrders'] ?? 0) 
+                                    + ($notifications['newBookings'] ?? 0)
+                                    + ($notifications['newReviews'] ?? 0);
+            @endphp
+            
+            <ul class="dropdown-menu dropdown-menu-end p-0 shadow-lg" style="width: 320px; max-height: 400px; overflow-y: auto;">
+                <li class="dropdown-header fw-bold bg-light py-2 px-3">Notifications</li>
+                <li><hr class="dropdown-divider m-0"></li>
+            
+                @if($totalNotifications === 0)
+                    <li class="text-center py-3 text-muted">
+                        <i class="fas fa-bell-slash fa-lg mb-1"></i><br>
+                        No new notifications
+                    </li>
+                @else
+                    @if(($notifications['newOrders'] ?? 0) > 0)
+                        <li>
+                            <a href="{{ route('admin.orders.index') }}" class="dropdown-item d-flex align-items-start py-2">
+                                <i class="fas fa-shopping-cart text-primary me-2 mt-1"></i>
+                                <div class="flex-grow-1">
+                                    <div class="fw-bold">New Orders</div>
+                                    <small class="text-muted">{{ $notifications['newOrders'] }} new order(s) today</small>
+                                </div>
+                            </a>
                         </li>
-                    @else
-                        @if(($notifications['newOrders'] ?? 0) > 0)
-                            <li>
-                                <a href="{{ route('admin.orders.index') }}" class="dropdown-item d-flex align-items-start py-2">
-                                    <i class="fas fa-shopping-cart text-primary me-2 mt-1"></i>
-                                    <div class="flex-grow-1">
-                                        <div class="fw-bold">New Orders</div>
-                                        <small class="text-muted">{{ $notifications['newOrders'] }} new order(s) today</small>
-                                    </div>
-                                </a>
-                            </li>
-                        @endif
-
-                        @if(($notifications['newBookings'] ?? 0) > 0)
-                            <li>
-                                <a href="{{ route('admin.bookings.index') }}" class="dropdown-item d-flex align-items-start py-2">
-                                    <i class="fas fa-calendar-check text-success me-2 mt-1"></i>
-                                    <div class="flex-grow-1">
-                                        <div class="fw-bold">New Bookings</div>
-                                        <small class="text-muted">{{ $notifications['newBookings'] }} new booking(s) today</small>
-                                    </div>
-                                </a>
-                            </li>
-                        @endif
                     @endif
-                </ul>
+            
+                    @if(($notifications['newBookings'] ?? 0) > 0)
+                        <li>
+                            <a href="{{ route('admin.bookings.index') }}" class="dropdown-item d-flex align-items-start py-2">
+                                <i class="fas fa-calendar-check text-success me-2 mt-1"></i>
+                                <div class="flex-grow-1">
+                                    <div class="fw-bold">New Bookings</div>
+                                    <small class="text-muted">{{ $notifications['newBookings'] }} new booking(s) today</small>
+                                </div>
+                            </a>
+                        </li>
+                    @endif
+            
+                    @if(($notifications['newReviews'] ?? 0) > 0)
+                        <li>
+                            <a href="{{ route('admin.product.index') }}" class="dropdown-item d-flex align-items-start py-2">
+                                <i class="fas fa-star text-warning me-2 mt-1"></i>
+                                <div class="flex-grow-1">
+                                    <div class="fw-bold">New Product Ratings/Comments</div>
+                                    <small class="text-muted">{{ $notifications['newReviews'] }} new review(s) today</small>
+                                </div>
+                            </a>
+                        </li>
+                    @endif
+                @endif
+            </ul>
+            
             </div>
             <a class="text-decoration-none text-danger d-flex align-items-center" href="{{ route('admin.logout') }}">
                 <i class="fa-solid fa-right-from-bracket me-2"></i> Logout

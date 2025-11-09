@@ -20,7 +20,7 @@
             </div>
             @if($motorcycles->isEmpty())
                 <div class="text-center py-5 bg-white border rounded shadow-sm my-3">
-                    <img src="{{ asset('images/garage.jpg') }}" alt="No motorcycles" width="120">
+                    <img src="{{ asset('storage/images/garage.jpg') }}" alt="No motorcycles" width="120">
                     <h5 class="fw-semibold mb-2">No Motorcycles Registered</h5>
                     <p class="text-muted mb-3">You haven't added any motorcycles yet. Click below to add your first one.</p>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#motorcycleModal">

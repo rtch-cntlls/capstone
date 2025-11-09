@@ -21,6 +21,8 @@ return new class extends Migration
             $table->decimal('delivery_fee', 10, 2)->nullable();
             $table->integer('quantity');
             $table->decimal('total', 10, 2); 
+            $table->boolean('addrates')->default(false);
+            $table->unsignedBigInteger('review_id')->nullable();
             $table->timestamps();
 
             $table->foreign('order_id')->references('order_id')->on('orders')->onDelete('cascade');

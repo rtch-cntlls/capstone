@@ -11,6 +11,7 @@ use App\Models\Wishlist;
 use App\Models\Booking;
 use App\Models\Motorcycle;
 use App\Models\Order;
+use App\Models\ProductReview;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -61,6 +62,7 @@ class AppServiceProvider extends ServiceProvider
     
                     $notifications['newOrders'] = Order::whereDate('created_at', $today)->whereIn('status', ['pending'])->count();
                     $notifications['newBookings'] = Booking::whereDate('created_at', $today)->whereIn('status', ['pending'])->count();
+                    $notifications['newReviews'] = ProductReview::whereDate('created_at', $today)->count();
                 }
             }
     

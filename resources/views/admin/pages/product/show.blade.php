@@ -55,7 +55,7 @@
                 </div>
                 <div class="text-end d-flex justify-content-end gap-2">
                     <button class="btn btn-outline-secondary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#adminProductComments">
-                        <i class="fas fa-comments me-2"></i>View comments
+                        <i class="fas fa-comments me-2"></i>View comments/ratings
                     </button>
                     <a href="{{ route('admin.inventory.show', ['id' => $product->inventory->inventory_id]) }}" 
                     class="btn btn-outline-primary fw-bold"><i class="fas fa-eye me-2"></i>View inventory details</a>
@@ -69,40 +69,51 @@
         <div class="col-12">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <h6 class="fw-bold mb-2">Comments ({{ $reviews->count() }})</h6>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold mb-0">Comments/Ratings ({{ $reviews->count() }})</h6>
+                    </div>
+    
                     <div class="collapse" id="adminProductComments">
                         @forelse($reviews as $rev)
-                            <div class="border rounded p-2 mb-2 small">
-                                <div class="d-flex justify-content-between">
-                                    <div><strong>{{ $rev->customer->user->firstname ?? 'Customer' }}</strong></div>
-                                    <div class="text-warning">{{ str_repeat('★', (int)$rev->rating) }}{{ str_repeat('☆', 5-(int)$rev->rating) }}</div>
+                            <div class="card mb-2 shadow-sm">
+                                <div class="card-body p-3">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="fw-semibold">{{ $rev->customer->user->firstname ?? 'Customer' }}</div>
+                                        <div class="ms-auto text-warning">
+                                            {!! str_repeat('<i class="fas fa-star"></i>', (int)$rev->rating) !!}
+                                            {!! str_repeat('<i class="far fa-star"></i>', 5-(int)$rev->rating) !!}
+                                        </div>
+                                    </div>
+                                    @if($rev->comment)
+                                        <p class="mb-2 small text-muted">{{ $rev->comment }}</p>
+                                    @endif
+    
+                                    @if($rev->replies && $rev->replies->count())
+                                        <div class="ms-3 mb-2">
+                                            @foreach($rev->replies as $rep)
+                                                <div class="bg-light p-2 rounded mb-1 small"><strong>Admin:</strong> {{ $rep->comment }}</div>
+                                            @endforeach
+                                        </div>
+                                    @endif
+    
+                                    <form method="POST" action="{{ route('admin.reviews.reply', $rev->id) }}" class="mt-2">
+                                        @csrf
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" name="comment" class="form-control" placeholder="Reply as admin..." required>
+                                            <button class="btn btn-primary">Reply</button>
+                                        </div>
+                                    </form>
                                 </div>
-                                @if($rev->comment)
-                                    <div class="mt-1">{{ $rev->comment }}</div>
-                                @endif
-                                @if($rev->replies && $rev->replies->count())
-                                    <div class="mt-2 ms-2">
-                                        @foreach($rev->replies as $rep)
-                                            <div class="bg-light p-2 rounded mb-1"><strong>Admin:</strong> {{ $rep->comment }}</div>
-                                        @endforeach
-                                    </div>
-                                @endif
-                                <form method="POST" action="{{ route('admin.reviews.reply', $rev->id) }}" class="mt-2">
-                                    @csrf
-                                    <div class="input-group input-group-sm">
-                                        <input type="text" name="comment" class="form-control" placeholder="Reply as admin..." required>
-                                        <button class="btn btn-primary">Reply</button>
-                                    </div>
-                                </form>
                             </div>
                         @empty
-                            <div class="text-muted">No comments yet.</div>
+                            <div class="text-center text-muted small py-3">No comments yet.</div>
                         @endforelse
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
 <script>
     document.addEventListener('DOMContentLoaded', function(){
         const toggleBtn = document.querySelector('[data-bs-target="#adminProductComments"]');

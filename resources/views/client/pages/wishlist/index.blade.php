@@ -11,7 +11,7 @@
             </h4>
             @if($wishlist->isEmpty())
                 <div class="text-center p-5 bg-white border rounded shadow-sm">
-                    <img src="{{ asset('images/wishlist.jpg') }}" alt="wishlist" width="160">
+                    <img src="{{ asset('storage/images/wishlist.jpg') }}" alt="wishlist" width="160">
                     <p class="text-muted small mb-3">
                         No products found in your wishlist. <br>
                         Explore motorcycle parts product to get started.
