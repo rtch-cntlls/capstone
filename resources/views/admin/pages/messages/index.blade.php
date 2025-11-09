@@ -80,6 +80,10 @@
                 @endif
             </div>
             @if($selectedUser)
+                <div id="attachmentsPreview" class="d-flex flex-wrap gap-2 mt-2"></div>
+                <div class="progress mt-2 d-none" id="uploadProgressWrap">
+                    <div id="uploadProgress" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                </div>
                 <form id="sendMessageForm" action="{{ route('admin.messages.send', $selectedUser->user_id) }}" method="POST" class="d-flex align-items-center gap-2" enctype="multipart/form-data">
                     @csrf
                     <input type="text" name="content" class="form-control" placeholder="Type a message...">
@@ -89,10 +93,6 @@
                     </button>
                     <button type="submit" class="btn btn-success">Send</button>
                 </form>
-                <div id="attachmentsPreview" class="d-flex flex-wrap gap-2 mt-2"></div>
-                <div class="progress mt-2 d-none" id="uploadProgressWrap">
-                    <div id="uploadProgress" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
-                </div>
             @endif
         </div>
     </div>
@@ -142,7 +142,6 @@ function fetchMessages() {
                 `;
                 messagesContainer.appendChild(div);
 
-                // Fetch blobs for attachments not cached
                 if (Array.isArray(message.attachments)) {
                     message.attachments.forEach(att => {
                         const key = `att_${att.attachment_id}`;
@@ -267,7 +266,7 @@ if(sendForm){
         const sendBtn = sendForm.querySelector('button[type="submit"]');
         if (sendBtn) sendBtn.disabled = true;
         if (attachmentsBtn) attachmentsBtn.disabled = true;
-        // Append all pending files explicitly to ensure multiple selections are included
+
         pendingFiles.forEach(f => formData.append('attachments[]', f));
         progressWrap.classList.remove('d-none');
         const xhr = new XMLHttpRequest();
@@ -307,7 +306,6 @@ if(sendForm){
     });
 }
 
-// Click-to-preview modal (admin)
 messagesContainer.addEventListener('click', (e) => {
     const img = e.target.closest('img[data-attachment-id]');
     const vid = e.target.closest('video[data-attachment-id]');
@@ -337,7 +335,6 @@ messagesContainer.addEventListener('click', (e) => {
     }
 });
 
-// Ensure video stops and scroll to bottom on admin modal close
 const adminModal = document.getElementById('adminPreviewModal');
 if (adminModal) {
     adminModal.addEventListener('hidden.bs.modal', () => {
@@ -356,7 +353,7 @@ if (adminModal) {
     });
 }
 </script>
-<!-- Admin Preview Modal -->
+
 <div class="modal fade preview-modal" id="adminPreviewModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content" style="background: transparent; border: 0; box-shadow: none; position: relative;">

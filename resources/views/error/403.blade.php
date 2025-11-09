@@ -9,7 +9,7 @@
 </head>
 <body class="bg-black text-white">
     <div class="text-center mt-5">
-        <img src="{{ asset('images/403.gif')}}" alt="403" width="500">
+        <img src="{{ asset('storage/images/403.gif')}}" alt="403" width="500">
         <p class="lead">Access Denied. You do not have permission to access this page.</p>
         <a href="{{ url()->previous() }}" class="btn btn-danger">Go back</a>
     </div>

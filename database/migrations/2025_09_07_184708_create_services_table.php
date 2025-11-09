@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('category')->nullable();
             $table->decimal('price', 10, 2)->default(0); 
             $table->string('duration')->nullable(); 
-            $table->text('description')->nullable(); 
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->timestamps();
         });

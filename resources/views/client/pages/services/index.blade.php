@@ -8,7 +8,7 @@
         @forelse($services as $service)
             <div class="col-md-6 col-lg-4">
                 <div class="card shadow-sm h-100 border-0 hover-shadow d-flex flex-column">
-                    <img src="{{ asset('images/services.webp') }}" class="card-img-top" alt="{{ $service->name }}" style="height: 180px; object-fit: cover;">
+                    <img src="{{ asset('storage/images/services.webp') }}" class="card-img-top" alt="{{ $service->name }}" style="height: 180px; object-fit: cover;">
                     <div class="card-body d-flex flex-column">
                         <div class="mb-3">
                             <h5 class="fw-bold mb-1">{{ $service->name }}</h5>

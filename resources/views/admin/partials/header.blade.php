@@ -66,16 +66,28 @@
                     @endif
             
                     @if(($notifications['newReviews'] ?? 0) > 0)
-                        <li>
-                            <a href="{{ route('admin.product.index') }}" class="dropdown-item d-flex align-items-start py-2">
-                                <i class="fas fa-star text-warning me-2 mt-1"></i>
-                                <div class="flex-grow-1">
-                                    <div class="fw-bold">New Product Ratings/Comments</div>
-                                    <small class="text-muted">{{ $notifications['newReviews'] }} new review(s) today</small>
-                                </div>
-                            </a>
-                        </li>
-                    @endif
+                    <li>
+                        <a href="{{ route('admin.product.index') }}" class="dropdown-item d-flex align-items-start py-2">
+                            <i class="fas fa-star text-warning me-2 mt-1"></i>
+                            <div class="flex-grow-1">
+                                <div class="fw-bold">New Product Ratings/Comments</div>
+                                <small class="text-muted">{{ $notifications['newReviews'] }} new review(s) today</small>
+                
+                                @if(!empty($notifications['reviewedProducts']))
+                                    <ul class="list-unstyled mt-1 mb-0 ms-3">
+                                        @foreach($notifications['reviewedProducts'] as $reviewedProduct)
+                                            <li class="small text-muted">
+                                                • {{ $reviewedProduct->product->product_name ?? 'Unknown Product' }}
+                                                ({{ $reviewedProduct->review_count }})
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+                            </div>
+                        </a>
+                    </li>
+                @endif
+                
                 @endif
             </ul>
             

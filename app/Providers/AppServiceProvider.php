@@ -63,6 +63,11 @@ class AppServiceProvider extends ServiceProvider
                     $notifications['newOrders'] = Order::whereDate('created_at', $today)->whereIn('status', ['pending'])->count();
                     $notifications['newBookings'] = Booking::whereDate('created_at', $today)->whereIn('status', ['pending'])->count();
                     $notifications['newReviews'] = ProductReview::whereDate('created_at', $today)->count();
+                    $notifications['reviewedProducts'] = ProductReview::with('product:product_id,product_name')
+                    ->whereDate('created_at', $today)
+                    ->selectRaw('product_id, COUNT(*) as review_count')
+                    ->groupBy('product_id')
+                    ->get();
                 }
             }
     

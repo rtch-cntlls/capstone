@@ -218,12 +218,18 @@ class OverviewService
 
     public function getRecentSoldProducts(int $limit = 5)
     {
-        return SaleItem::with('product.category')
-            ->select('product_id', DB::raw('SUM(quantity) as total_quantity'), 
-                DB::raw('AVG(price) as price'), DB::raw('SUM(total) as total_revenue'))
+        $soldProducts = SaleItem::with('product.category')
+            ->select('product_id', DB::raw('SUM(quantity) as total_quantity'), DB::raw('AVG(price) as price'))
             ->groupBy('product_id')
-            ->orderByDesc('total_revenue')
+            ->orderByDesc(DB::raw('SUM(quantity)'))
             ->take($limit)
             ->get();
-    }
+
+        foreach ($soldProducts as $item) {
+            $cost = $item->product?->cost_price ?? 0;
+            $item->total_revenue = ($item->price - $cost) * $item->total_quantity;
+        }
+    
+        return $soldProducts;
+    }    
 }

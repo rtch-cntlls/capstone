@@ -1,5 +1,5 @@
 <div>
-    <ul class="nav nav-tabs flex-nowrap mb-3" style="white-space: nowrap;">
+    <ul class="nav nav-tabs flex-nowrap my-3" style="white-space: nowrap;">
         <li class="nav-item">
             <a class="nav-link {{ request('status') === null ? 'active' : '' }}"
                href="{{ route('mybooking.index') }}">

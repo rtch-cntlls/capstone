@@ -97,14 +97,14 @@
                                 <div class="card shadow-sm h-100 hover-shadow">
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <h6 class="fw-semibold mb-0">Order #{{ $order->order_number }}</h6>
+                                            <h6 class="mb-0">Order #{{ $order->order_number }}</h6>
                                             <span class="badge {{ $badgeClass }}">
                                                 {{ ucfirst(str_replace('_',' ',$order->status)) }}
                                             </span>
                                         </div>
                                         <div class="mb-1 text-muted small">Date: {{ \Carbon\Carbon::parse($order->placed_at)->format('M d, Y') }}</div>
-                                        <div class="mb-2 fw-bold">Total: ₱{{ number_format($order->grand_total, 2) }}</div>
-                                        <a href="{{ route('order.show', $order->order_id) }}" class="btn btn-sm btn-primary w-100 mb-2">View Details</a>
+                                        <div class="mb-2">Total: ₱{{ number_format($order->grand_total, 2) }}</div>
+                                        <a href="{{ route('order.show', $order->order_id) }}" class="btn btn-sm btn-outline-primary w-100 mb-2">View Details</a>
                                         @php
                                             $firstUnrated = null;
                                             if ($order->status === 'completed') {
@@ -114,7 +114,7 @@
                                             }
                                         @endphp
                                         @if($firstUnrated)
-                                            <a href="{{ route('shop.details', $firstUnrated->product_id) }}?rate=1&order_item_id={{ $firstUnrated->id }}" class="btn btn-sm btn-warning text-dark w-100">
+                                            <a href="{{ route('shop.details', $firstUnrated->product_id) }}?rate=1&order_item_id={{ $firstUnrated->id }}" class="btn btn-sm btn-outline-warning text-dark w-100">
                                                 <i class="fas fa-star me-1"></i> Add Ratings
                                             </a>
                                         @endif

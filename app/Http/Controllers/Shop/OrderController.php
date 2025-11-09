@@ -22,8 +22,9 @@ class OrderController extends Controller
         $status = $request->query('status');
 
         $orders = $this->orderService->getCustomerOrders(10, $status);
+        $counts = $this->orderService->getOrderCounts();
 
-        return view('client.pages.myorder.index', compact('orders', 'shop', 'status'));
+        return view('client.pages.myorder.index', compact('orders', 'shop', 'status', 'counts'));
     }
 
     public function show($order_id)

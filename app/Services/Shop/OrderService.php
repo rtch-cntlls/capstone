@@ -25,6 +25,15 @@ class OrderService
         return $query->paginate($perPage)->withQueryString();
     }    
 
+    public function getOrderCounts(): array
+    {
+        return [
+            'completed' => $this->getCustomerOrders(null, 'completed')->count(),
+            'cancelled' => $this->getCustomerOrders(null, 'cancelled')->count(),
+            'failed' => $this->getCustomerOrders(null, 'failed')->count(),
+        ];
+    }
+
     public function getCustomerOrder(int $orderId): Order
     {
         $customer = Auth::user()->customer;

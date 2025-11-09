@@ -12,7 +12,12 @@ use Illuminate\Support\Facades\Response;
 
 class ProductController extends Controller
 {
-    public function __construct(protected ProductService $productService) {}
+    protected $productService;
+
+    public function __construct(ProductService $productService)
+    {
+        $this->productService = $productService;
+    }
 
     public function index(Request $request)
     {

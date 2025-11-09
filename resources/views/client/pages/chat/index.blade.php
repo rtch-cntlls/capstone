@@ -56,6 +56,10 @@
                 @endforeach
             </div>
             <div class="card-footer bg-white">
+                <div id="chatAttachmentsPreview" class="d-flex flex-wrap gap-2 mt-2"></div>
+                <div class="progress mt-2 d-none" id="chatUploadProgressWrap">
+                    <div id="chatUploadProgress" class="progress-bar" role="progressbar" style="width:0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                </div>
                 <form id="customerSendForm" class="d-flex align-items-center gap-2" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="receiver_id" value="{{ $receiverId }}">
@@ -66,10 +70,6 @@
                     </button>
                     <button class="btn btn-primary" type="submit">Send</button>
                 </form>
-                <div id="chatAttachmentsPreview" class="d-flex flex-wrap gap-2 mt-2"></div>
-                <div class="progress mt-2 d-none" id="chatUploadProgressWrap">
-                    <div id="chatUploadProgress" class="progress-bar" role="progressbar" style="width:0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
-                </div>
             </div>
         </div>
     </div>
@@ -79,7 +79,6 @@
         window.messageStoreUrl = '{{ route("message.store") }}';
     </script>
     <script src="{{ asset('script/customer/chatbox.js') }}"></script>
-    <!-- Preview Modal -->
     <div class="modal fade preview-modal" id="chatPreviewModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content" style="background: transparent; border: 0; box-shadow: none; position: relative;">
