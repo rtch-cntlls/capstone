@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\{
     SalesReportController,
     ServiceReportController
 };
+use App\Http\Controllers\Admin\ReviewAdminController;
 use App\Http\Controllers\Auth\LogoutController;
 
 
@@ -97,6 +98,11 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
         Route::get('/{order}', [OrderManagementController::class, 'show'])->name('show');
         Route::post('/{order}/update', [OrderManagementController::class, 'updateStatus'])->name('update');
         Route::get('/{order}/pdf', [OrderManagementController::class, 'exportPdf'])->name('pdf');
+    });
+
+    // REVIEWS
+    Route::prefix('reviews')->name('reviews.')->group(function () {
+        Route::post('/{review}/reply', [ReviewAdminController::class, 'reply'])->name('reply');
     });
 
     // SERVICES

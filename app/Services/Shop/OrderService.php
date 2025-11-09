@@ -14,7 +14,7 @@ class OrderService
 
         if (!$customer) return collect();
 
-        $query = $customer->orders()->with('customer')->orderBy('placed_at', 'desc');
+        $query = $customer->orders()->with(['customer', 'orderItems.product'])->orderBy('placed_at', 'desc');
 
         if ($status) {
             $query->where('status', strtolower($status));

@@ -12,6 +12,11 @@
                 <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('storage/images/placeholder.png') }}"
                 class="w-100 product-detail-img rounded"
                 alt="">
+                <div class="mt-3">
+                    <a href="#ratingsSection" class="btn btn-outline-secondary w-100" id="viewCommentsBtn">
+                        <i class="fas fa-comments me-1"></i> View comments
+                    </a>
+                </div>
             </div>
         </div>
         <div class="col-12 col-md-7">
@@ -140,6 +145,71 @@
             </div>
         </div>
     @endif
+    <div class="mt-5" id="ratingsSection">
+        <h5 class="fw-bold mb-3">Product Ratings</h5>
+        <div class="border rounded p-3 mb-3">
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <div class="display-6 fw-bold text-danger">{{ $averageRating ?: '0.0' }}</div>
+                <div class="text-muted">out of 5</div>
+                <div class="ms-auto small text-muted">{{ $totalReviews }} ratings</div>
+            </div>
+            <div class="mt-3 d-flex flex-wrap gap-2">
+                <button class="btn btn-sm btn-outline-secondary filter-btn" data-stars="">All</button>
+                <button class="btn btn-sm btn-outline-secondary filter-btn" data-stars="5">5 Star ({{ $starCounts[5] ?? 0 }})</button>
+                <button class="btn btn-sm btn-outline-secondary filter-btn" data-stars="4">4 Star ({{ $starCounts[4] ?? 0 }})</button>
+                <button class="btn btn-sm btn-outline-secondary filter-btn" data-stars="3">3 Star ({{ $starCounts[3] ?? 0 }})</button>
+                <button class="btn btn-sm btn-outline-secondary filter-btn" data-stars="2">2 Star ({{ $starCounts[2] ?? 0 }})</button>
+                <button class="btn btn-sm btn-outline-secondary filter-btn" data-stars="1">1 Star ({{ $starCounts[1] ?? 0 }})</button>
+                <button class="btn btn-sm btn-outline-secondary" id="btnWithComments">With Comments ({{ $withCommentsCount }})</button>
+            </div>
+        </div>
+
+        <div id="reviewAlert" class="alert alert-success d-none" role="alert">Commented successfully.</div>
+        <div id="reviewsList" class="vstack gap-3"></div>
+
+        @php $oiq = request('order_item_id'); @endphp
+        @if(($canRate && $rateableOrderItemId) || $oiq)
+            <div class="mt-3">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal">
+                    <i class="fas fa-star me-1"></i> Add your rating
+                </button>
+            </div>
+            <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Rate this product</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="reviewForm">
+                                <input type="hidden" name="order_item_id" value="{{ $oiq ?: $rateableOrderItemId }}">
+                                <div class="mb-3">
+                                    <label class="form-label">Rating</label>
+                                    <div class="d-flex gap-1" id="starPicker">
+                                        @for($i=1;$i<=5;$i++)
+                                            <button class="btn btn-sm btn-outline-warning star" type="button" data-value="{{ $i }}"><i class="fas fa-star"></i></button>
+                                        @endfor
+                                    </div>
+                                    <input type="hidden" name="rating" id="ratingValue" value="5">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Comment (optional)</label>
+                                    <textarea class="form-control" name="comment" rows="3" placeholder="Share your experience..."></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            @csrf
+                            <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button class="btn btn-primary" id="submitReviewBtn">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+    </div>
+
     @if ($recommendedProducts->count())
         <div class="mt-5">
             <h5 class="fw-bold mb-3">
@@ -197,5 +267,109 @@
             isFull = !isFull;
         });
     });
+    // Ratings fetch and submit
+    const reviewsApi = `{{ route('shop.reviews.index', $product->product_id) }}`;
+    const reviewsList = document.getElementById('reviewsList');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    let withComments = false;
+    let activeStars = '';
+
+    function renderReviews(data){
+        reviewsList.innerHTML = '';
+        const items = data.reviews.data || [];
+        if(items.length === 0){
+            reviewsList.innerHTML = '<div class="text-muted">No reviews yet.</div>';
+            return;
+        }
+        items.forEach(r => {
+            const name = r.customer?.user?.firstname ? `${r.customer.user.firstname} ${r.customer.user.lastname}` : 'Customer';
+            const stars = '★★★★★'.slice(0, r.rating) + '☆☆☆☆☆'.slice(r.rating);
+            const imgs = (r.images || []).map(u => `<img src="${u.startsWith('http')?u:('<?= asset('storage/') ?>'+'/'+u) }" class="rounded me-2 mb-2" style="width:70px;height:70px;object-fit:cover;">`).join('');
+            const replies = (r.replies || []).map(rep => `<div class="ms-3 mt-2 p-2 bg-light rounded small"><strong>Admin:</strong> ${rep.comment}</div>`).join('');
+            const card = document.createElement('div');
+            card.className = 'card border-0 shadow-sm';
+            card.innerHTML = `<div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div class="fw-semibold">${name}</div>
+                    <div class="text-warning">${stars}</div>
+                </div>
+                ${r.comment ? `<div class="mt-2">${r.comment}</div>` : ''}
+                ${imgs ? `<div class="mt-2">${imgs}</div>` : ''}
+                ${replies}
+            </div>`;
+            reviewsList.appendChild(card);
+        });
+    }
+
+    async function loadReviews(){
+        const params = new URLSearchParams();
+        if(activeStars) params.append('stars', activeStars);
+        if(withComments) params.append('with_comments', '1');
+        
+        const res = await fetch(`${reviewsApi}?${params.toString()}`);
+        const json = await res.json();
+        renderReviews(json);
+    }
+
+    filterButtons.forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+            activeStars = btn.dataset.stars;
+            loadReviews();
+        });
+    });
+    const btnWithComments = document.getElementById('btnWithComments');
+    if(btnWithComments){ btnWithComments.addEventListener('click', ()=>{ withComments = !withComments; btnWithComments.classList.toggle('btn-secondary'); loadReviews(); }); }
+
+    loadReviews();
+
+    const starPicker = document.getElementById('starPicker');
+    const ratingValue = document.getElementById('ratingValue');
+    if(starPicker){
+        starPicker.querySelectorAll('.star').forEach(btn=>{
+            btn.addEventListener('click', ()=>{
+                ratingValue.value = btn.dataset.value;
+                starPicker.querySelectorAll('.star').forEach(b=>b.classList.remove('btn-warning'));
+                btn.classList.add('btn-warning');
+            });
+        });
+    }
+
+    const submitBtn = document.getElementById('submitReviewBtn');
+    if(submitBtn){
+        submitBtn.addEventListener('click', async ()=>{
+            const form = document.getElementById('reviewForm');
+            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            const payload = {
+                order_item_id: form.order_item_id.value,
+                rating: form.rating.value,
+                comment: form.comment.value
+            };
+            const res = await fetch(`{{ route('shop.reviews.store') }}`,{
+                method:'POST',
+                headers: { 'Content-Type':'application/json', 'X-CSRF-TOKEN': token },
+                body: JSON.stringify(payload)
+            });
+            if(res.ok){
+                loadReviews();
+                const modalEl = document.getElementById('reviewModal');
+                const modal = bootstrap.Modal.getInstance(modalEl);
+                modal?.hide();
+                const alertBox = document.getElementById('reviewAlert');
+                if (alertBox) { alertBox.classList.remove('d-none'); alertBox.textContent = 'Commented successfully.'; }
+            } else {
+                alert('Failed to submit review');
+            }
+        });
+    }
+
+    // Auto-open rating modal if coming from My Orders with rate=1
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('rate') === '1') {
+        const modalEl = document.getElementById('reviewModal');
+        if (modalEl) {
+            const m = new bootstrap.Modal(modalEl);
+            m.show();
+        }
+    }
     </script>
 @endsection
