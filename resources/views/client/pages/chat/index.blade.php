@@ -17,9 +17,11 @@
                                 @if(isset($message->attachments) && $message->attachments->count())
                                     @foreach($message->attachments as $att)
                                         @if($att->attachment_type === 'image')
-                                            <img src="{{ route('media.attachment', $att->attachment_id) }}" alt="image" class="rounded mb-1" style="max-width:120px; max-height:120px; cursor:pointer;" data-preview-src="{{ route('media.attachment', $att->attachment_id) }}" data-attachment-id="{{ $att->attachment_id }}"/>
+                                            <img src="{{ route('media.attachment', $att->attachment_id) }}?v={{ $message->created_at->timestamp }}" alt="image" class="rounded mb-1" style="max-width:120px; max-height:120px; cursor:pointer;" data-preview-src="{{ route('media.attachment', $att->attachment_id) }}" data-attachment-id="{{ $att->attachment_id }}"/>
                                         @elseif($att->attachment_type === 'video')
-                                            <video class="rounded mb-1" style="max-width:120px; max-height:120px; cursor:pointer;" @if($att->thumbnail_path) poster="{{ route('media.attachment.thumbnail', $att->attachment_id) }}" @endif data-preview-src="{{ route('media.attachment', $att->attachment_id) }}" data-preview-type="{{ $att->mime_type ?? 'video/mp4' }}" data-attachment-id="{{ $att->attachment_id }}"></video>
+                                            <video class="rounded mb-1" style="max-width:120px; max-height:120px; cursor:pointer;" @if($att->thumbnail_path) poster="{{ route('media.attachment.thumbnail', $att->attachment_id) }}?v={{ $message->created_at->timestamp }}" @endif data-preview-src="{{ route('media.attachment', $att->attachment_id) }}" data-preview-type="{{ $att->mime_type ?? 'video/mp4' }}" data-attachment-id="{{ $att->attachment_id }}">
+                                                <source src="{{ route('media.attachment', $att->attachment_id) }}?v={{ $message->created_at->timestamp }}" type="{{ $att->mime_type ?? 'video/mp4' }}">
+                                            </video>
                                         @endif
                                     @endforeach
                                 @endif
@@ -39,7 +41,9 @@
                                         @if($att->attachment_type === 'image')
                                             <img src="{{ route('media.attachment', $att->attachment_id) }}" alt="image" class="rounded mb-1" style="max-width:120px; max-height:120px; cursor:pointer;" data-preview-src="{{ route('media.attachment', $att->attachment_id) }}" data-attachment-id="{{ $att->attachment_id }}"/>
                                         @elseif($att->attachment_type === 'video')
-                                            <video class="rounded mb-1" style="max-width:120px; max-height:120px; cursor:pointer;" @if($att->thumbnail_path) poster="{{ route('media.attachment.thumbnail', $att->attachment_id) }}" @endif data-preview-src="{{ route('media.attachment', $att->attachment_id) }}" data-preview-type="{{ $att->mime_type ?? 'video/mp4' }}" data-attachment-id="{{ $att->attachment_id }}"></video>
+                                            <video class="rounded mb-1" style="max-width:120px; max-height:120px; cursor:pointer;" @if($att->thumbnail_path) poster="{{ route('media.attachment.thumbnail', $att->attachment_id) }}" @endif data-preview-src="{{ route('media.attachment', $att->attachment_id) }}" data-preview-type="{{ $att->mime_type ?? 'video/mp4' }}" data-attachment-id="{{ $att->attachment_id }}">
+                                                <source src="{{ route('media.attachment', $att->attachment_id) }}" type="{{ $att->mime_type ?? 'video/mp4' }}">
+                                            </video>
                                         @endif
                                     @endforeach
                                 @endif

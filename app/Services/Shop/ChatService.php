@@ -6,6 +6,7 @@ use App\Models\Message;
 use App\Models\MessageAttachment;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 
 class ChatService
@@ -44,16 +45,43 @@ class ChatService
                 $type = 'other';
             }
 
+            $thumbPath = null;
+            if ($type === 'video') {
+                $thumbPath = $this->generateVideoThumbnail($storedPath);
+            }
+
             MessageAttachment::create([
                 'message_id' => $message->message_id,
                 'attachment_path' => $storedPath,
                 'attachment_type' => $type,
                 'mime_type' => $mime,
-                'thumbnail_path' => null,
+                'thumbnail_path' => $thumbPath,
             ]);
         }
 
         return $message->load('attachments');
+    }
+
+    private function generateVideoThumbnail(string $relativeStoredPath): ?string
+    {
+        try {
+            $ffmpeg = trim((string) shell_exec('ffmpeg -version 2>NUL || echo'));
+            if ($ffmpeg === '') {
+                return null;
+            }
+            $source = Storage::disk('public')->path($relativeStoredPath);
+            $thumbRel = 'messages/thumbnails/' . pathinfo($relativeStoredPath, PATHINFO_FILENAME) . '.jpg';
+            $thumbAbs = Storage::disk('public')->path($thumbRel);
+            if (!is_dir(dirname($thumbAbs))) {
+                @mkdir(dirname($thumbAbs), 0775, true);
+            }
+            $srcArg = escapeshellarg($source);
+            $dstArg = escapeshellarg($thumbAbs);
+            @shell_exec("ffmpeg -y -ss 00:00:01 -i $srcArg -vframes 1 -vf scale='640:-1' $dstArg 2>NUL");
+            return file_exists($thumbAbs) ? $thumbRel : null;
+        } catch (\Throwable) {
+            return null;
+        }
     }
 }
 
