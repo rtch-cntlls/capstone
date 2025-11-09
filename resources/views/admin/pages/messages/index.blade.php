@@ -52,6 +52,9 @@
                         @foreach($messages as $message)
                             <div class="mb-2 d-flex {{ $message->sender_id == auth()->user()->user_id ? 'justify-content-end' : 'justify-content-start' }}">
                                 <div class="p-2 rounded {{ $message->sender_id == auth()->user()->user_id ? 'border bg-light' : 'bg-light border' }}" style="max-width: 70%;">
+                                    @if(!empty($message->content))
+                                        {{ $message->content }} 
+                                    @endif
                                     @if(isset($message->attachments) && $message->attachments->count())
                                         @foreach($message->attachments as $att)
                                             @if($att->attachment_type === 'image')
@@ -62,9 +65,6 @@
                                                 </video>
                                             @endif
                                         @endforeach
-                                    @endif
-                                    @if(!empty($message->content))
-                                        {{ $message->content }} 
                                     @endif
                                     <div class="form-text text-end mt-1" style="font-size: 10px;">
                                         {{ $message->created_at->format('D h:i A') }}
@@ -136,7 +136,7 @@ function fetchMessages() {
                 const ts = dt.toLocaleString(undefined, { weekday: 'short', hour: '2-digit', minute: '2-digit' });
                 div.innerHTML = `
                     <div class="p-2 rounded ${message.sender_id == authUserId ? 'border bg-light' : 'bg-light border'}" style="max-width:70%;">
-                        ${mediaHtml}${textHtml}
+                        ${textHtml}${mediaHtml}
                         <div class="form-text text-end mt-1" style="font-size:10px;">${ts}</div>
                     </div>
                 `;

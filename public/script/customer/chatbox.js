@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const ts = dt.toLocaleString(undefined, { weekday: 'short', hour: '2-digit', minute: '2-digit' });
                     div.innerHTML = `
                         <div class="p-2 rounded ${isSender ? 'bg-primary text-white' : 'bg-light'}">
-                            ${mediaHtml}${textHtml}
+                            ${textHtml}${mediaHtml}
                             <div class="form-text text-end mt-1" style="font-size:10px;">${ts}</div>
                         </div>`;
                     chatMessages.appendChild(div);
