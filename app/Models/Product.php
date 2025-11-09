@@ -58,4 +58,9 @@ class Product extends Model
         
         return $addedAt->gt(now()->subWeeks(3)) ? 'New' : 'Old';
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(ProductReview::class, 'product_id', 'product_id');
+    }
 }

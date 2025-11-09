@@ -55,7 +55,20 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <a href="{{ route('order.show', $order->order_id) }}" class="btn btn-sm btn-primary">View</a>
+                                            <a href="{{ route('order.show', $order->order_id) }}" class="btn btn-sm btn-primary me-1">View</a>
+                                            @php
+                                                $firstUnrated = null;
+                                                if ($order->status === 'completed') {
+                                                    $firstUnrated = $order->orderItems->first(function($i){
+                                                        return empty($i->addrates);
+                                                    });
+                                                }
+                                            @endphp
+                                            @if($firstUnrated)
+                                                <a href="{{ route('shop.details', $firstUnrated->product_id) }}?rate=1&order_item_id={{ $firstUnrated->id }}" class="btn btn-sm btn-warning text-dark">
+                                                    <i class="fas fa-star me-1"></i> Add Ratings
+                                                </a>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
@@ -91,7 +104,20 @@
                                         </div>
                                         <div class="mb-1 text-muted small">Date: {{ \Carbon\Carbon::parse($order->placed_at)->format('M d, Y') }}</div>
                                         <div class="mb-2 fw-bold">Total: ₱{{ number_format($order->grand_total, 2) }}</div>
-                                        <a href="{{ route('order.show', $order->order_id) }}" class="btn btn-sm btn-primary w-100">View Details</a>
+                                        <a href="{{ route('order.show', $order->order_id) }}" class="btn btn-sm btn-primary w-100 mb-2">View Details</a>
+                                        @php
+                                            $firstUnrated = null;
+                                            if ($order->status === 'completed') {
+                                                $firstUnrated = $order->orderItems->first(function($i){
+                                                    return empty($i->addrates);
+                                                });
+                                            }
+                                        @endphp
+                                        @if($firstUnrated)
+                                            <a href="{{ route('shop.details', $firstUnrated->product_id) }}?rate=1&order_item_id={{ $firstUnrated->id }}" class="btn btn-sm btn-warning text-dark w-100">
+                                                <i class="fas fa-star me-1"></i> Add Ratings
+                                            </a>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

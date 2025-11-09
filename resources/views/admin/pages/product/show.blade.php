@@ -14,6 +14,8 @@
         <div class="col-md-6">
             <h5 class="fw-bold m-0">Product details</h5>
         </div>
+
+    
         <div class="col-md-6 text-md-end text-start mt-2 mt-md-0">
             <button class="btn btn-primary" style="font-size: 11px;" data-bs-toggle="modal" data-bs-target="#addDiscountModal">
                 <i class="fa fa-plus me-1"></i> <span class="fw-bold">Apply Discount</span>
@@ -51,11 +53,64 @@
                         </ul>
                     </div>
                 </div>
-                <div class="text-end">
+                <div class="text-end d-flex justify-content-end gap-2">
+                    <button class="btn btn-outline-secondary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#adminProductComments">
+                        <i class="fas fa-comments me-2"></i>View comments
+                    </button>
                     <a href="{{ route('admin.inventory.show', ['id' => $product->inventory->inventory_id]) }}" 
                     class="btn btn-outline-primary fw-bold"><i class="fas fa-eye me-2"></i>View inventory details</a>
                 </div>
             </div>
         </div>
     </div>
+
+    @php $reviews = $product->reviews ?? collect(); @endphp
+    <div class="row p-3" id="adminCommentsSection">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-2">Comments ({{ $reviews->count() }})</h6>
+                    <div class="collapse" id="adminProductComments">
+                        @forelse($reviews as $rev)
+                            <div class="border rounded p-2 mb-2 small">
+                                <div class="d-flex justify-content-between">
+                                    <div><strong>{{ $rev->customer->user->firstname ?? 'Customer' }}</strong></div>
+                                    <div class="text-warning">{{ str_repeat('★', (int)$rev->rating) }}{{ str_repeat('☆', 5-(int)$rev->rating) }}</div>
+                                </div>
+                                @if($rev->comment)
+                                    <div class="mt-1">{{ $rev->comment }}</div>
+                                @endif
+                                @if($rev->replies && $rev->replies->count())
+                                    <div class="mt-2 ms-2">
+                                        @foreach($rev->replies as $rep)
+                                            <div class="bg-light p-2 rounded mb-1"><strong>Admin:</strong> {{ $rep->comment }}</div>
+                                        @endforeach
+                                    </div>
+                                @endif
+                                <form method="POST" action="{{ route('admin.reviews.reply', $rev->id) }}" class="mt-2">
+                                    @csrf
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" name="comment" class="form-control" placeholder="Reply as admin..." required>
+                                        <button class="btn btn-primary">Reply</button>
+                                    </div>
+                                </form>
+                            </div>
+                        @empty
+                            <div class="text-muted">No comments yet.</div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function(){
+        const toggleBtn = document.querySelector('[data-bs-target="#adminProductComments"]');
+        const comments = document.getElementById('adminProductComments');
+        const section = document.getElementById('adminCommentsSection');
+        function scrollToComments(){ if(section){ section.scrollIntoView({behavior:'smooth', block:'start'}); } }
+        if (toggleBtn) toggleBtn.addEventListener('click', ()=> setTimeout(scrollToComments, 50));
+        if (comments) comments.addEventListener('shown.bs.collapse', scrollToComments);
+    });
+</script>
 @endsection

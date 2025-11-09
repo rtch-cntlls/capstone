@@ -15,7 +15,8 @@ use App\Http\Controllers\Shop\{
     FooterController,
     ContactController,
     LoginClientController,
-    RegisterController
+    RegisterController,
+    ReviewController
 };
 
 // START PAGE
@@ -27,6 +28,9 @@ Route::prefix('shop')->name('shop.')->group(function () {
     Route::get('/', [ShopController::class, 'index'])->name('product');
     Route::get('/api/products/filter', [ShopController::class, 'Products']);
     Route::get('/product/{product_id}', [ShopController::class, 'showDetails'])->name('details');
+    // Reviews
+    Route::get('/product/{product_id}/reviews', [ReviewController::class, 'index'])->name('reviews.index');
+    Route::post('/reviews', [ReviewController::class, 'store'])->middleware('auth')->name('reviews.store');
 });
 
 // CUSTOMER CART
