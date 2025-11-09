@@ -10,7 +10,7 @@
                 <div class="row g-4 align-items-center">
                     <div class="col-md-6 text-center">
                         <div class="text-muted">
-                            <img src="{{ asset('images/gcash-code.jpg') }}" alt="GCash QR" class="img-fluid" style="max-width: 250px;">
+                            <img src="{{ asset('storage/images/gcash-code.jpg') }}" alt="GCash QR" class="img-fluid" style="max-width: 250px;">
                             <p class="m-0"><span class="fw-bold">Gcash Number:</span> 09453590382</p>
                             <p class="m-0"><span class="fw-bold">Account Name:</span> AWRICH C PARAGES</p>
                         </div>

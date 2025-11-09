@@ -12,8 +12,9 @@ return new class extends Migration
             $table->id('attachment_id');
             $table->unsignedBigInteger('message_id');
             $table->string('attachment_path');
-            $table->string('attachment_type'); // image|video|other
-            $table->string('thumbnail_path')->nullable(); // for video/image preview
+            $table->string('attachment_type');
+            $table->string('mime_type')->nullable();
+            $table->string('thumbnail_path')->nullable();
             $table->timestamps();
 
             $table->foreign('message_id')->references('message_id')->on('messages')->onDelete('cascade');

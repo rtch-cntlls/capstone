@@ -40,7 +40,6 @@ class MaintenancePredictionService
                 return null;
             }
 
-            // --- Normalize helper ---
             $normalize = function ($text) {
                 $text = strtolower($text);
                 $text = str_replace(

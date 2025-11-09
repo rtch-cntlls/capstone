@@ -17,7 +17,7 @@
     </div>
     @if ($customers->isEmpty())
         <div class="text-center my-4">
-            <img src="{{ asset('images/empty.gif') }}" alt="No Customers" style="width: 200px;">
+            <img src="{{ asset('storage/images/empty.gif') }}" alt="No Customers" style="width: 200px;">
             <p class="m-0">No Customers found</p>
         </div>
     @else

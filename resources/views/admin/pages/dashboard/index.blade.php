@@ -4,7 +4,7 @@
 <div class="p-2">
     <div class="row">
         <div class="col-md-6 mt-2">
-            @include('admin.pages.dashboard.includes.quick-access')
+            @include('admin.pages.dashboard.includes.greet')
         </div>
         <div class="col-md-6 mt-2">
             @include('admin.pages.dashboard.includes.value')

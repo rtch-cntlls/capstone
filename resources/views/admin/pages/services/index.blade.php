@@ -18,7 +18,7 @@
     @endif
     @if ($services->isEmpty())
         <div class="text-center my-5">
-            <img src="{{ asset('images/empty.gif') }}" alt="No Services" style="width: 180px;">
+            <img src="{{ asset('storage/images/empty.gif') }}" alt="No Services" style="width: 180px;">
             <h6 class="fw-bold mt-3">No services found</h6>
         </div>
     @else

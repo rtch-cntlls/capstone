@@ -78,7 +78,7 @@
                                             class="form-check-input product-checkbox"
                                             {{ in_array($product->product_id, old('product_ids', [])) ? 'checked' : '' }}>
                                     </div>
-                                    <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/placeholder.png') }}"
+                                    <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('storage/images/placeholder.png') }}"
                                         class="card-img-top" 
                                         style="height: 150px; object-fit: cover;">                               
                                     <div class="card-body d-flex flex-column">
@@ -91,7 +91,7 @@
                             </div>
                         @empty
                             <div class="w-100 text-center">
-                                <img src="{{ asset('images/empty.gif') }}" alt="No Products" style="width: 150px;">
+                                <img src="{{ asset('storage/images/empty.gif') }}" alt="No Products" style="width: 150px;">
                                 <p class="m-0 text-danger">No product found.</p>
                             </div>
                         @endforelse
@@ -128,7 +128,7 @@
                                 {{ in_array($product->product_id, old('product_ids', [])) ? 'checked' : '' }}>
                             
                             </div>
-                            <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/placeholder.png') }}"
+                            <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('storage/images/placeholder.png') }}"
                                 class="card-img-top" 
                                 style="height: 120px; object-fit: cover;">
                             <div class="card-body d-flex flex-column">
@@ -141,7 +141,7 @@
                     </div>
                 @empty
                     <div class="w-100 text-center">
-                        <img src="{{ asset('images/empty.gif') }}" alt="No Promo" style="width: 150px;">
+                        <img src="{{ asset('storage/images/empty.gif') }}" alt="No Promo" style="width: 150px;">
                         <p class="m-0 text-danger form-text">No product found.</p>
                     </div>
                 @endforelse

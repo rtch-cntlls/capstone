@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id('message_id');
             $table->unsignedBigInteger('sender_id');
             $table->unsignedBigInteger('receiver_id');
-            $table->text('content');
+            $table->text('content')->nullable();
+            $table->string('attachment_path')->nullable();
+            $table->string('attachment_type')->nullable();
             $table->timestamp('read_at')->nullable();
             $table->timestamps();
         

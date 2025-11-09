@@ -3,7 +3,7 @@
 <div class="container my-5">
     <div class="row g-4 align-items-center mb-5">
         <div class="col-lg-6 order-lg-2">
-            <img src="{{ asset('images/shop.jfif') }}" alt="{{ $shop->shop_name }}" class="img-fluid shadow-sm">
+            <img src="{{ asset('storage/images/shop.jfif') }}" alt="{{ $shop->shop_name }}" class="img-fluid shadow-sm">
         </div>
         <div class="col-lg-6 order-lg-1">
             <h3 class="display-5 fw-bold mb-3">{{ $shop->shop_name }}</h3>

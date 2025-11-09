@@ -12,7 +12,7 @@
     </div>
     @if ($sales->isEmpty())
         <div class="text-center py-5">
-            <img src="{{ asset('images/empty.gif') }}" alt="No Sales" style="width: 180px;">
+            <img src="{{ asset('storage/images/empty.gif') }}" alt="No Sales" style="width: 180px;">
             <p class="text-muted mt-3 mb-0">No sale transactions found for this date.</p>
         </div>
     @else

@@ -1,5 +1,5 @@
 .split-left {
-    background-image: url('/images/login-background.jpg'); 
+    background-image: url('/storage/images/login-background.jpg'); 
     background-size: cover;
 }
 .split-right {
@@ -17,14 +17,6 @@ input::placeholder{
     letter-spacing: 1.5px;
     color: white;
     text-shadow: 1px 1px 2px black;
-}
-.btn-orange {
-    background-color: darkorange;
-    color: white;
-    border: none;
-}
-.btn-orange:hover {
-    background-color: darkorange;
 }
 @media (max-width: 767.98px) { 
     .auth-card {

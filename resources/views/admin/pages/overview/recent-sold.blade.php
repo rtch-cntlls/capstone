@@ -4,7 +4,7 @@
         <div style="font-size: 15px;">
             @if ($recentSoldProducts->isEmpty())
                 <div class="text-center my-2">
-                    <img src="{{ asset('images/empty.gif') }}" alt="No Orders" style="width: 135px;">
+                    <img src="{{ asset('storage/images/empty.gif') }}" alt="No Orders" style="width: 135px;">
                     <p class="m-0">No recent sold items</p>
                 </div>
             @else

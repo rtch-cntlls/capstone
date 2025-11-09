@@ -17,7 +17,7 @@
         </div>
         @if ($products->isEmpty())
             <div class="text-center my-5">
-                <img src="{{ asset('images/empty.gif') }}" alt="No Products" style="width: 200px;">
+                <img src="{{ asset('storage/images/empty.gif') }}" alt="No Products" style="width: 200px;">
                 <p class="mt-3 text-muted">No products found</p>
             </div>
         @else

@@ -83,8 +83,7 @@ class DashboardService
 
     public function getTotalProductValue(): float
     {
-        return Product::with('inventory')
-            ->get()
+        return Product::with('inventory')->get()
             ->sum(fn($product) => ($product->cost_price ?? 0) * ($product->inventory->instock ?? 0));
     }
 

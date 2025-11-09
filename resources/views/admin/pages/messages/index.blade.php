@@ -39,7 +39,7 @@
                     @endforeach
                 @else
                     <div class="text-center mt-5">
-                        <img src="{{ asset('images/EmptyMessage.gif')}}" alt="empty" width="250">
+                        <img src="{{ asset('storage/images/EmptyMessage.gif')}}" alt="empty" width="250">
                         <p class="mt-3 text-danger small">No messages.</p>
                     </div>
                 @endif

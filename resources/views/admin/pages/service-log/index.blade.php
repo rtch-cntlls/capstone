@@ -50,7 +50,7 @@
     </form>
     @if ($logs->isEmpty())
         <div class="text-center my-5">
-            <img src="{{ asset('images/empty.gif') }}" alt="No Orders" style="width: 160px;" class="mb-3">
+            <img src="{{ asset('storage/images/empty.gif') }}" alt="No Orders" style="width: 160px;" class="mb-3">
             <p class="m-0 fw-bold">No service logs found.</p>
         </div>
     @else

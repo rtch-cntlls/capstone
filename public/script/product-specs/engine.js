@@ -233,10 +233,5 @@ export const engineSpecs = `
         </select>
     </div>
 
-    <div class="col-md-6">
-        <label>Engine Number Location</label>
-        <input type="text" name="engine_number_location" class="form-control" placeholder="e.g. Left Crankcase Below Cylinder">
-    </div>
-
 </div>
 `;
