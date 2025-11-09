@@ -62,7 +62,7 @@ class MediaController extends Controller
                 'Content-Length' => (string)$length,
                 'Content-Range' => "bytes $start-$end/$size",
                 'Accept-Ranges' => 'bytes',
-                'Cache-Control' => 'public, max-age=31536000',
+                'Cache-Control' => 'no-store, no-cache, must-revalidate',
             ]);
 
             return $response;
@@ -74,7 +74,7 @@ class MediaController extends Controller
             'Content-Type' => $mime,
             'Content-Length' => (string)$size,
             'Accept-Ranges' => 'bytes',
-            'Cache-Control' => 'public, max-age=31536000',
+            'Cache-Control' => 'no-store, no-cache, must-revalidate',
         ]);
     }
 
@@ -97,7 +97,7 @@ class MediaController extends Controller
         }, 200, [
             'Content-Type' => $mime,
             'Content-Length' => (string)$size,
-            'Cache-Control' => 'public, max-age=31536000',
+            'Cache-Control' => 'no-store, no-cache, must-revalidate',
         ]);
     }
 }

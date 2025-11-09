@@ -14,11 +14,17 @@ class MessageAttachment extends Model
         'message_id',
         'attachment_path',
         'attachment_type',
+        'mime_type',
         'thumbnail_path',
     ];
 
     public function message()
     {
         return $this->belongsTo(Message::class, 'message_id', 'message_id');
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'attachment_id';
     }
 }

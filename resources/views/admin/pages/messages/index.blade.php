@@ -55,10 +55,10 @@
                                     @if(isset($message->attachments) && $message->attachments->count())
                                         @foreach($message->attachments as $att)
                                             @if($att->attachment_type === 'image')
-                                                <img src="{{ route('media.attachment', $att->attachment_id) }}" alt="image" class="rounded mb-1" style="max-width:120px; max-height:120px; cursor:pointer;" data-attachment-id="{{ $att->attachment_id }}"/>
+                                                <img src="{{ route('media.attachment', $att->attachment_id) }}?v={{ $message->created_at->timestamp }}" alt="image" class="rounded mb-1" style="max-width:120px; max-height:120px; cursor:pointer;" data-attachment-id="{{ $att->attachment_id }}"/>
                                             @elseif($att->attachment_type === 'video')
-                                                <video class="rounded mb-1" style="max-width:120px; max-height:120px; cursor:pointer;" @if($att->thumbnail_path) poster="{{ route('media.attachment.thumbnail', $att->attachment_id) }}" @endif data-attachment-id="{{ $att->attachment_id }}">
-                                                    <source src="{{ route('media.attachment', $att->attachment_id) }}" type="{{ $att->mime_type ?? 'video/mp4' }}">
+                                                <video class="rounded mb-1" style="max-width:120px; max-height:120px; cursor:pointer;" @if($att->thumbnail_path) poster="{{ route('media.attachment.thumbnail', $att->attachment_id) }}?v={{ $message->created_at->timestamp }}" @endif data-attachment-id="{{ $att->attachment_id }}">
+                                                    <source src="{{ route('media.attachment', $att->attachment_id) }}?v={{ $message->created_at->timestamp }}" type="{{ $att->mime_type ?? 'video/mp4' }}">
                                                 </video>
                                             @endif
                                         @endforeach
@@ -147,7 +147,8 @@ function fetchMessages() {
                     message.attachments.forEach(att => {
                         const key = `att_${att.attachment_id}`;
                         if (!blobCache[key]) {
-                            fetch(`${window.location.origin}/media/attachments/${att.attachment_id}`)
+                            const mediaUrl = `${window.location.origin}/media/attachments/${att.attachment_id}?v=${Date.now()}`;
+                            fetch(mediaUrl, { cache: 'no-store' })
                                 .then(r => r.ok ? r.blob() : Promise.reject())
                                 .then(b => {
                                     const objUrl = URL.createObjectURL(b);
@@ -164,7 +165,8 @@ function fetchMessages() {
                         if (att.thumbnail_path) {
                             const tkey = `att_thumb_${att.attachment_id}`;
                             if (!blobCache[tkey]) {
-                                fetch(`${window.location.origin}/media/attachments/${att.attachment_id}/thumbnail`)
+                                const thumbUrl = `${window.location.origin}/media/attachments/${att.attachment_id}/thumbnail?v=${Date.now()}`;
+                                fetch(thumbUrl, { cache: 'no-store' })
                                     .then(r => r.ok ? r.blob() : Promise.reject())
                                     .then(b => {
                                         const objUrl = URL.createObjectURL(b);

@@ -25,11 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function fetchMessages() {
-        fetch(window.messagePollUrl)
+        fetch(window.messagePollUrl, { cache: 'no-store' })
             .then(res => res.json())
             .then(messages => {
                 chatMessages.innerHTML = '';
-                const blobCache = {};
+                const blobCache = window.__mediaBlobCache || (window.__mediaBlobCache = {});
                 messages.forEach(message => {
                     const div = document.createElement('div');
                     const isSender = message.sender_id == window.authUserId;
@@ -67,7 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         message.attachments.forEach(att => {
                             const key = `att_${att.attachment_id}`;
                             if (!blobCache[key]) {
-                                fetch(`${window.location.origin}/media/attachments/${att.attachment_id}`)
+                                const mediaUrl = `${window.location.origin}/media/attachments/${att.attachment_id}?v=${Date.now()}`;
+                                fetch(mediaUrl, { cache: 'no-store' })
                                     .then(r => r.ok ? r.blob() : Promise.reject())
                                     .then(b => {
                                         const objUrl = URL.createObjectURL(b);
@@ -84,7 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (att.thumbnail_path) {
                                 const tkey = `att_thumb_${att.attachment_id}`;
                                 if (!blobCache[tkey]) {
-                                    fetch(`${window.location.origin}/media/attachments/${att.attachment_id}/thumbnail`)
+                                    const thumbUrl = `${window.location.origin}/media/attachments/${att.attachment_id}/thumbnail?v=${Date.now()}`;
+                                    fetch(thumbUrl, { cache: 'no-store' })
                                         .then(r => r.ok ? r.blob() : Promise.reject())
                                         .then(b => {
                                             const objUrl = URL.createObjectURL(b);
