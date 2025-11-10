@@ -70,7 +70,6 @@ class ServiceManagementService
                 'category'    => $category,
                 'price'       => $data['price'],
                 'duration'    => $data['duration'] ?? null,
-                'description' => $data['description'] ?? null,
                 'status'      => 'Active',
             ]);
         });

@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id('customer_id');
             $table->unsignedBigInteger('user_id');
             $table->string('phone', 20)->nullable();
+            $table->softDeletes();
             $table->timestamps();
-
+            
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
         });
     }

@@ -16,28 +16,47 @@ class MybookingController extends Controller
         $shop = Shop::first();
         $userId = Auth::id();
         $customer = Customer::where('user_id', $userId)->first();
-    
+
         if (!$customer) {
             return redirect()->back()->with('error', 'No customer profile found.');
         }
-    
+
         $status = $request->query('status');
-    
+
         $query = Booking::with(['service'])
             ->where('customer_id', $customer->customer_id)
             ->orderBy('schedule', 'desc');
-    
+
         if ($status) {
             $query->where('status', $status);
         } else {
             $query->whereIn('status', ['Pending', 'Rescheduled', 'Approved']);
         }
-    
+
         $bookings = $query->paginate(9)->withQueryString();
-    
-        return view('client.pages.mybooking.index', compact('shop', 'bookings', 'status'));
+
+        $completedCount = Booking::where('customer_id', $customer->customer_id)
+            ->where('status', 'Completed')
+            ->count();
+
+        $cancelledCount = Booking::where('customer_id', $customer->customer_id)
+            ->where('status', 'Cancelled')
+            ->count();
+
+        $failedCount = Booking::where('customer_id', $customer->customer_id)
+            ->where('status', 'Failed')
+            ->count();
+
+        return view('client.pages.mybooking.index', compact(
+            'shop',
+            'bookings',
+            'status',
+            'completedCount',
+            'cancelledCount',
+            'failedCount'
+        ));
     }
-    
+
     public function cancel($booking_id)
     {
         $booking = Booking::findOrFail($booking_id);

@@ -32,7 +32,6 @@ class PromoService
     
             $discount = Discount::create([
                 'title'            => $request->title,
-                'promo_type'       => $request->promo_type,
                 'discount_percent' => $request->discount_percent,
                 'start_date'       => $startDate,
                 'expiry_date'      => $expiryDate,

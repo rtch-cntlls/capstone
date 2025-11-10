@@ -50,7 +50,6 @@ class ServicesManagementController extends Controller
             'name'        => 'required|string|max:255',
             'price'       => 'required|numeric|min:0',
             'duration'    => 'nullable|string|max:100',
-            'description' => 'nullable|string',
         ]);
 
         try {
@@ -69,7 +68,6 @@ class ServicesManagementController extends Controller
             'name'        => 'required|string|max:255',
             'price'       => 'required|numeric|min:0',
             'duration'    => 'required|string|max:100',
-            'description' => 'nullable|string',
         ]);
 
         try {

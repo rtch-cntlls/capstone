@@ -30,17 +30,18 @@ class ShopServicesController extends Controller
     
         $customer = Auth::user()->customer;
         
+   
+        if (!$customer->phone || $customer->addresses->isEmpty()) {
+            return redirect()->route('account.show')
+                ->with('error', 'Please complete your profile (phone number and address) before booking a service.');
+        }
+        
         $customerAddress = $customer->addresses->first();
         if ($customerAddress->city != $shop->city) {
             return redirect()->route('account.show')
                 ->with('error', 'Sorry, your location is too far from the shop. Service is only available for customers in the same city.');
         }
 
-        if (!$customer->phone || $customer->addresses->isEmpty()) {
-            return redirect()->route('account.show')
-                ->with('error', 'Please complete your profile (phone number and address) before booking a service.');
-        }
-    
         return view('client.pages.services.create', compact('service', 'shop'));
     }
     

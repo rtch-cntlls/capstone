@@ -1,4 +1,4 @@
-<form action="{{ route('admin.promo.store') }}" method="POST" class="create">
+{{-- <form action="{{ route('admin.promo.store') }}" method="POST" class="create">
     @csrf
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="fw-bold">Create Promo</h4>
@@ -81,4 +81,4 @@
     <div class="offcanvas-body">
         @include('admin.pages.promo.includes.products', ['products' => $products])
     </div>
-</div>
+</div> --}}

@@ -49,7 +49,6 @@ class PromoController extends Controller
     {
         $request->validate([
             'title'            => 'required|string',
-            'promo_type'       => 'required|in:single,bundle',
             'discount_percent' => 'required|numeric|min:1|max:100',
             'start_date'       => 'required|date',
             'expiry_date'      => 'required|date|after:start_date',

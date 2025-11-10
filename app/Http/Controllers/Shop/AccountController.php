@@ -30,10 +30,25 @@ class AccountController extends Controller
     }
 
     public function deleteAccount()
-    { 
+    {
         $user = Auth::user();
+        $customer = $user->customer;
+
+        if ($customer) {
+            $customer->update(['phone' => null]);
+            $customer->delete();
+        }
+
+        $user->update([
+            'email' => 'deleted_user_' . $user->user_id . '@example.com',
+            'firstname' => 'Deleted',
+            'lastname' => 'Account',
+            'password' => 'delete',
+        ]);
+
         Auth::logout();
         $user->delete();
+
         return redirect('/')->with('status', 'Account deleted successfully.');
     }
 

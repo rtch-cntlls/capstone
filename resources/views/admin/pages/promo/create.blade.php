@@ -21,13 +21,6 @@
             <div class="col-md-4">
                 <div class="bg-white border rounded shadow-sm p-3">
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Promo Type</label>
-                        <select class="form-select" name="promo_type">
-                            <option value="single">Single</option>
-                            <option value="bundle">Bundle</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
                         <label class="form-label fw-semibold">Promo Title</label>
                         <input type="text" name="title" value="{{ old('title') }}" 
                             class="form-control @error('title') is-invalid @enderror"

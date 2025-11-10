@@ -9,7 +9,6 @@ class Discount extends Model
     protected $primaryKey = 'discount_id';
     protected $fillable = [
         'title',
-        'promo_type',
         'discount_percent',
         'discount_amount',
         'start_date',

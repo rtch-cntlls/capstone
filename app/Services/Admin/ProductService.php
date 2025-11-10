@@ -156,7 +156,6 @@ class ProductService
             }
     
             $discount = Discount::create([
-                'promo_type'       => 'single',
                 'title'            => 'Single Product Discount',
                 'discount_percent' => $request->discount_percent,
                 'start_date'       => $request->start_date,

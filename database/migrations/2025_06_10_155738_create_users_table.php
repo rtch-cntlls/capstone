@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('avatar')->nullable();
             $table->boolean('is_seeded')->default(false);
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('role_id')->references('role_id')->on('roles')->cascadeOnDelete();
