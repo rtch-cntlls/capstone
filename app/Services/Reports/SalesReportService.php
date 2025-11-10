@@ -11,38 +11,49 @@ class SalesReportService
 {
     public function getProductsSold(string $from, string $to)
     {
-        return SaleItem::with('product', 'sale')
+        $query = SaleItem::with('product', 'sale')
             ->whereHas('sale', function ($query) use ($from, $to) {
                 $query->whereBetween(DB::raw('DATE(sale_date)'), [$from, $to]);
-            })
-            ->select(
-                'product_id',
-                DB::raw('SUM(quantity) as total_sold'),
-                DB::raw('SUM(total) as total_revenue'),
-                DB::raw('AVG(price) as avg_price')
-            )
-            ->groupBy('product_id')
-            ->orderByDesc('total_sold')
-            ->paginate(10);
-    }       
+            });
+
+        $items = $query->get()->groupBy('product_id')->map(function ($group) {
+            $product = $group->first()->product;
+            $totalSold = $group->sum('quantity');
+            $totalSale = $group->sum('total');
+            $avgPrice = $group->avg('price');
+
+            $revenue = $group->sum(function ($item) {
+                $cost = $item->product?->cost_price ?? 0;
+                return ($item->price - $cost) * $item->quantity;
+            });
+
+            return [
+                'product'      => $product,
+                'total_sold'   => $totalSold,
+                'total_sale'   => $totalSale,
+                'avg_price'    => $avgPrice,
+                'total_revenue'=> $revenue,
+            ];
+        })->sortByDesc('total_revenue');
+
+        return $items->values();
+    }
 
     public function exportCsv(string $from, string $to)
     {
-        $productsSold = $this->getProductsSold($from, $to)
-            ->map(function ($item) {
-                return [
-                    'Product Name' => $item->product->product_name ?? 'Unknown Product',
-                    'Quantity Sold' => $item->total_sold,
-                    'Sale Price' => number_format($item->avg_price, 2),
-                    'Total' => number_format($item->total_revenue, 2),
-                ];
-            });
+        $productsSold = $this->getProductsSold($from, $to);
 
         $response = new StreamedResponse(function() use ($productsSold) {
             $handle = fopen('php://output', 'w');
-            fputcsv($handle, ['Product Name', 'Quantity Sold', 'Sale Price', 'Total']);
+            fputcsv($handle, ['Product Name', 'Quantity Sold', 'Sale Price', 'Total Sale (₱)', 'Revenue (₱)']);
             foreach ($productsSold as $row) {
-                fputcsv($handle, $row);
+                fputcsv($handle, [
+                    $row['product']->product_name ?? 'Unknown Product',
+                    $row['total_sold'],
+                    number_format($row['avg_price'], 2),
+                    number_format($row['total_sale'], 2),
+                    number_format($row['total_revenue'], 2),
+                ]);
             }
             fclose($handle);
         });

@@ -23,16 +23,18 @@
                 <th>QTY Sold</th>
                 <th>Sale Price</th>
                 <th>Total</th>
+                <th>Revenue</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($productsSold as $index => $item)
                 <tr>
                     <td>{{ $index + 1 }}</td>
-                    <td>{{ $item->product->product_name ?? 'Unknown Product' }}</td>
-                    <td>{{ $item->total_sold }}</td>
-                    <td>₱{{ number_format($item->avg_price, 2) }}</td>
-                    <td>₱{{ number_format($item->total_revenue, 2) }}</td>
+                    <td>{{ $item['product']->product_name ?? 'Unknown Product' }}</td>
+                    <td>{{ $item['total_sold'] }}</td>
+                    <td>₱{{ number_format($item['avg_price'], 2) }}</td>
+                    <td>₱{{ number_format($item['total_sale'], 2) }}</td>
+                    <td>₱{{ number_format($item['total_revenue'], 2) }}</td>
                 </tr>
             @endforeach
         </tbody>

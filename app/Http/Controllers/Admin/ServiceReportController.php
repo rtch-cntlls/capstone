@@ -20,10 +20,17 @@ class ServiceReportController extends Controller
         $from = $request->input('from') ?: now()->startOfMonth()->toDateString();
         $to   = $request->input('to') ?: now()->endOfMonth()->toDateString();
 
-        $bookings    = $this->service->getBookings($from, $to, true);
-        $dailyTrends = $this->service->getDailyTrends($bookings);
+        $results = $this->service->getBookingsAndLogs($from, $to, true);
 
-        return view('admin.pages.service-report.index', compact('from', 'to', 'dailyTrends', 'bookings'));
+        $dailyTrends = $this->service->getDailyTrends($results['bookings'], $results['logs']);
+
+        return view('admin.pages.service-report.index', [
+            'from' => $from,
+            'to' => $to,
+            'bookings' => $results['bookings'],
+            'logs' => $results['logs'],
+            'dailyTrends' => $dailyTrends
+        ]);
     }
 
     public function exportPdf(Request $request)
@@ -31,9 +38,9 @@ class ServiceReportController extends Controller
         $from = $request->input('from');
         $to   = $request->input('to');
 
-        $bookings = $this->service->getBookings($from, $to);
+        $results = $this->service->getBookingsAndLogs($from, $to);
 
-        return $this->service->exportPdf($bookings, $from, $to);
+        return $this->service->exportPdf($results['bookings'], $results['logs'], $from, $to);
     }
 
     public function exportCsv(Request $request)
@@ -41,8 +48,8 @@ class ServiceReportController extends Controller
         $from = $request->input('from');
         $to   = $request->input('to');
 
-        $bookings = $this->service->getBookings($from, $to);
+        $results = $this->service->getBookingsAndLogs($from, $to);
 
-        return $this->service->exportCsv($bookings, $from, $to);
+        return $this->service->exportCsv($results['bookings'], $results['logs'], $from, $to);
     }
 }

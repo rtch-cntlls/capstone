@@ -67,7 +67,7 @@
         @else
         <div class="text-center py-5">
             <div class="mb-3">
-                <img src="{{ asset('images/address.jpg') }}" alt="No Address" width="100">
+                <img src="{{ asset('storage/images/address.jpg') }}" alt="No Address" width="100">
             </div>
             <h5 class="fw-bold text-muted mb-2">No Address Found</h5>
             <p class="text-muted small mb-3">

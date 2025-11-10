@@ -64,23 +64,33 @@
                                 <th>Customer Name</th>
                                 <th>Service</th>
                                 <th>(₱) Generated</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($bookings as $index => $booking)
+                            @php
+                                $combined = $bookings->concat($logs)->sortBy(function($item) {
+                                    return $item->schedule ?? $item->created_at;
+                                });
+                            @endphp
+                        
+                            @forelse($combined as $index => $entry)
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($booking->schedule)->format('F d, Y') }}</td>
-                                    <td>{{ $booking->customer?->user?->firstname . ' ' . $booking->customer?->user?->lastname ?? 'N/A' }}</td>
-                                    <td>{{ $booking->service->name ?? 'N/A' }}</td>
-                                    <td>{{ $booking->service->price ?? 'N/A' }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($entry->schedule ?? $entry->created_at)->format('F d, Y') }}</td>
+                                    <td>
+                                        {{ trim(($entry->customer?->user?->firstname ?? '') . ' ' . ($entry->customer?->user?->lastname ?? '')) ?: ($entry->customer_name ?? 'N/A') }}
+                                    </td>
+                                    <td>{{ $entry->service->name ?? 'N/A' }}</td>
+                                    <td>{{ $entry->service->price ?? 'N/A' }}</td>
+                                    <td>{{ $entry instanceof \App\Models\Booking ? 'Booking' : 'Walk-in' }}</td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center text-muted">No completed services found for this date range.</td>
+                                    <td colspan="6" class="text-center text-muted">No services found for this date range.</td>
                                 </tr>
                             @endforelse
-                        </tbody>
+                        </tbody>                        
                     </table>
                     <div class="mt-3">
                         {{ $bookings->links('pagination::bootstrap-5') }}

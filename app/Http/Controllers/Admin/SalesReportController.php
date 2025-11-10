@@ -8,6 +8,8 @@ use App\Models\Sale;
 use App\Services\Reports\SalesReportService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class SalesReportController extends Controller
 {
@@ -20,9 +22,9 @@ class SalesReportController extends Controller
 
     public function index(Request $request)
     {
-        $from = $request->input('from', Carbon::now()->startOfMonth()->toDateString());
-        $to = $request->input('to', Carbon::now()->endOfMonth()->toDateString());
-
+        $from = $request->input('from', now()->startOfMonth()->toDateString());
+        $to = $request->input('to', now()->endOfMonth()->toDateString());
+    
         $sales = Sale::whereBetween(DB::raw('DATE(sale_date)'), [$from, $to])
             ->select(
                 DB::raw('DATE(sale_date) as date'),
@@ -33,17 +35,30 @@ class SalesReportController extends Controller
             ->groupBy('date')
             ->orderBy('date', 'ASC')
             ->get();
-
-        $productsSold = $this->salesReportService->getProductsSold($from, $to)
-            ->through(function ($item) {
+    
+        $productsSoldCollection = $this->salesReportService->getProductsSold($from, $to)
+            ->map(function ($item) {
                 return [
-                    'name' => $item->product->product_name ?? 'Unknown Product',
-                    'total_sold' => $item->total_sold,
-                    'total_revenue' => $item->total_revenue,
-                    'avg_price' => $item->avg_price,
+                    'name' => $item['product']->product_name ?? 'Unknown Product',
+                    'total_sold' => $item['total_sold'],
+                    'avg_price' => $item['avg_price'],
+                    'total_sale' => $item['total_sale'],
+                    'total_revenue' => $item['total_revenue'],
                 ];
-            });        
-
+            });
+    
+        $page = request()->get('page', 1);
+        $perPage = 10;
+        $offset = ($page - 1) * $perPage;
+    
+        $productsSold = new LengthAwarePaginator(
+            $productsSoldCollection->slice($offset, $perPage)->values(),
+            $productsSoldCollection->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+    
         return view('admin.pages.sale-report.index', compact('sales', 'from', 'to', 'productsSold'));
     }
 

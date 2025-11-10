@@ -37,7 +37,7 @@
                         <tr>
                             <td>
                                 <div class="d-flex align-items-center gap-2">
-                                    <img src="{{ $customer->user->profile ? asset('storage/' . $customer->user->profile) : asset('profile/customer.webp') }}" 
+                                    <img src="{{ $customer->user->profile ? asset($customer->user->profile) : asset('storage/profile/customer.webp') }}" 
                                         alt="Profile" width="30" style="border-radius:50%;">                               
                                     {{ $customer->user->firstname }} {{ $customer->user->lastname }}
                                 </div>

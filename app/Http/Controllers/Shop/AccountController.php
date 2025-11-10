@@ -71,7 +71,7 @@ class AccountController extends Controller
         $user = Auth::user();
         $customer = Customer::where('user_id', $user->user_id)->first();
         $shop = Shop::first();
-
+    
         $validated = $request->validate([
             'street' => 'required|string|max:255',
             'barangay' => 'required|string|max:255',
@@ -79,15 +79,18 @@ class AccountController extends Controller
             'province' => 'nullable|string|max:255',
             'postal_code' => 'required|string|max:20',
         ]);
-        if ($shop->service_area === 'province') {
-            if ($validated['province'] !== $shop->province) {
-                return back()->with('error', 'This province is not supported by this shop.');
-            }
+    
+        if ($shop->service_area === 'province' && $validated['province'] !== $shop->province) {
+            return back()->with('error', 'This address is not supported by this shop.');
         }
-        if ($shop->service_area === 'local') {
-            if ($validated['province'] !== $shop->province || $validated['city'] !== $shop->city) {
-                return back()->with('error', 'This address is not supported by this shop.');
-            }
+    
+        if ($shop->service_area === 'local' &&
+            ($validated['province'] !== $shop->province || $validated['city'] !== $shop->city)) {
+            return back()->with('error', 'This address is not supported by this shop.');
+        }
+    
+        if ($customer->addresses()->exists()) {
+            $customer->addresses()->delete();
         }
 
         Address::create([
@@ -100,5 +103,5 @@ class AccountController extends Controller
         ]);
     
         return back()->with('success', 'Address saved successfully!');
-    }
+    }    
 }

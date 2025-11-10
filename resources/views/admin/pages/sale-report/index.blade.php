@@ -61,6 +61,7 @@
                                 <th>Product Name</th>
                                 <th class="text-center">QTY Sold</th>
                                 <th class="text-center">Sale Price</th>
+                                <th class="text-center">Revenue</th>
                                 <th class="text-end">Total</th>
                             </tr>
                         </thead>
@@ -71,7 +72,8 @@
                                     <td>{{ $product['name'] }}</td>
                                     <td class="text-center">{{ $product['total_sold'] }}</td>
                                     <td class="text-center">₱{{ number_format($product['avg_price'], 2) }}</td>
-                                    <td class="text-end fw-semibold">₱{{ number_format($product['total_revenue'], 2) }}</td>
+                                    <td class="text-center">₱{{ number_format($product['total_revenue'], 2) }}</td>
+                                    <td class="text-end fw-semibold">₱{{ number_format($product['total_sale'], 2) }}</td>
                                 </tr>
                             @empty
                                 <tr>

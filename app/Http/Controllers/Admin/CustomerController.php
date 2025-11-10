@@ -18,7 +18,6 @@ class CustomerController extends Controller
     {
         try {
             [$customers, $cards] = $this->customerService->getCustomersWithCards();
-
             return view('admin.pages.customer.index', compact('customers', 'cards'));
         } catch (\Throwable $e) {
             report($e); 
@@ -29,12 +28,11 @@ class CustomerController extends Controller
     public function show($customerId)
     {
         try {
-            [$customer, $purchaseHistory] = $this->customerService->getCustomerPurchaseHistory($customerId);
-
-            return view('admin.pages.customer.show', compact('customer', 'purchaseHistory'));
+            [$customer, $purchaseHistory, $bookings] = $this->customerService->getCustomerPurchaseHistory($customerId);
+            return view('admin.pages.customer.show', compact('customer', 'purchaseHistory', 'bookings'));
         } catch (\Throwable $e) {
             report($e); 
             return response()->view('error.admin500');
         }
-    }
+    }    
 }

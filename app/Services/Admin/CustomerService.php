@@ -8,16 +8,22 @@ class CustomerService
 {
     public function getCustomersWithCards(int $perPage = 10): array
     {
-        $customers = Customer::with(['user', 'addresses', 'motorcycles', 'orders'])
+        $customers = Customer::with(['user', 'addresses', 'orders', 'bookings'])
             ->whereHas('orders')
+            ->orWhereHas('bookings')
             ->paginate($perPage);
 
-        $totalCustomers = Customer::whereHas('orders')->count();
+        $totalCustomers = Customer::whereHas('orders')
+            ->orWhereHas('bookings')
+            ->count();
 
         $cards = [
             [
-                'title' => 'Total Customers', 'value' => $totalCustomers, 'type'  => 'customers',
-                'icon' => 'fas fa-users', 'color' => 'text-primary',
+                'title' => 'Total Customers',
+                'value' => $totalCustomers,
+                'type'  => 'customers',
+                'icon' => 'fas fa-users',
+                'color' => 'text-primary',
             ],
         ];
 
@@ -26,11 +32,18 @@ class CustomerService
 
     public function getCustomerPurchaseHistory(int $customerId)
     {
-        $customer = Customer::with(['user', 'addresses'])->findOrFail($customerId);
+        $customer = Customer::with(['user', 'addresses', 'bookings.service'])->findOrFail($customerId);
 
         $purchaseHistory = $customer->orders()->with('orderItems.product')
-            ->whereIn('status', ['completed', 'cancelled'])->latest()->get();
+            ->whereIn('status', ['completed', 'cancelled'])
+            ->latest()
+            ->get();
 
-        return [$customer, $purchaseHistory];
+        $bookings = $customer->bookings()->with('service')
+            ->where('status', 'Completed')
+            ->latest()
+            ->get();
+
+        return [$customer, $purchaseHistory, $bookings];
     }
 }

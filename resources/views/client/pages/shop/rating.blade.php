@@ -38,11 +38,11 @@
 
     const displayedItems = showAllReviews ? items : items.slice(0, 1);
 
-    displayedItems.forEach(r => {
-    const name = r.customer?.user 
-            ? `${r.customer.user.firstname ? r.customer.user.firstname[0] + '*****' : ''} \
-    ${r.customer.user.lastname ? r.customer.user.lastname[0] + '*****' : ''}`.trim()
-                : 'Customer';
+        displayedItems.forEach(r => {
+            const name = r.customer?.user 
+                ? `${r.customer.user.firstname ? r.customer.user.firstname[0] + '*****' : ''} \
+                ${r.customer.user.lastname ? r.customer.user.lastname[0] + '*****' : ''}`.trim()
+                    : 'Customer';
 
             function renderStars(rating) {
                 let html = '';
@@ -55,6 +55,7 @@
             }
 
             const stars = renderStars(r.rating);
+            
             const imgs = (r.images || []).map(u => 
                 `<img src="${u.startsWith('http') ? u : ('<?= asset('storage/') ?>'+'/'+u) }" class="rounded me-2 mb-2" style="width:70px;height:70px;object-fit:cover;">`
             ).join('');

@@ -3,46 +3,69 @@
 namespace App\Services\Reports;
 
 use App\Models\Booking;
+use App\Models\ServiceLog;
 use PDF;
 use Illuminate\Support\Facades\Response;
 
 class ServiceReportService
 {
-    public function getBookings(?string $from, ?string $to, bool $paginate = false, int $perPage = 10)
+    public function getBookingsAndLogs(?string $from, ?string $to, bool $paginate = false, int $perPage = 10)
     {
-        $query = Booking::with(['customer.user', 'service'])
+        $bookingQuery = Booking::with(['customer.user', 'service'])
             ->where('status', 'completed');
 
         if ($from && $to) {
-            $query->whereBetween('schedule', [$from, $to]);
+            $bookingQuery->whereBetween('schedule', [$from, $to]);
         }
 
-        $query->orderBy('schedule', 'asc');
+        $bookingQuery->orderBy('schedule', 'asc');
 
-        return $paginate ? $query->paginate($perPage)->withQueryString() : $query->get();
+        $bookings = $paginate 
+            ? $bookingQuery->paginate($perPage)->withQueryString() 
+            : $bookingQuery->get();
+
+        $logQuery = ServiceLog::with('service');
+
+        if ($from && $to) {
+            $logQuery->whereBetween('created_at', [$from . ' 00:00:00', $to . ' 23:59:59']);
+        }
+
+        $logQuery->orderBy('created_at', 'asc');
+
+        $logs = $paginate 
+            ? $logQuery->paginate($perPage)->withQueryString() 
+            : $logQuery->get();
+
+        if ($paginate) {
+            return ['bookings' => $bookings, 'logs' => $logs];
+        }
+
+        return ['bookings' => $bookings, 'logs' => $logs];
     }
 
-    public function getDailyTrends($bookings): array
+    public function getDailyTrends($bookings, $logs): array
     {
         $trends = [];
 
         foreach ($bookings as $b) {
             $date = date('Y-m-d', strtotime($b->schedule));
-            if (!isset($trends[$date])) {
-                $trends[$date] = 0;
-            }
-            $trends[$date]++;
+            $trends[$date] = ($trends[$date] ?? 0) + 1;
+        }
+
+        foreach ($logs as $l) {
+            $date = date('Y-m-d', strtotime($l->created_at));
+            $trends[$date] = ($trends[$date] ?? 0) + 1;
         }
 
         ksort($trends);
-
         return $trends;
     }
 
-    public function exportPdf($bookings, string $from, string $to)
+    public function exportPdf($bookings, $logs, string $from, string $to)
     {
         $pdf = PDF::loadView('admin.pages.service-report.export-pdf', [
             'bookings' => $bookings,
+            'logs' => $logs,
             'from' => $from,
             'to' => $to
         ])->setPaper('a4', 'landscape');
@@ -50,7 +73,7 @@ class ServiceReportService
         return $pdf->download("service_report_{$from}_to_{$to}.pdf");
     }
 
-    public function exportCsv($bookings, string $from, string $to)
+    public function exportCsv($bookings, $logs, string $from, string $to)
     {
         $filename = "service_report_{$from}_to_{$to}.csv";
 
@@ -59,9 +82,9 @@ class ServiceReportService
             'Content-Disposition' => "attachment; filename=\"$filename\"",
         ];
 
-        $columns = ['Date', 'Customer Name', 'Motorcycle / Service', 'Status'];
+        $columns = ['Date', 'Customer Name', 'Service', 'Type', 'Price'];
 
-        $callback = function () use ($bookings, $columns) {
+        $callback = function () use ($bookings, $logs, $columns) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
 
@@ -74,7 +97,18 @@ class ServiceReportService
                     date('Y-m-d', strtotime($b->schedule)),
                     trim($customerName),
                     $b->service->name ?? 'N/A',
-                    ucfirst($b->status ?? 'N/A')
+                    'Booking',
+                    $b->service->price ?? 'N/A'
+                ]);
+            }
+
+            foreach ($logs as $l) {
+                fputcsv($file, [
+                    date('Y-m-d', strtotime($l->created_at)),
+                    $l->customer_name ?? 'N/A',
+                    $l->service->name ?? 'N/A',
+                    'Walk-in',
+                    $l->service->price ?? 'N/A'
                 ]);
             }
 
