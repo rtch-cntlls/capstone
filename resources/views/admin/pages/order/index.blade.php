@@ -51,9 +51,12 @@
                         <tr>
                             <td class="text-primary fw-semibold text-center">#{{ $order->order_number }}</td>
                             <td class="d-flex align-items-center gap-2">
-                                <img src="{{ $order->customer->user->profile ?? asset('profile/customer.webp') }}" 
+                                <img src="{{ $order->customer->user->profile ?? asset('storage/profile/customer.webp') }}" 
                                     alt="" width="32" height="32" class="rounded-circle object-fit-cover">
                                 {{ $order->customer->user->firstname }} {{ $order->customer->user->lastname }}
+                                @if ($customer->user->deleted_at)
+                                    <span class="badge bg-danger ms-1">Deleted</span>
+                                @endif
                             </td>
                             <td class="text-center">
                                 <span class="badge rounded-pill px-3 py-2

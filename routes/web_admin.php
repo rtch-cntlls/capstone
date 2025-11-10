@@ -143,6 +143,7 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
         Route::get('/{user_id?}', [MessagesController::class, 'index'])->name('index');
         Route::post('/send/{user}', [MessagesController::class, 'send'])->name('send');
         Route::get('/poll/{user}', [MessagesController::class, 'poll'])->name('poll');
+        Route::post('/read/{user}', [MessagesController::class, 'markAsRead'])->name('read');
     });
     
     // SETTINGS

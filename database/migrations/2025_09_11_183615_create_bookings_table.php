@@ -20,6 +20,7 @@ return new class extends Migration
             $table->timestamp('rescheduled_at')->nullable(); 
             $table->text('notes')->nullable();
             $table->enum('status', ['Pending', 'Approved', 'Rescheduled', 'Completed', 'Cancelled', 'Failed'])->default('Pending');
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('customer_id')->references('customer_id')->on('customer')->onDelete('cascade');

@@ -40,6 +40,9 @@
                                     <img src="{{ $customer->user->profile ? asset($customer->user->profile) : asset('storage/profile/customer.webp') }}" 
                                         alt="Profile" width="30" style="border-radius:50%;">                               
                                     {{ $customer->user->firstname }} {{ $customer->user->lastname }}
+                                    @if ($customer->user->deleted_at)
+                                        <span class="badge bg-danger ms-1">Deleted</span>
+                                    @endif
                                 </div>
                             </td>
                             <td>{{ $customer->user->email }}</td>

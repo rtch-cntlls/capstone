@@ -13,7 +13,10 @@
         <div class="d-flex align-items-center">
             <div class="dropdown me-4">
                 @php
-                    $totalNotifications = ($notifications['newOrders'] ?? 0) + ($notifications['newBookings'] ?? 0);
+                    $totalNotifications = ($notifications['newOrders'] ?? 0) 
+                                        + ($notifications['newBookings'] ?? 0)
+                                        + ($notifications['newReviews'] ?? 0)
+                                        + ($notifications['newMessages'] ?? 0);
                 @endphp
                 <a class="text-decoration-none text-dark position-relative" href="#" role="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-bell fa-lg"></i>
@@ -24,14 +27,8 @@
                         </span>
                     @endif
                 </a>
-
-                @php
-                $totalNotifications = ($notifications['newOrders'] ?? 0) 
-                                    + ($notifications['newBookings'] ?? 0)
-                                    + ($notifications['newReviews'] ?? 0);
-            @endphp
             
-            <ul class="dropdown-menu dropdown-menu-end p-0 shadow-lg" style="width: 320px; max-height: 400px; overflow-y: auto;">
+            <ul class="dropdown-menu dropdown-menu-end p-0 mt-3 shadow-lg" style="width: 320px; max-height: 400px; overflow-y: auto;">
                 <li class="dropdown-header fw-bold bg-light py-2 px-3">Notifications</li>
                 <li><hr class="dropdown-divider m-0"></li>
             
@@ -66,35 +63,47 @@
                     @endif
             
                     @if(($notifications['newReviews'] ?? 0) > 0)
-                    <li>
-                        <a href="{{ route('admin.product.index') }}" class="dropdown-item d-flex align-items-start py-2">
-                            <i class="fas fa-star text-warning me-2 mt-1"></i>
-                            <div class="flex-grow-1">
-                                <div class="fw-bold">New Product Ratings/Comments</div>
-                                <small class="text-muted">{{ $notifications['newReviews'] }} new review(s) today</small>
-                
-                                @if(!empty($notifications['reviewedProducts']))
-                                    <ul class="list-unstyled mt-1 mb-0 ms-3">
-                                        @foreach($notifications['reviewedProducts'] as $reviewedProduct)
-                                            <li class="small text-muted">
-                                                • {{ $reviewedProduct->product->product_name ?? 'Unknown Product' }}
-                                                ({{ $reviewedProduct->review_count }})
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                @endif
-                            </div>
-                        </a>
-                    </li>
-                @endif
+                        <li>
+                            <a href="{{ route('admin.product.index') }}" class="dropdown-item d-flex align-items-start py-2">
+                                <i class="fas fa-star text-warning me-2 mt-1"></i>
+                                <div class="flex-grow-1">
+                                    <div class="fw-bold">New Product Ratings/Comments</div>
+                                    <small class="text-muted">{{ $notifications['newReviews'] }} new review(s) today</small>
+                    
+                                    @if(!empty($notifications['reviewedProducts']))
+                                        <ul class="list-unstyled mt-1 mb-0 ms-3">
+                                            @foreach($notifications['reviewedProducts'] as $reviewedProduct)
+                                                <li class="small text-muted">
+                                                    • {{ $reviewedProduct->product->product_name ?? 'Unknown Product' }}
+                                                    ({{ $reviewedProduct->review_count }})
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    @endif
+                                </div>
+                            </a>
+                        </li>
+                    @endif
+
+                    @if(($notifications['newMessages'] ?? 0) > 0)
+                        <li>
+                            <a href="{{ route('admin.messages.index') }}" class="dropdown-item d-flex align-items-start py-2">
+                                <i class="fas fa-envelope text-info me-2 mt-1"></i>
+                                <div class="flex-grow-1">
+                                    <div class="fw-bold">New Messages</div>
+                                    <small class="text-muted">{{ $notifications['newMessages'] }} message(s) from customers</small>
+                                </div>
+                            </a>
+                        </li>
+                    @endif
                 
                 @endif
             </ul>
-            
             </div>
             <a class="text-decoration-none text-danger d-flex align-items-center" href="{{ route('admin.logout') }}">
-                <i class="fa-solid fa-right-from-bracket me-2"></i> Logout
-            </a>
+                <i class="fa-solid fa-right-from-bracket me-2"></i>
+                <span class="d-none d-md-inline">Logout</span>
+            </a>            
         </div>
     </div>
 </div>

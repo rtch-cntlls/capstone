@@ -30,17 +30,27 @@
                     @enderror
                 </div>
                 <div class="col-md-6">
-                    <label for="image" class="form-label fw-bold">Product Image</label>
-                    <input type="file" id="image" name="image" accept="image/*"
-                           class="form-control @error('image') is-invalid @enderror">
-                    @error('image')
+                    <label for="compatible_models" class="form-label fw-bold">Compatible Models</label>
+                    <input type="text" id="compatible_models" name="compatible_models"
+                           value="{{ old('compatible_models') }}" 
+                           class="form-control @error('compatible_models') is-invalid @enderror"
+                           placeholder="e.g. Yamaha YZF-R15, Honda CBR150R, Suzuki GSX-R150">
+                    @error('compatible_models')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
-                </div>
+                </div>                
                 @include('admin.pages.product.form.materials')
             </div>
             <div id="specific-specs" class="mb-4"></div>
             <input type="hidden" id="product_specs" name="specs" value="">
+            <div class="mb-4">
+                <label for="image" class="form-label fw-bold">Product Image</label>
+                <input type="file" id="image" name="image" accept="image/*"
+                       class="form-control @error('image') is-invalid @enderror">
+                @error('image')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
             <div class="mb-4">
                 <label for="description" class="form-label fw-bold">Product Description <small class="text-muted">(optional)</small></label>
                 <textarea id="description" name="description" rows="6" style="resize:none"

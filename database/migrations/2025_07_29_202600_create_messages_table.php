@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('attachment_path')->nullable();
             $table->string('attachment_type')->nullable();
             $table->timestamp('read_at')->nullable();
+            $table->boolean('admin_replied')->default(false);
             $table->timestamps();
         
             $table->foreign('sender_id')->references('user_id')->on('users')->onDelete('cascade');

@@ -93,6 +93,7 @@ class ProductService
                 'weight_kg'    => $request->weight_kg,
                 'material'     => $request->material, 
                 'color_finish' => $request->color_finish,
+                'compatible_models'  => $request->compatible_models,
                 'specs'        => $specs,
                 'image'        => $imagePath,
                 'status'       => 'active', 

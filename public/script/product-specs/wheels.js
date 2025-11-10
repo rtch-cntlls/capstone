@@ -1,6 +1,5 @@
 export const wheelSpecs = `
-<h5 class="fw-bold">Wheels & Tires</h5>
-<div class="row g-3 mb-2">
+<div class="row g-3 mb-3">
 
     <div class="col-md-6">
         <label>Front Tire Size</label>
@@ -158,30 +157,23 @@ export const wheelSpecs = `
     </div>
 
     <div class="col-md-6">
-        <label>Wheel Type</label>
-        <select name="wheel_type" class="form-select">
+        <label>Brand / Manufacturer</label>
+        <input type="text" name="brand" class="form-control" placeholder="e.g. Pirelli, Michelin, Dunlop, IRC, OEM">
+    </div>
+
+    <div class="col-md-6">
+        <label>Wheel / Rim Material</label>
+        <select name="rim_material" class="form-select">
             <option value="">Select</option>
-            <option value="Spoke Wheel">Spoke Wheel</option>
-            <option value="Wire Wheel">Wire Wheel</option>
-            <option value="Alloy">Alloy</option>
-            <option value="Mag">Mag Wheel</option>
-            <option value="Aftermarket Alloy">Aftermarket Alloy</option>
+            <option value="Aluminum Alloy">Aluminum Alloy</option>
             <option value="Forged Aluminum">Forged Aluminum</option>
-            <option value="Billet Aluminum">Billet Aluminum</option>
+            <option value="Steel">Steel</option>
             <option value="Carbon Fiber">Carbon Fiber</option>
-            <option value="Racing/Lightweight">Racing / Lightweight</option>
-            <option value="Tubeless-Ready Rim">Tubeless-Ready Rim</option>
-            <option value="Steel Rim">Steel Rim</option>
-            <option value="Split Rim">Split Rim</option>
-            <option value="Multi-Spoke Design">Multi-Spoke Alloy</option>
-            <option value="Comstar Wheel">Comstar Wheel</option>
-            <option value="Flow Formed">Flow Formed Alloy</option>
-            <option value="Pressed Steel">Pressed Steel</option>
-            <option value="OEM Factory Type">OEM Factory Type</option>
-            <option value="Custom Machined">Custom Machined</option>
-            <option value="Supermoto Wheel Set">Supermoto Wheel Set</option>
-            <option value="Motocross Wheel Set">Motocross Wheel Set</option>
-            <option value="Adventure Wheel Set">Adventure Wheel Set</option>
+            <option value="Magnesium Alloy">Magnesium Alloy</option>
+            <option value="Billet Aluminum">Billet Aluminum</option>
+            <option value="Titanium Alloy">Titanium Alloy</option>
+            <option value="Anodized / Powder-Coated">Anodized / Powder-Coated</option>
+            <option value="Polished / Painted">Polished / Painted</option>
             <option value="Other">Other</option>
         </select>
     </div>
@@ -233,32 +225,47 @@ export const wheelSpecs = `
     </div>
 
     <div class="col-md-6">
-        <label>Recommended Tire Pressure (Front / Rear)</label>
-        <input type="text" name="recommended_tire_pressure" class="form-control" placeholder="e.g. 30 psi / 32 psi">
-    </div>
-
-    <div class="col-md-6">
-        <label>Rim Material</label>
-        <select name="rim_material" class="form-select">
+        <label>Tire Type / Construction</label>
+        <select name="tire_type" class="form-select">
             <option value="">Select</option>
-            <option value="Aluminum Alloy">Aluminum Alloy</option>
-            <option value="Forged Aluminum">Forged Aluminum</option>
-            <option value="Steel">Steel</option>
-            <option value="Stainless Steel">Stainless Steel</option>
-            <option value="Magnesium Alloy">Magnesium Alloy</option>
-            <option value="Carbon Fiber">Carbon Fiber</option>
-            <option value="Titanium Alloy">Titanium Alloy</option>
-            <option value="Billet Aluminum">Billet Aluminum</option>
-            <option value="Chromed Steel">Chromed Steel</option>
-            <option value="Anodized Aluminum">Anodized Aluminum</option>
-            <option value="Powder-Coated Alloy">Powder-Coated Alloy</option>
-            <option value="Painted Alloy">Painted Alloy</option>
-            <option value="Polished Alloy">Polished Alloy</option>
-            <option value="Die-Cast Alloy">Die-Cast Alloy</option>
-            <option value="Reinforced Alloy">Reinforced Alloy</option>
-            <option value="Hybrid Alloy">Hybrid Alloy</option>
+            <option value="Tubeless">Tubeless</option>
+            <option value="Tube Type">Tube Type</option>
+            <option value="Radial">Radial</option>
+            <option value="Bias-Ply">Bias-Ply</option>
+            <option value="Run-Flat">Run-Flat</option>
+            <option value="All-Weather / Rain">All-Weather / Rain</option>
+            <option value="Off-Road / Motocross">Off-Road / Motocross</option>
+            <option value="Sport / Supersport">Sport / Supersport</option>
+            <option value="Touring / Long-Distance">Touring / Long-Distance</option>
+            <option value="Scooter / City">Scooter / City</option>
+            <option value="Adventure / Dual-Sport">Adventure / Dual-Sport</option>
+            <option value="Custom / Retro">Custom / Retro</option>
             <option value="Other">Other</option>
         </select>
     </div>
+
+    <div class="col-md-6">
+        <label>Wheel Type / Design</label>
+        <select name="wheel_type" class="form-select">
+            <option value="">Select</option>
+            <option value="Spoke Wheel">Spoke Wheel</option>
+            <option value="Wire Wheel">Wire Wheel</option>
+            <option value="Alloy Wheel">Alloy Wheel</option>
+            <option value="Forged / Billet">Forged / Billet</option>
+            <option value="Mag Wheel">Mag Wheel</option>
+            <option value="Carbon Fiber Wheel">Carbon Fiber Wheel</option>
+            <option value="Tubeless-Ready Rim">Tubeless-Ready Rim</option>
+            <option value="Multi-Spoke / Split-Spoke">Multi-Spoke / Split-Spoke</option>
+            <option value="Comstar / Flow Formed">Comstar / Flow Formed</option>
+            <option value="Custom Machined">Custom Machined</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+
+    <div class="col-md-6">
+        <label>Recommended Tire Pressure</label>
+        <input type="text" name="recommended_pressure" class="form-control" placeholder="e.g. 30 psi front / 32 psi rear">
+    </div>
+
 </div>
 `;

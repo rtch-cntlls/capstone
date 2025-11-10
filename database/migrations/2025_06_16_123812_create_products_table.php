@@ -23,6 +23,7 @@ return new class extends Migration
             $table->decimal('weight_kg', 8, 3);
             $table->string('material', 255)->nullable();
             $table->string('color_finish', 255)->nullable();
+            $table->text('compatible_models')->nullable();
             $table->json('specs')->nullable();
             $table->string('image')->nullable();
             $table->timestamps();

@@ -57,6 +57,7 @@ class ProductController extends Controller
             'image'         => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'material'      => 'nullable|string',
             'color_finish'  => 'nullable|string',
+            'compatible_models' => 'nullable|string|max:1000',
             'specs'         => 'nullable|string',
         ], [], [
             'category_id' => 'category',

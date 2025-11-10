@@ -30,6 +30,9 @@
                             <td>
                                 {{ $booking->customer->user->firstname ?? '' }}
                                 {{ $booking->customer->user->lastname ?? '' }}
+                                @if ( $booking->customer->user->deleted_at)
+                                    <span class="badge bg-danger ms-1">Deleted</span>
+                                @endif
                             </td>
                             <td>{{ $booking->service->name ?? '---' }}</td>
                             <td>

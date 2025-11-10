@@ -1,5 +1,4 @@
 export const accessoriesSpecs = `
-<h5>Accessories & Apparel</h5>
 <div class="row g-3 mb-2">
 
     <h6 class="fw-bold">Motorcycle Accessories</h6>
@@ -37,18 +36,8 @@ export const accessoriesSpecs = `
     </div>
 
     <div class="col-md-6">
-        <label>Compatibility / Vehicle Fitment</label>
-        <input type="text" name="accessory_compatibility" class="form-control" placeholder="e.g. Universal, Yamaha NMAX, Honda Click, Kawasaki Ninja 250">
-    </div>
-
-    <div class="col-md-6">
         <label>Brand / Manufacturer</label>
         <input type="text" name="accessory_brand" class="form-control" placeholder="e.g. GIVI, Koso, Rizoma, RCB, H2C, Yamaha Genuine, Honda Genuine">
-    </div>
-
-    <div class="col-md-6">
-        <label>Material / Build</label>
-        <input type="text" name="accessory_material" class="form-control" placeholder="e.g. ABS Plastic, Aluminum Alloy, Carbon Fiber, Stainless Steel">
     </div>
 
     <div class="col-md-6">

@@ -1,5 +1,7 @@
 @extends('client.layouts.clientNoFooter')
 @section('content')
+@include('components.ModalAlertSuccess')
+@include('components.ModalAlertError')
 @include('components.DeleteAccount')
     <div class="container">
         <div class="row">

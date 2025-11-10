@@ -19,6 +19,7 @@ class Product extends Model
         'image',
         'material',
         'color_finish',
+        'compatible_models',
         'specs',
     ];
 

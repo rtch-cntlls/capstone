@@ -12,6 +12,7 @@ use App\Models\Booking;
 use App\Models\Motorcycle;
 use App\Models\Order;
 use App\Models\ProductReview;
+use App\Models\Message;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -68,6 +69,11 @@ class AppServiceProvider extends ServiceProvider
                     ->selectRaw('product_id, COUNT(*) as review_count')
                     ->groupBy('product_id')
                     ->get();
+
+                    $notifications['newMessages'] = Message::where('receiver_id', Auth::id())
+                    ->whereNull('read_at')
+                    ->where('admin_replied', false)
+                    ->count();
                 }
             }
     

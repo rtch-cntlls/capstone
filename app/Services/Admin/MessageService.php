@@ -38,8 +38,15 @@ class MessageService
 
     public function sendMessage(User $receiver, ?string $content, array $attachments = [])
     {
+        $authId = Auth::id();
+
+        Message::where('sender_id', $receiver->user_id)
+            ->where('receiver_id', $authId)
+            ->where('admin_replied', false)
+            ->update(['admin_replied' => true, 'read_at' => now()]);
+
         $message = Message::create([
-            'sender_id' => Auth::id(),
+            'sender_id' => $authId,
             'receiver_id' => $receiver->user_id,
             'content' => $content,
         ]);
@@ -57,10 +64,7 @@ class MessageService
                 $type = 'other';
             }
 
-            $thumbPath = null;
-            if ($type === 'video') {
-                $thumbPath = $this->generateVideoThumbnail($storedPath);
-            }
+            $thumbPath = $type === 'video' ? $this->generateVideoThumbnail($storedPath) : null;
 
             MessageAttachment::create([
                 'message_id' => $message->message_id,

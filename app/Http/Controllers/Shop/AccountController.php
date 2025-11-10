@@ -33,24 +33,30 @@ class AccountController extends Controller
     {
         $user = Auth::user();
         $customer = $user->customer;
-
+    
         if ($customer) {
+            $pendingOrders = $customer->orders()->whereNotIn('status', ['completed', 'cancelled'])->exists();
+            $pendingBookings = $customer->bookings()->whereNotIn('status', ['Completed', 'Cancelled', 'Failed'])->exists();
+    
+            if ($pendingOrders || $pendingBookings) {
+                return back()->with('error', 'You cannot delete your account while you have active orders or bookings.');
+            }
             $customer->update(['phone' => null]);
             $customer->delete();
         }
-
+    
         $user->update([
             'email' => 'deleted_user_' . $user->user_id . '@example.com',
             'firstname' => 'Deleted',
             'lastname' => 'Account',
             'password' => 'delete',
         ]);
-
+    
         Auth::logout();
         $user->delete();
-
-        return redirect('/')->with('status', 'Account deleted successfully.');
-    }
+    
+        return redirect('/')->with('success', 'Account deleted successfully.');
+    }    
 
     public function updateProfile(Request $request)
     {
