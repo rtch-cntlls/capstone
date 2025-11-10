@@ -6,12 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Motorcycle extends Model
 {
-    protected $casts = [
-        'issues' => 'array',
-        'maintenance' => 'array',
-    ];
     protected $table = 'motorcycles';
     protected $primaryKey = 'motorcycle_id';
+    public $incrementing = true;
+    protected $keyType = 'int'; 
 
     protected $fillable = [
         'customer_id',
@@ -20,14 +18,19 @@ class Motorcycle extends Model
         'issues',
         'maintenance',
     ];
-    
+
+    protected $casts = [
+        'issues' => 'array',
+        'maintenance' => 'array',
+    ];
+
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_id', 'customer_id');
     }
-    
+
     public function maintenanceLogs()
     {
         return $this->hasMany(MotorcycleMaintenanceLog::class, 'motorcycle_id', 'motorcycle_id');
-    }    
+    }
 }

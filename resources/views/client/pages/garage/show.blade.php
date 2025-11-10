@@ -4,22 +4,26 @@
     $brand = strtolower($motorcycle->brand);
     $model = strtolower(str_replace(' ', '-', $motorcycle->model)); 
     $imagePath = "motorcycle/{$brand}/{$model}.webp";
+    $storagePath = storage_path("app/public/{$imagePath}");
     $basicCount = count($issues['basic'] ?? []);
     $mechanicCount = count($issues['mechanic_required'] ?? []);
 @endphp
+
 <div class="container">
     @include('client.pages.garage.includes.nav')
+
     <div class="row mb-4 position-relative">
         @if(!$basicCount && !$mechanicCount)
             <div class="section-overlay d-flex flex-column justify-content-center align-items-center">
-                <img src="{{ asset('images/generating.gif') }}" alt="Generating..." width="250" class="mb-3 opacity-75">
+                <img src="{{ asset('storage/images/generating.gif') }}" alt="Generating..." width="250" class="mb-3 opacity-75">
                 <h6 class="fw-bold text-muted mb-2">Analyzing Motorcycle Data...</h6>
                 <p class="text-secondary small mb-0">Please wait while Gemini AI generates troubleshooting insights.</p>
             </div>
         @endif
+
         <div class="col-lg-4 col-md-5 mb-3">
             <div class="card border-0 shadow-sm overflow-hidden h-100">
-                <img src="{{ file_exists(public_path($imagePath)) ? asset($imagePath) : asset('images/motorcycle.jpg') }}"
+                <img src="{{ file_exists($storagePath) ? asset('storage/' . $imagePath) : asset('storage/images/motorcycle.jpg') }}"
                      alt="{{ $motorcycle->model }}" 
                      class="img-fluid w-100">
                 <div class="card-body text-center">
@@ -28,6 +32,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col-lg-8 col-md-7">
             <div class="px-2 px-md-3">
                 @if($basicCount)
@@ -44,7 +49,7 @@
                                     <div class="card shadow-sm border-0 p-3 h-100">
                                         <div class="row g-3 align-items-stretch">
                                             <div class="col-md-4 col-12 d-flex">
-                                                <img src="{{ asset('images/troubleshoot.jpg') }}" 
+                                                <img src="{{ asset('storage/images/troubleshoot.jpg') }}" 
                                                      alt="Issue Image"  
                                                      class="img-fluid rounded-3 w-100 object-fit-cover"
                                                      style="min-height: 180px;">
@@ -118,6 +123,7 @@
             </div>
         </div>
     </div>
+
     @if($mechanicCount)
         <h5 class="fw-bold mb-3 d-flex align-items-center">
             <span class="icon-circle bg-light-danger me-2">
@@ -139,6 +145,7 @@
         </div>
     @endif
 </div>
+
 @if(!$basicCount && !$mechanicCount)
 <script>
     setTimeout(() => location.reload(), 10000);

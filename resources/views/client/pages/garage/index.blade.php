@@ -34,25 +34,21 @@
                             $brand = strtolower($motorcycle->brand);
                             $model = strtolower(str_replace(' ', '-', $motorcycle->model));
                             $imagePath = "motorcycle/{$brand}/{$model}.webp";
+                            $storagePath = storage_path("app/public/{$imagePath}");
                         @endphp
-                       <div class="col-md-6 col-lg-4">
+                        <div class="col-md-6 col-lg-4">
                             <a href="{{ route('garage.show', $motorcycle->motorcycle_id) }}" class="text-decoration-none">
                                 <div class="card border-0 shadow-sm rounded-3 h-100 hover-shadow">
-                                    @php
-                                        $brand = strtolower($motorcycle->brand);
-                                        $model = strtolower(str_replace(' ', '-', $motorcycle->model));
-                                        $imagePath = "motorcycle/{$brand}/{$model}.webp";
-                                    @endphp
-                                    @if(file_exists(public_path($imagePath)))
-                                        <img src="{{ asset($imagePath) }}" 
-                                            alt="{{ $motorcycle->model }}" 
-                                            class="card-img-top" 
-                                            style="height:180px; width:100%; object-fit:cover;">
+                                    @if(file_exists($storagePath))
+                                        <img src="{{ asset('storage/' . $imagePath) }}" 
+                                             alt="{{ $motorcycle->model }}" 
+                                             class="card-img-top" 
+                                             style="height:180px; width:100%; object-fit:cover;">
                                     @else
-                                        <img src="{{ asset('images/motorcycle.jpg') }}" 
-                                            alt="{{ $motorcycle->model }}" 
-                                            class="card-img-top" 
-                                            style="height:180px; width:100%; object-fit:cover;">
+                                        <img src="{{ asset('storage/images/motorcycle.jpg') }}" 
+                                             alt="{{ $motorcycle->model }}" 
+                                             class="card-img-top" 
+                                             style="height:180px; width:100%; object-fit:cover;">
                                     @endif
                                     <div class="card-body text-center">
                                         <h5 class="fw-semibold mb-1">{{ $motorcycle->brand }}</h5>
@@ -75,5 +71,3 @@
 </div>
 @include('client.pages.garage.modal-form.motorcycle')
 @endsection
-
-

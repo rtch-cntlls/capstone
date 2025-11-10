@@ -66,7 +66,10 @@
                     </div>
                     <div class="d-flex justify-content-end gap-2 mt-4">
                         <button type="button" class="btn btn-outline-secondary rounded-3" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary rounded-3">Save Motorcycle</button>
+                        <button type="submit" class="btn btn-primary rounded-3" id="saveMotorcycleBtn">
+                            <span id="btnText">Save Motorcycle</span>
+                            <span id="btnLoader" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+                        </button>                        
                     </div>
                 </form>
             </div>
@@ -91,5 +94,17 @@
                 modelSelect.appendChild(option);
             });
         }
+    });
+
+    const form = document.querySelector('#motorcycleModal form');
+    const saveBtn = document.getElementById('saveMotorcycleBtn');
+    const btnText = document.getElementById('btnText');
+    const btnLoader = document.getElementById('btnLoader');
+
+    form.addEventListener('submit', function() {
+        btnText.textContent = 'Saving...';
+        btnLoader.classList.remove('d-none');
+
+        saveBtn.disabled = true;
     });
 </script>

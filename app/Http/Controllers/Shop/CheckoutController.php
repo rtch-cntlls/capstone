@@ -126,9 +126,9 @@ class CheckoutController extends Controller
             }
 
             $result = $this->geminiValidator->validateScreenshot(
-                public_path('payment/' . $filename),
+                storage_path('app/public/payment/' . $filename),
                 $expectedAmount
-            );
+            );            
 
             $validPayment = $result
                 && isset($result['valid_format'], $result['amount'], $result['reference_number'])

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 class PaymentController extends Controller
 {
@@ -23,8 +24,8 @@ class PaymentController extends Controller
         ]);
 
         $file = $request->file('payment_proof');
-        $filename = time().'_'.$file->getClientOriginalName();
-        $path = $file->storeAs('payment',$filename,'public');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $path = $file->storeAs('payment', $filename, 'public');
         $order->payment_proof = $path;
         $order->payment_status = 'pending';
         $order->save();

@@ -8,7 +8,7 @@
     @include('client.pages.garage.includes.nav')
     @if($maintenanceOverview === '' && empty($maintenanceSchedule))
         <div class="text-center py-5 bg-white">
-            <img src="{{ asset('images/generating.gif') }}" alt="Generating..." width="200" class="mb-3">
+            <img src="{{ asset('storage/images/generating.gif') }}" alt="Generating..." width="200" class="mb-3">
             <h6 class="fw-bold text-muted mb-2">Analyzing Your Motorcycle Data</h6>
             <p class="text-secondary small mb-0">
                 Please wait while Gemini AI generates your personalized maintenance plan...
@@ -55,7 +55,7 @@
                     </div>
                 @else
                     <div class="text-center py-4">
-                        <img src="{{ asset('images/empty-schedule.svg') }}" alt="No Schedule" width="120" class="mb-3">
+                        <img src="{{ asset('storage/images/empty-schedule.svg') }}" alt="No Schedule" width="120" class="mb-3">
                         <h6 class="fw-bold text-muted">No Maintenance Schedule Available</h6>
                         <p class="text-secondary small mb-0">
                             Once MotoSmart AI collects more data, it will generate a recommended schedule for you.

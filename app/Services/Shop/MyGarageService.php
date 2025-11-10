@@ -21,13 +21,15 @@ class MyGarageService
 
     public function getBrands(): array
     {
-        $path = public_path('motorcycle/MotorcycleData.json');
+        $path = storage_path('app/public/motorcycle/MotorcycleData.json');
+    
         if (file_exists($path)) {
             $json = file_get_contents($path);
             return json_decode($json, true) ?? [];
         }
+    
         return [];
-    }
+    }    
 
     public function getCustomerMotorcycles($perPage = 5)
     {

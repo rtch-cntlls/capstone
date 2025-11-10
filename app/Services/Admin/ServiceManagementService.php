@@ -39,14 +39,14 @@ class ServiceManagementService
 
     public function getServicesDataFromJson(): array
     {
-        $jsonPath = public_path('services/services.json');
-
-        if (! file_exists($jsonPath)) {
+        $jsonPath = storage_path('app/public/services/services.json');
+    
+        if (!file_exists($jsonPath)) {
             return [];
         }
-
+    
         return json_decode(file_get_contents($jsonPath), true) ?? [];
-    }
+    }    
 
     public function findCategoryForService(string $name, array $servicesData): string
     {
