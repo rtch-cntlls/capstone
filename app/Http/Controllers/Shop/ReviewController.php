@@ -62,7 +62,6 @@ class ReviewController extends Controller
 
         $orderItem = OrderItem::with(['order', 'product'])->findOrFail($data['order_item_id']);
 
-        // Ownership and eligibility checks
         abort_unless(
             $orderItem->order->customer_id === $user->customer->customer_id, 403
         );

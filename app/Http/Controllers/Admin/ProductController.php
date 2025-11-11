@@ -76,21 +76,51 @@ class ProductController extends Controller
     public function updatePricing(Request $request, $id)
     {
         $request->validate([
-            'cost_price' => 'required|numeric|min:0',
-            'sale_price' => 'required|numeric|gte:cost_price',
+            'cost_price'        => 'required|numeric|min:0',
+            'sale_price'        => 'required|numeric|gte:cost_price',
+            'weight_kg'         => 'required|numeric|min:0',
+            'material'          => 'nullable|string|max:255',
+            'color_finish'      => 'nullable|string|max:255',
+            'compatible_models' => 'nullable|string|max:1000',
+            'image'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ], [
             'sale_price.gte' => 'The sale price must be greater than or equal to the cost price.',
         ]);
 
         try {
             $product = Product::findOrFail($id);
+
             $payload = [
-                'cost_price' => $request->cost_price,
-                'sale_price' => $request->sale_price,
+                'cost_price'        => $request->cost_price,
+                'sale_price'        => $request->sale_price,
+                'weight_kg'         => $request->weight_kg,
+                'material'          => $request->material,
+                'color_finish'      => $request->color_finish,
+                'compatible_models' => $request->compatible_models,
             ];
+            
+            if ($request->hasFile('image') && $request->file('image')->isValid()) {
+                $destinationPath = public_path('products');
+
+                if (!is_dir($destinationPath)) {
+                    mkdir($destinationPath, 0777, true); 
+                }
+
+                $filename = time() . '_' . uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
+
+                $moved = $request->file('image')->move($destinationPath, $filename);
+            
+                if ($moved) {
+                    $payload['image'] = 'products/' . $filename;
+
+                    if ($product->image && file_exists(public_path($product->image))) {
+                        @unlink(public_path($product->image));
+                    }
+                } 
+            }                     
             $product->update($payload);
 
-            return back()->with('success', 'Pricing updated successfully.');
+            return back()->with('success', 'Product updated successfully.');
         } catch (\Throwable $e) {
             report($e);
             return response()->view('error.admin500');
