@@ -18,7 +18,7 @@ class MaintenancePredictionService
     {
         $this->apiKey  = env('GEMINI_API_KEY');
         $this->baseUrl = "https://generativelanguage.googleapis.com/v1beta/models";
-        $this->model   = env('GEMINI_MODEL', 'gemini-2.0-pro');
+        $this->model   = env('GEMINI_MODEL', 'gemini-2.5-flash');
     }
 
     public function predict(Motorcycle $motorcycle, int $currentMileage = 0): ?MotorcycleMaintenanceLog

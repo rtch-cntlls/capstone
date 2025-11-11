@@ -170,7 +170,7 @@
                     @foreach($order->orderItems as $item)
                         <tr>
                             <td style="width: 90px;">
-                                <img src="{{ $item->product->image ? asset('storage/' . $item->product->image) : asset('storage/images/placeholder.png') }}" 
+                                <img src="{{ $item->product->image ? asset($item->product->image) : asset('images/placeholder.png') }}" 
                                      alt="Product image" 
                                      class="rounded shadow-sm" 
                                      style="width: 70px; height: 70px; object-fit: cover;">

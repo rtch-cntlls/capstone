@@ -16,7 +16,7 @@ class GeminiPaymentValidator
     {
         $this->apiKey  = env('GEMINI_API_KEY');
         $this->baseUrl = "https://generativelanguage.googleapis.com/v1beta/models";
-        $this->model   = env('GEMINI_MODEL', 'gemini-2.5-pro');
+        $this->model   = env('GEMINI_MODEL', 'gemini-2.5-flash');
     }
 
     public function validateScreenshot(string $filePath, float $amount): ?array
@@ -74,8 +74,7 @@ class GeminiPaymentValidator
         $url = "{$this->baseUrl}/{$this->model}:generateContent?key={$this->apiKey}";
 
         try {
-            $response = Http::retry(2, 1000)
-                ->timeout(30)
+            $response = Http::timeout(30)
                 ->withHeaders(['Content-Type' => 'application/json'])
                 ->post($url, $payload);
 

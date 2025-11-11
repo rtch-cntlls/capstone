@@ -22,7 +22,7 @@
             if (products.length === 0) {
                 html = `
                     <div class="text-muted text-center bg-white p-4 shadow-sm border">
-                        <img src="{{asset('storage/images/empty.gif')}}" alt="Image" width="250">
+                        <img src="{{asset('images/empty.gif')}}" alt="Image" width="250">
                         <p class="mt-2 form-text">No products found</p>
                     </div>
                 `;
@@ -64,7 +64,7 @@
                                         </button>
                                     </form>
                                 </span>
-                                <img src="${product.image ? '/storage/' + product.image : 'storage/images/placeholder.png'}"
+                                <img src="${product.image ? '/' + product.image : 'images/placeholder.png'}"
                                     class="card-img-top product-img img-fluid"
                                     style="object-fit: cover; max-height: 200px;"
                                     onerror="this.src='/images/placeholder.png'">

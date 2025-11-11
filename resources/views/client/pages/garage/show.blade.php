@@ -2,9 +2,9 @@
 @section('content')
 @php
     $brand = strtolower($motorcycle->brand);
-    $model = strtolower(str_replace(' ', '-', $motorcycle->model)); 
+    $model = strtolower(str_replace(' ', '-', $motorcycle->model));
     $imagePath = "motorcycle/{$brand}/{$model}.webp";
-    $storagePath = storage_path("app/public/{$imagePath}");
+    $publicPath = public_path($imagePath);
     $basicCount = count($issues['basic'] ?? []);
     $mechanicCount = count($issues['mechanic_required'] ?? []);
 @endphp
@@ -15,7 +15,7 @@
     <div class="row mb-4 position-relative">
         @if(!$basicCount && !$mechanicCount)
             <div class="section-overlay d-flex flex-column justify-content-center align-items-center">
-                <img src="{{ asset('storage/images/generating.gif') }}" alt="Generating..." width="250" class="mb-3 opacity-75">
+                <img src="{{ asset('images/generating.gif') }}" alt="Generating..." width="250" class="mb-3 opacity-75">
                 <h6 class="fw-bold text-muted mb-2">Analyzing Motorcycle Data...</h6>
                 <p class="text-secondary small mb-0">Please wait while Gemini AI generates troubleshooting insights.</p>
             </div>
@@ -23,9 +23,9 @@
 
         <div class="col-lg-4 col-md-5 mb-3">
             <div class="card border-0 shadow-sm overflow-hidden h-100">
-                <img src="{{ file_exists($storagePath) ? asset('storage/' . $imagePath) : asset('storage/images/motorcycle.jpg') }}"
-                     alt="{{ $motorcycle->model }}" 
-                     class="img-fluid w-100">
+                <img src="{{ file_exists($publicPath) ? asset($imagePath) : asset('images/motorcycle.jpg') }}"
+                    alt="{{ $motorcycle->model }}" 
+                    class="img-fluid w-100">
                 <div class="card-body text-center">
                     <h4 class="fw-bold mb-1 text-dark">{{ $motorcycle->model }}</h4>
                     <p class="text-muted mb-0 text-uppercase small">{{ $motorcycle->brand }}</p>
@@ -49,7 +49,7 @@
                                     <div class="card shadow-sm border-0 p-3 h-100">
                                         <div class="row g-3 align-items-stretch">
                                             <div class="col-md-4 col-12 d-flex">
-                                                <img src="{{ asset('storage/images/troubleshoot.jpg') }}" 
+                                                <img src="{{ asset('images/troubleshoot.jpg') }}" 
                                                      alt="Issue Image"  
                                                      class="img-fluid rounded-3 w-100 object-fit-cover"
                                                      style="min-height: 180px;">

@@ -12,7 +12,7 @@
                     <input type="radio" class="btn-check" name="payment_method" id="gcash" value="gcash" autocomplete="off">
                     <div class="btn btn-outline-primary w-100 d-flex align-items-center justify-content-between p-3 rounded payment-option">
                         <span><i class="fas fa-wallet me-2"></i> GCash</span>
-                        <img src="{{ asset('storage/images/gcash.png')}}" alt="GCash" width="40">
+                        <img src="{{ asset('images/gcash.png')}}" alt="GCash" width="40">
                     </div>
                 </label>
             </div>
@@ -23,7 +23,7 @@
                     <input type="radio" class="btn-check" name="payment_method" id="cod" value="cod" autocomplete="off">
                     <div class="btn btn-outline-dark w-100 d-flex align-items-center justify-content-between p-3 rounded payment-option">
                         <span><i class="fas fa-box me-2"></i> Cash on Delivery</span>
-                        <img src="{{ asset('storage/images/cod.png')}}" alt="COD" width="85">
+                        <img src="{{ asset('images/cod.png')}}" alt="COD" width="85">
                     </div>
                 </label>
             </div>

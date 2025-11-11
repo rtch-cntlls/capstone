@@ -21,7 +21,7 @@ class MyGarageService
 
     public function getBrands(): array
     {
-        $path = storage_path('app/public/motorcycle/MotorcycleData.json');
+        $path = public_path('motorcycle/MotorcycleData.json');
     
         if (file_exists($path)) {
             $json = file_get_contents($path);
@@ -29,7 +29,7 @@ class MyGarageService
         }
     
         return [];
-    }    
+    }      
 
     public function getCustomerMotorcycles($perPage = 5)
     {

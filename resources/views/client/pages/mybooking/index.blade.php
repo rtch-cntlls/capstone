@@ -14,7 +14,7 @@
             </div>
             @if($bookings->isEmpty())
                 <div class="text-center p-5 bg-white border rounded shadow-sm">
-                    <img src="{{ asset('storage/images/booking.jpg') }}" alt="" width="160">
+                    <img src="{{ asset('images/booking.jpg') }}" alt="" width="160">
                     <h5 class="fw-semibold">No Bookings Found</h5>
                     <p class="text-muted small mb-3">
                         You don’t have any bookings yet. Explore services to get started.

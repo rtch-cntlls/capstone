@@ -58,13 +58,13 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <a href="{{ route('auth.google.login') }}" class="btn btn-sm btn-outline-dark d-flex justify-content-center align-items-center">
-                                    <img src="{{ asset('storage/images/google.png') }}" class="me-2" alt="Google Logo" style="width: 20px; height: 20px;">
+                                    <img src="{{ asset('images/google.png') }}" class="me-2" alt="Google Logo" style="width: 20px; height: 20px;">
                                     Google
                                 </a>
                             </div>
                             <div class="col-md-6">
                                 <a href="{{ route('auth.facebook.redirect') }}" class="btn btn-sm btn-outline-primary d-flex justify-content-center align-items-center">
-                                    <img src="{{ asset('storage/images/facebook.png') }}" alt="Facebook Logo" class="me-2" style="width: 20px; height: 20px;">
+                                    <img src="{{ asset('images/facebook.png') }}" alt="Facebook Logo" class="me-2" style="width: 20px; height: 20px;">
                                     Facebook
                                 </a>
                             </div> 

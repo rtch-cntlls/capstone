@@ -54,7 +54,7 @@
                                 <img src="{{ $order->customer->user->profile ?? asset('profile/customer.webp') }}" 
                                     alt="" width="32" height="32" class="rounded-circle object-fit-cover">
                                 {{ $order->customer->user->firstname }} {{ $order->customer->user->lastname }}
-                                @if ($customer->user->deleted_at)
+                                @if ($order->customer->user->deleted_at)
                                     <span class="badge bg-danger ms-1">Deleted</span>
                                 @endif
                             </td>

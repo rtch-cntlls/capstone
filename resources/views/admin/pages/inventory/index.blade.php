@@ -37,7 +37,9 @@
                     <tbody>
                         @foreach ($products as $product)
                             <tr>
-                                <td>{{ $product->inventory->code ?? 'N/A' }}</td>
+                                <td>
+                                    {{ 'INV' . (1000 + $products->firstItem() + $loop->index - 1) }}
+                                </td>                                
                                 <td>
                                     @if ($product->inventory)
                                         <a href="{{ route('admin.inventory.show', ['id' => $product->inventory->inventory_id]) }}"

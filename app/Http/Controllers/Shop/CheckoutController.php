@@ -126,9 +126,9 @@ class CheckoutController extends Controller
             }
 
             $result = $this->geminiValidator->validateScreenshot(
-                storage_path('app/public/payment/' . $filename),
+                public_path('payment/' . $filename),
                 $expectedAmount
-            );            
+            );       
 
             $validPayment = $result
                 && isset($result['valid_format'], $result['amount'], $result['reference_number'])
@@ -137,6 +137,12 @@ class CheckoutController extends Controller
                     $result['amount'],
                     $expectedAmount
                 );
+
+                if (!$result || !$result['valid_format']) {
+                    return redirect()->route('checkout.checkout')
+                        ->with('error', 'Invalid GCash payment screenshot. Please upload a valid GCash payment proof.')
+                        ->withInput();
+                }
 
                 if ($result && isset($result['transaction_date'])) {
                     $transactionDate = strtotime($result['transaction_date']);

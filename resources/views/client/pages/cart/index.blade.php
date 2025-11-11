@@ -43,7 +43,7 @@
                                     </td>
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            <img src="{{ $item->product->image ? asset('storage/' . $item->product->image) : asset('storage/images/placeholder.png') }}"
+                                            <img src="{{ $item->product->image ? asset($item->product->image) : asset('images/placeholder.png') }}"
                                                 alt="{{ $item->product->product_name }}"
                                                 class="me-2 rounded border"
                                                 style="width:50px;height:50px;object-fit:cover;">                                       

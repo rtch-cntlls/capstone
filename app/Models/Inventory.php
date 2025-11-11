@@ -26,8 +26,9 @@ class Inventory extends Model
         return $this->hasMany(InventoryHistory::class, 'inventory_id', 'inventory_id');
     }
     
-    public function getCodeAttribute(): string
-    {
-        return 'INV' . $this->inventory_id;
-    }
+    // public function getCodeAttribute(): string
+    // {
+    //     $randomNumber = mt_rand(100000, 999999);
+    //     return 'INV' . $randomNumber;
+    // }
 }

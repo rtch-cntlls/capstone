@@ -10,7 +10,7 @@
                 <div class="row g-4 align-items-center">
                     <div class="col-md-6 text-center">
                         <div class="text-muted">
-                            <img src="{{ asset('storage/images/gcash-code.jpg') }}" alt="GCash QR" class="img-fluid" style="max-width: 250px;">
+                            <img src="{{ asset('images/gcash-code.jpg') }}" alt="GCash QR" class="img-fluid" style="max-width: 250px;">
                             <p class="m-0"><span class="fw-bold">Gcash Number:</span> 09453590382</p>
                             <p class="m-0"><span class="fw-bold">Account Name:</span> AWRICH C PARAGES</p>
                         </div>
@@ -36,6 +36,27 @@
                 <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
                 <button type="button" id="confirmPaymentBtn" class="btn btn-primary rounded-pill fw-bold">Confirm Payment</button>
             </div>
+            <div id="paymentLoader" class="d-none text-center p-5">
+                <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <h5 class="fw-bold mb-2">Validating Your Payment</h5>
+                <p class="text-muted small">Please wait while we confirm your transaction.</p>
+            </div>
         </div>
     </div>
 </div>
+<script>
+    document.getElementById('confirmPaymentBtn').addEventListener('click', function() {
+    const modalBody = document.querySelector('#paymentModal .modal-body');
+    const modalFooter = document.querySelector('#paymentModal .modal-footer');
+
+    modalBody.classList.add('d-none');
+    modalFooter.classList.add('d-none');
+
+    const loader = document.getElementById('paymentLoader');
+    loader.classList.remove('d-none');
+
+});
+
+</script>

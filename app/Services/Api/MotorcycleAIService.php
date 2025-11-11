@@ -15,7 +15,7 @@ class MotorcycleAIService
     {
         $this->apiKey  = env('GEMINI_API_KEY'); 
         $this->baseUrl = "https://generativelanguage.googleapis.com/v1";
-        $this->model   = env('GEMINI_MODEL', 'gemini-2.5-pro');
+        $this->model   = env('GEMINI_MODEL', 'gemini-2.5-flash');
     }
     
     public function getMaintenanceRecommendations(string $brand, string $model): array
