@@ -27,6 +27,7 @@ class OrderManagementController extends Controller
             return view('admin.pages.order.index', compact('orders', 'cards', 'localOrders', 'nationwideOrders'));
         } catch (\Throwable $e) {
             report($e); 
+            dd($e->getMessage());
             return response()->view('error.admin500');
         }
     }

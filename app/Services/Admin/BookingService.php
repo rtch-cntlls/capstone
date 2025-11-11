@@ -20,36 +20,86 @@ class BookingService
         return $query->paginate($perPage);
     }
 
-    public function getBookingStats()
+    // public function getBookingStats()
+    // {
+    //     $stats = Booking::select('status', DB::raw('COUNT(*) as total'))
+    //         ->whereIn('status', ['Pending', 'Approved', 'Completed', 'Cancelled', 'Failed'])
+    //         ->groupBy('status')
+    //         ->pluck('total', 'status');
+
+    //     return [
+    //         [
+    //             'title' => 'Pending/Approved',
+    //             'value' => ($stats['Pending'] ?? 0) + ($stats['Approved'] ?? 0),
+    //             'type'  => 'bookings',
+    //             'icon'  => 'fas fa-clock',
+    //         ],
+    //         [
+    //             'title' => 'Completed',
+    //             'value' => $stats['Completed'] ?? 0,
+    //             'type'  => 'bookings',
+    //             'icon'  => 'fas fa-clipboard-check',
+    //         ],
+    //         [
+    //             'title' => 'Cancelled',
+    //             'value' => $stats['Cancelled'] ?? 0,
+    //             'type'  => 'bookings',
+    //             'icon'  => 'fas fa-times-circle',
+    //         ],
+    //         [
+    //             'title' => 'Failed',
+    //             'value' => $stats['Failed'] ?? 0,
+    //             'type'  => 'bookings',
+    //             'icon'  => 'fas fa-times-circle',
+    //         ],
+    //     ];
+    // }
+
+    public function getBookingStats(): array
     {
-        $stats = Booking::select('status', DB::raw('COUNT(*) as total'))
-            ->whereIn('status', ['Pending', 'Approved', 'Completed', 'Cancelled', 'Failed'])
+        $monthStart = now()->startOfMonth();
+        $monthEnd = now()->endOfMonth();
+
+        $lastMonthStart = now()->subMonth()->startOfMonth();
+        $lastMonthEnd = now()->subMonth()->endOfMonth();
+
+        $statuses = ['Pending', 'Approved', 'Completed', 'Cancelled', 'Failed'];
+
+        $thisMonthStats = Booking::whereIn('status', $statuses)
+            ->whereBetween('updated_at', [$monthStart, $monthEnd])
+            ->select('status', DB::raw('COUNT(*) as total'))
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        $lastMonthStats = Booking::whereIn('status', $statuses)
+            ->whereBetween('updated_at', [$lastMonthStart, $lastMonthEnd])
+            ->select('status', DB::raw('COUNT(*) as total'))
             ->groupBy('status')
             ->pluck('total', 'status');
 
         return [
             [
                 'title' => 'Pending/Approved',
-                'value' => ($stats['Pending'] ?? 0) + ($stats['Approved'] ?? 0),
-                'type'  => 'bookings',
+                'value' => ($thisMonthStats['Pending'] ?? 0) + ($thisMonthStats['Approved'] ?? 0),
+                'type'  => 'Last month: ' . (($lastMonthStats['Pending'] ?? 0) + ($lastMonthStats['Approved'] ?? 0)),
                 'icon'  => 'fas fa-clock',
             ],
             [
                 'title' => 'Completed',
-                'value' => $stats['Completed'] ?? 0,
-                'type'  => 'bookings',
+                'value' => $thisMonthStats['Completed'] ?? 0,
+                'type'  => 'Last month: ' . ($lastMonthStats['Completed'] ?? 0),
                 'icon'  => 'fas fa-clipboard-check',
             ],
             [
                 'title' => 'Cancelled',
-                'value' => $stats['Cancelled'] ?? 0,
-                'type'  => 'bookings',
+                'value' => $thisMonthStats['Cancelled'] ?? 0,
+                'type'  => 'Last month: ' . ($lastMonthStats['Cancelled'] ?? 0),
                 'icon'  => 'fas fa-times-circle',
             ],
             [
                 'title' => 'Failed',
-                'value' => $stats['Failed'] ?? 0,
-                'type'  => 'bookings',
+                'value' => $thisMonthStats['Failed'] ?? 0,
+                'type'  => 'Last month: ' . ($lastMonthStats['Failed'] ?? 0),
                 'icon'  => 'fas fa-times-circle',
             ],
         ];

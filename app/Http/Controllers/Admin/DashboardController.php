@@ -23,7 +23,7 @@ class DashboardController extends Controller
             $data = $this->dashboardService->getDashboardData($month, $year);
             $data['totalProductValue'] = $this->dashboardService->getTotalProductValue();
             $data['todaySales'] = $this->dashboardService->getTodaySalesTotal();
-            $data['soldProductValue'] = $this->dashboardService->getTotalSoldProductValue();
+            $data['soldProductValue'] = $this->dashboardService->getTotalSoldProductValue(); 
 
             $data['soldPercent'] = $data['totalProductValue'] > 0 
                 ? round(($data['soldProductValue'] / $data['totalProductValue']) * 100, 1) 

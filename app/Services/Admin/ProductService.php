@@ -44,29 +44,89 @@ class ProductService
         return $query->paginate($perPage)->appends($request->only('search'));
     }
 
+    // public function getCards(): array
+    // {
+    //     $data = [
+    //         'condition' => Product::where('condition', 'new')->count(),
+    //         'active'    => Product::where('status', 'active')->count(),
+    //         'inactive'  => Product::where('status', 'inactive')->count(),
+    //     ];
+
+    //     return [
+    //         [
+    //             'title' => 'New Products', 'icon'  => 'fas fa-star', 'value' => $data['condition'],
+    //             'type'  => 'product/s', 'color' => 'text-primary',
+    //         ],
+    //         [
+    //             'title' => 'Active', 'icon'  => 'fas fa-circle-check', 'value' => $data['active'],
+    //             'type'  => 'item/s', 'color' => 'text-success',
+    //         ],
+    //         [
+    //             'title' => 'Inactive', 'icon'  => 'fas fa-circle-xmark', 'value' => $data['inactive'],
+    //             'type'  => 'item/s', 'color' => 'text-danger',
+    //         ],
+    //     ];
+    // }
+
     public function getCards(): array
     {
-        $data = [
-            'condition' => Product::where('condition', 'new')->count(),
-            'active'    => Product::where('status', 'active')->count(),
-            'inactive'  => Product::where('status', 'inactive')->count(),
-        ];
-
+        $monthStart = now()->startOfMonth();
+        $monthEnd = now()->endOfMonth();
+    
+        $lastMonthStart = now()->subMonth()->startOfMonth();
+        $lastMonthEnd = now()->subMonth()->endOfMonth();
+    
+        // New products created this month
+        $newThisMonth = Product::where('condition', 'new')
+            ->whereBetween('created_at', [$monthStart, $monthEnd])
+            ->count();
+    
+        $newLastMonth = Product::where('condition', 'new')
+            ->whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])
+            ->count();
+    
+        // Active products updated this month
+        $activeThisMonth = Product::where('status', 'active')
+            ->whereBetween('updated_at', [$monthStart, $monthEnd])
+            ->count();
+    
+        $activeLastMonth = Product::where('status', 'active')
+            ->whereBetween('updated_at', [$lastMonthStart, $lastMonthEnd])
+            ->count();
+    
+        // Inactive products updated this month
+        $inactiveThisMonth = Product::where('status', 'inactive')
+            ->whereBetween('updated_at', [$monthStart, $monthEnd])
+            ->count();
+    
+        $inactiveLastMonth = Product::where('status', 'inactive')
+            ->whereBetween('updated_at', [$lastMonthStart, $lastMonthEnd])
+            ->count();
+    
         return [
             [
-                'title' => 'New Products', 'icon'  => 'fas fa-star', 'value' => $data['condition'],
-                'type'  => 'product/s', 'color' => 'text-primary',
+                'title' => 'New Products',
+                'icon'  => 'fas fa-star',
+                'value' => $newThisMonth,
+                'type'  => 'Last month: ' . $newLastMonth,
+                'color' => 'text-primary',
             ],
             [
-                'title' => 'Active', 'icon'  => 'fas fa-circle-check', 'value' => $data['active'],
-                'type'  => 'item/s', 'color' => 'text-success',
+                'title' => 'Active',
+                'icon'  => 'fas fa-circle-check',
+                'value' => $activeThisMonth,
+                'type'  => 'Last month: ' . $activeLastMonth,
+                'color' => 'text-success',
             ],
             [
-                'title' => 'Inactive', 'icon'  => 'fas fa-circle-xmark', 'value' => $data['inactive'],
-                'type'  => 'item/s', 'color' => 'text-danger',
+                'title' => 'Inactive',
+                'icon'  => 'fas fa-circle-xmark',
+                'value' => $inactiveThisMonth,
+                'type'  => 'Last month: ' . $inactiveLastMonth,
+                'color' => 'text-danger',
             ],
         ];
-    }
+    }    
 
     public function createProduct(Request $request)
     {

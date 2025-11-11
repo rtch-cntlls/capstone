@@ -8,6 +8,7 @@ use App\Models\OrderItem;
 use App\Models\Sale;
 use App\Models\SaleItem;
 use App\Models\Booking;
+use App\Models\ServiceLog;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -15,7 +16,7 @@ class DashboardService
 {
     public const CUSTOMER_ROLE = 2;
 
-    public function getDashboardData(int $month, int $year): array
+    public function getDashboardData(int $month, int $year): array 
     {
         $today = Carbon::now();
         return [
@@ -53,7 +54,9 @@ class DashboardService
     private function getDashboardCards(): array
     {
         $totalProducts = Product::where('status', 'Active')->count();
-        $totalUsers = User::where('role_id', self::CUSTOMER_ROLE)->count();
+        $totalUsers = User::where('role_id', DashboardService::CUSTOMER_ROLE)
+            ->whereHas('customer.orders')
+            ->count();
         $totalOrder = OrderItem::with('product')->count();
         $totalBooking = Booking::with('service')->count();
 
@@ -84,7 +87,7 @@ class DashboardService
     public function getTotalProductValue(): float
     {
         return Product::with('inventory')->get()
-            ->sum(fn($product) => ($product->cost_price ?? 0) * ($product->inventory->instock ?? 0));
+            ->sum(fn($product) => ($product->sale_price ?? 0) * ($product->inventory->instock ?? 0));
     }
 
     public function getTotalSoldProductValue(): float
@@ -92,10 +95,38 @@ class DashboardService
         return Sale::sum('grand_total');
     }
 
-    public function getTodaySalesTotal(): float
+    public function getTodaySalesTotal(): string
     {
-        return Sale::whereDate('sale_date', now()->toDateString())
+        $today = now()->toDateString();
+
+        $productSales = Sale::whereDate('sale_date', $today)
             ->sum('grand_total');
+
+        $bookingRevenue = Booking::with('service')
+            ->where('status', 'Completed')
+            ->whereDate('created_at', $today)
+            ->get()
+            ->sum(fn($booking) => optional($booking->service)->price ?? 0);
+
+        $serviceLogRevenue = ServiceLog::with('service')
+            ->whereDate('created_at', $today)
+            ->get()
+            ->sum(fn($log) => optional($log->service)->price ?? 0);
+
+        $total = $productSales + $bookingRevenue + $serviceLogRevenue;
+
+        return $this->formatToK($total);
+    }
+
+    protected function formatToK(float $number): string
+    {
+        if ($number >= 1000000) {
+            return rtrim(rtrim(number_format($number / 1000000, 1), '0'), '.') . 'M';
+        } elseif ($number >= 1000) {
+            return rtrim(rtrim(number_format($number / 1000, 1), '0'), '.') . 'K';
+        }
+    
+        return rtrim(rtrim(number_format($number, 1), '0'), '.');
     }
 
     private function getRecentProducts()
@@ -103,7 +134,7 @@ class DashboardService
         return Product::with('category')->latest()->take(5)->get();
     }
 
-    private function getWeeklySales(): float
+    private function getWeeklySales(): float 
     {
         $today = Carbon::now();
         $weekStart = $today->copy()->startOfWeek();
@@ -170,25 +201,40 @@ class DashboardService
         ];
     }
     
-    public function getOverallRevenue(): array
-    {
-        $productRevenue = Sale::sum('grand_total');
 
-        $serviceRevenue = Booking::with('service')
+    public function getOverallRevenue(?Carbon $month = null): array
+    {
+        $month = $month ?? Carbon::now();
+
+        $productRevenue = Sale::whereMonth('created_at', $month->month)
+                            ->whereYear('created_at', $month->year)
+                            ->sum('grand_total');
+
+        $bookingRevenue = Booking::with('service')
             ->where('status', 'Completed')
+            ->whereMonth('created_at', $month->month)
+            ->whereYear('created_at', $month->year)
             ->get()
             ->sum(fn($booking) => optional($booking->service)->price ?? 0);
 
+        $serviceLogRevenue = ServiceLog::with('service')
+            ->whereMonth('created_at', $month->month)
+            ->whereYear('created_at', $month->year)
+            ->get()
+            ->sum(fn($log) => optional($log->service)->price ?? 0);
+
+        $totalServiceRevenue = $bookingRevenue + $serviceLogRevenue;
+
         return [
             'productRevenue' => $productRevenue,
-            'serviceRevenue' => $serviceRevenue,
-            'totalRevenue'   => $productRevenue + $serviceRevenue,
+            'serviceRevenue' => $totalServiceRevenue,
+            'totalRevenue'   => $productRevenue + $totalServiceRevenue,
         ];
     }
 
-    public function getRevenueBreakdown(): array
+    public function getRevenueBreakdown(?Carbon $month = null): array
     {
-        $revenues = $this->getOverallRevenue();
+        $revenues = $this->getOverallRevenue($month);
 
         return [
             'labels' => ['Products', 'Services'],
@@ -219,49 +265,70 @@ class DashboardService
     {
         $today = Carbon::now();
         $weekStart = $today->copy()->startOfWeek();
-        $weekEnd = $today->copy()->endOfWeek();
+        $weekEnd   = $today->copy()->endOfWeek();
 
-        return Booking::with('service')
+        $bookingRevenue = Booking::with('service')
             ->where('status', 'Completed')
             ->whereBetween('created_at', [$weekStart, $weekEnd])
             ->get()
             ->sum(fn($booking) => optional($booking->service)->price ?? 0);
+
+        $serviceLogRevenue = ServiceLog::with('service')
+            ->whereBetween('created_at', [$weekStart, $weekEnd])
+            ->get()
+            ->sum(fn($log) => optional($log->service)->price ?? 0);
+
+        return $bookingRevenue + $serviceLogRevenue;
     }
 
     public function getDailyServiceRevenue()
     {
         $today = Carbon::now();
         $weekStart = $today->copy()->startOfWeek();
-        $weekEnd = $today->copy()->endOfWeek();
+        $weekEnd   = $today->copy()->endOfWeek();
+    
+        $dailyRevenue = [];
 
         $bookings = Booking::with('service')
             ->where('status', 'Completed')
             ->whereBetween('created_at', [$weekStart, $weekEnd])
             ->get();
-
-        $dailyRevenue = [];
-
+    
         foreach ($bookings as $booking) {
             $date = $booking->created_at->toDateString();
-            $price = optional($booking->service)->price ?? 0;
-
-            $dailyRevenue[$date] = ($dailyRevenue[$date] ?? 0) + $price;
+            $dailyRevenue[$date] = ($dailyRevenue[$date] ?? 0) + (optional($booking->service)->price ?? 0);
         }
 
+        $logs = ServiceLog::with('service')
+            ->whereBetween('created_at', [$weekStart, $weekEnd])
+            ->get();
+    
+        foreach ($logs as $log) {
+            $date = $log->created_at->toDateString();
+            $dailyRevenue[$date] = ($dailyRevenue[$date] ?? 0) + (optional($log->service)->price ?? 0);
+        }
+    
         return collect($dailyRevenue);
-    }
+    }    
 
     public function getLastWeekServiceRevenue(): float
     {
         $today = Carbon::now();
         $lastWeekStart = $today->copy()->subWeek()->startOfWeek();
-        $lastWeekEnd = $today->copy()->subWeek()->endOfWeek();
+        $lastWeekEnd   = $today->copy()->subWeek()->endOfWeek();
 
-        return Booking::with('service')
+        $bookingRevenue = Booking::with('service')
             ->where('status', 'Completed')
             ->whereBetween('created_at', [$lastWeekStart, $lastWeekEnd])
             ->get()
             ->sum(fn($booking) => optional($booking->service)->price ?? 0);
+
+        $serviceLogRevenue = ServiceLog::with('service')
+            ->whereBetween('created_at', [$lastWeekStart, $lastWeekEnd])
+            ->get()
+            ->sum(fn($log) => optional($log->service)->price ?? 0);
+
+        return $bookingRevenue + $serviceLogRevenue;
     }
 
     public function getMonthlyRevenueChart(): array

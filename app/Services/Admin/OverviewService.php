@@ -98,18 +98,18 @@ class OverviewService
     private function getDatePeriods(): array
     {
         $now = Carbon::now();
-
+    
         return [
             'this' => [
-                'start' => $now->copy()->subDays(29)->startOfDay(),
-                'end' => $now->copy()->endOfDay(),
+                'start' => $now->copy()->startOfMonth(),
+                'end' => $now->copy()->endOfMonth(),
             ],
             'last' => [
-                'start' => $now->copy()->subDays(59)->startOfDay(),
-                'end' => $now->copy()->subDays(30)->endOfDay(),
+                'start' => $now->copy()->subMonth()->startOfMonth(),
+                'end' => $now->copy()->subMonth()->endOfMonth(),
             ],
         ];
-    }
+    }    
 
     private function getPeriodData(array $period): array
     {
@@ -148,7 +148,7 @@ class OverviewService
         return number_format($number, 2);
     }
 
-    private function buildCards(array $data): array
+    private function buildCards(array $data): array 
     {
         $growth = fn($current, $previous) => [
             'difference' => $current - $previous,
@@ -179,52 +179,71 @@ class OverviewService
         ];
     }
 
-    public function getTopProducts(int $limit = 5): array
+    public function getTopProducts(int $limit = 5, ?int $month = null, ?int $year = null): array
     {
+        $month = $month ?? now()->month;
+        $year  = $year ?? now()->year;
+    
         $topProducts = SaleItem::select(
                 'product_id',
                 DB::raw('SUM(quantity) as total_quantity')
             )
             ->with('product')
+            ->whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)
             ->groupBy('product_id')
             ->orderByDesc('total_quantity')
             ->take($limit)
             ->get();
-
+    
         $labels = $topProducts->map(fn($item) => $item->product?->product_name ?? 'Unknown')->toArray();
-        $data = $topProducts->pluck('total_quantity')->toArray();
-
+        $data   = $topProducts->pluck('total_quantity')->toArray();
+    
         return [
             'labels' => $labels,
-            'data' => $data,
+            'data'   => $data,
         ];
     }
-
-    public function getCategoryRevenueShare(): array
+    
+    public function getCategoryRevenueShare(?int $month = null, ?int $year = null): array
     {
+        $month = $month ?? now()->month;
+        $year  = $year ?? now()->year;
+    
         $categoryRevenue = SaleItem::with('product.category')
+            ->whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)
             ->get()
             ->groupBy(fn($item) => $item->product?->category?->name ?? 'Uncategorized')
             ->map(fn($items) => $items->sum(function ($item) {
                 $cost = $item->product?->cost_price ?? 0;
                 return ($item->price - $cost) * $item->quantity;
             }));
-
+    
         return [
             'labels' => $categoryRevenue->keys()->toArray(),
             'data'   => $categoryRevenue->values()->toArray(),
         ];
-    }
+    }    
 
-    public function getRecentSoldProducts(int $limit = 5)
+    public function getRecentSoldProducts(int $limit = 5, ?int $month = null, ?int $year = null)
     {
+        $month = $month ?? now()->month;
+        $year  = $year ?? now()->year;
+    
         $soldProducts = SaleItem::with('product.category')
-            ->select('product_id', DB::raw('SUM(quantity) as total_quantity'), DB::raw('AVG(price) as price'))
+            ->select(
+                'product_id',
+                DB::raw('SUM(quantity) as total_quantity'),
+                DB::raw('AVG(price) as price')
+            )
+            ->whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)
             ->groupBy('product_id')
             ->orderByDesc(DB::raw('SUM(quantity)'))
             ->take($limit)
             ->get();
-
+    
         foreach ($soldProducts as $item) {
             $cost = $item->product?->cost_price ?? 0;
             $item->total_revenue = ($item->price - $cost) * $item->total_quantity;

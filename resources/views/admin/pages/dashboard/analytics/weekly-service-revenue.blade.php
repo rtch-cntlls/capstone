@@ -1,9 +1,10 @@
 <div class="d-flex justify-content-between align-items-center flex-wrap">
     <div>
         <div class="mb-2 fw-bold" style="font-size:14px;">Weekly Service Revenue</div>
-        <h5 class="p-2 fw-bold mb-2">
+        <h5 class="p-0 m-0 fw-bold">
             ₱{{ number_format($weeklyServiceRevenue, 2) }}
         </h5>    
+        <small class="m-0 text-muted">This week sroduct sale</small> 
     </div>
     <div class="m-0" style="width: 200px; height: 100px;">
         <div id="weeklyServiceRevenueMiniChart"></div>

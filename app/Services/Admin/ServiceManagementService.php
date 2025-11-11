@@ -18,21 +18,62 @@ class ServiceManagementService
         return $query->paginate($perPage);
     }
 
+    // public function getCardsData(): array
+    // {
+    //     $stats = Service::select('status', DB::raw('COUNT(*) as total'))
+    //         ->whereIn('status', ['Active', 'Inactive'])
+    //         ->groupBy('status')
+    //         ->pluck('total', 'status');
+
+    //     return [
+    //         [
+    //             'title' => 'Active', 'value' => $stats['Active'] ?? 0, 'type' => 'services',
+    //             'color' => 'text-success', 'icon' => 'fas fa-check-circle',
+    //         ],
+    //         [
+    //             'title' => 'Inactive', 'value' => $stats['Inactive'] ?? 0,  'type' => 'services',
+    //             'color' => 'text-danger', 'icon' => 'fas fa-times-circle',
+    //         ],
+    //     ];
+    // }
     public function getCardsData(): array
     {
-        $stats = Service::select('status', DB::raw('COUNT(*) as total'))
-            ->whereIn('status', ['Active', 'Inactive'])
-            ->groupBy('status')
-            ->pluck('total', 'status');
+        $monthStart = now()->startOfMonth();
+        $monthEnd = now()->endOfMonth();
+
+        $lastMonthStart = now()->subMonth()->startOfMonth();
+        $lastMonthEnd = now()->subMonth()->endOfMonth();
+
+        $activeThisMonth = Service::where('status', 'Active')
+            ->whereBetween('updated_at', [$monthStart, $monthEnd])
+            ->count();
+
+        $inactiveThisMonth = Service::where('status', 'Inactive')
+            ->whereBetween('updated_at', [$monthStart, $monthEnd])
+            ->count();
+
+        $activeLastMonth = Service::where('status', 'Active')
+            ->whereBetween('updated_at', [$lastMonthStart, $lastMonthEnd])
+            ->count();
+
+        $inactiveLastMonth = Service::where('status', 'Inactive')
+            ->whereBetween('updated_at', [$lastMonthStart, $lastMonthEnd])
+            ->count();
 
         return [
             [
-                'title' => 'Active', 'value' => $stats['Active'] ?? 0, 'type' => 'services',
-                'color' => 'text-success', 'icon' => 'fas fa-check-circle',
+                'title' => 'Active',
+                'value' => $activeThisMonth,
+                'type'  => 'Last month: ' . $activeLastMonth,
+                'color' => 'text-success',
+                'icon'  => 'fas fa-check-circle',
             ],
             [
-                'title' => 'Inactive', 'value' => $stats['Inactive'] ?? 0,  'type' => 'services',
-                'color' => 'text-danger', 'icon' => 'fas fa-times-circle',
+                'title' => 'Inactive',
+                'value' => $inactiveThisMonth,
+                'type'  => 'Last month: ' . $inactiveLastMonth,
+                'color' => 'text-danger',
+                'icon'  => 'fas fa-times-circle',
             ],
         ];
     }

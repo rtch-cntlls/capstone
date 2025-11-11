@@ -40,12 +40,54 @@ class OrderService
         return $query;
     }
 
+    // public function getOrdersAndCards(Request $request): array
+    // {
+    //     $showAllStatuses = strtolower($request->status ?? '') === 'total_orders';
+    
+    //     $query = Order::with(['customer.user']);
+
+    //     $query = $this->applyFilters($query, $request);
+    
+    //     $query->when($request->filled('status') && !$showAllStatuses, function ($q) use ($request) {
+    //         $status = strtolower($request->status);
+    //         if (in_array($status, ['pending', 'completed', 'cancelled'])) {
+    //             $q->where('status', $status);
+    //         }
+    //     }, function ($q) use ($showAllStatuses) {
+    //         if (!$showAllStatuses) {
+    //             $q->whereNotIn('status', ['completed', 'cancelled']);
+    //         }
+    //     });
+
+    //     $orders = $query->latest()->paginate(10)->withQueryString();
+
+    //     $allStatuses = ['pending','processing','out_for_delivery','ready_for_pick_up','shipped','completed','cancelled'];
+    //     $stats = Order::select('status', DB::raw('COUNT(*) as total'))
+    //         ->whereIn('status', $allStatuses)
+    //         ->groupBy('status')
+    //         ->pluck('total', 'status');
+    
+    //     $cards = [
+    //         [
+    //             'title' => 'Total Orders', 
+    //             'value' => Order::count(), 
+    //             'type' => 'Orders', 
+    //             'icon' => 'fas fa-shopping-cart', 
+    //             'color' => 'text-primary',
+    //             'link'  => route('admin.orders.index', ['status' => 'total_orders'])
+    //         ],
+    //         ['title' => 'Pending', 'value' => $stats['pending'] ?? 0, 'type' => 'Orders', 'icon' => 'fas fa-clock', 'color' => 'text-warning'],
+    //         ['title' => 'Completed', 'value' => $stats['completed'] ?? 0, 'type' => 'Orders', 'icon' => 'fas fa-check-circle', 'color' => 'text-success'],
+    //         ['title' => 'Cancelled', 'value' => $stats['cancelled'] ?? 0, 'type' => 'Orders', 'icon' => 'fas fa-times-circle', 'color' => 'text-danger'],
+    //     ];
+    
+    //     return [$orders, $cards];
+    // }    
     public function getOrdersAndCards(Request $request): array
     {
         $showAllStatuses = strtolower($request->status ?? '') === 'total_orders';
     
         $query = Order::with(['customer.user']);
-
         $query = $this->applyFilters($query, $request);
     
         $query->when($request->filled('status') && !$showAllStatuses, function ($q) use ($request) {
@@ -58,31 +100,64 @@ class OrderService
                 $q->whereNotIn('status', ['completed', 'cancelled']);
             }
         });
-
+    
         $orders = $query->latest()->paginate(10)->withQueryString();
-
+    
+        $monthStart = now()->startOfMonth();
+        $monthEnd = now()->endOfMonth();
+    
+        $lastMonthStart = now()->subMonth()->startOfMonth();
+        $lastMonthEnd = now()->subMonth()->endOfMonth();
+    
         $allStatuses = ['pending','processing','out_for_delivery','ready_for_pick_up','shipped','completed','cancelled'];
-        $stats = Order::select('status', DB::raw('COUNT(*) as total'))
+    
+        $stats = Order::whereBetween('created_at', [$monthStart, $monthEnd])
             ->whereIn('status', $allStatuses)
+            ->select('status', DB::raw('COUNT(*) as total'))
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        $lastStats = Order::whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])
+            ->whereIn('status', $allStatuses)
+            ->select('status', DB::raw('COUNT(*) as total'))
             ->groupBy('status')
             ->pluck('total', 'status');
     
         $cards = [
             [
-                'title' => 'Total Orders', 
-                'value' => Order::count(), 
-                'type' => 'Orders', 
-                'icon' => 'fas fa-shopping-cart', 
+                'title' => 'Total Orders',
+                'value' => Order::whereBetween('created_at', [$monthStart, $monthEnd])->count(),
+                'type'  => 'Last month: ' . Order::whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])->count(),
+                'icon'  => 'fas fa-shopping-cart',
                 'color' => 'text-primary',
-                'link'  => route('admin.orders.index', ['status' => 'total_orders'])
+                'link'  => route('admin.orders.index', ['status' => 'total_orders']),
             ],
-            ['title' => 'Pending', 'value' => $stats['pending'] ?? 0, 'type' => 'Orders', 'icon' => 'fas fa-clock', 'color' => 'text-warning'],
-            ['title' => 'Completed', 'value' => $stats['completed'] ?? 0, 'type' => 'Orders', 'icon' => 'fas fa-check-circle', 'color' => 'text-success'],
-            ['title' => 'Cancelled', 'value' => $stats['cancelled'] ?? 0, 'type' => 'Orders', 'icon' => 'fas fa-times-circle', 'color' => 'text-danger'],
+            [
+                'title' => 'Pending',
+                'value' => $stats['pending'] ?? 0,
+                'type'  => 'Last month: ' . ($lastStats['pending'] ?? 0),
+                'icon'  => 'fas fa-clock',
+                'color' => 'text-warning'
+            ],
+            [
+                'title' => 'Completed',
+                'value' => $stats['completed'] ?? 0,
+                'type'  => 'Last month: ' . ($lastStats['completed'] ?? 0),
+                'icon'  => 'fas fa-check-circle',
+                'color' => 'text-success'
+            ],
+            [
+                'title' => 'Cancelled',
+                'value' => $stats['cancelled'] ?? 0,
+                'type'  => 'Last month: ' . ($lastStats['cancelled'] ?? 0),
+                'icon'  => 'fas fa-times-circle',
+                'color' => 'text-danger'
+            ],
         ];
     
         return [$orders, $cards];
-    }    
+    }
+    
 
     public function getOrderById(int $orderId): Order
     {

@@ -62,10 +62,6 @@
                             </div>
                         @enderror
                     </div>
-                    <div class="mb-3">
-                        <label class="small form-label">Additional Notes (Optional)</label>
-                        <textarea name="notes" class="form-control" rows="4" placeholder="Add any special instructions..."></textarea>
-                    </div>
                     <button type="submit" class="btn btn-success w-100">Confirm Booking</button>
                 </form>
             </div>
