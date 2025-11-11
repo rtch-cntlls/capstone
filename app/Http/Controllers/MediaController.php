@@ -4,20 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\MessageAttachment;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class MediaController extends Controller
 {
     public function show(MessageAttachment $attachment, Request $request)
     {
-        $disk = Storage::disk('public');
         $path = $attachment->attachment_path;
-        if (!$disk->exists($path)) {
+        $fullPath = public_path($path);
+        if (!is_file($fullPath)) {
             abort(404);
         }
-        $fullPath = $disk->path($path);
-        $mime = $attachment->mime_type ?: $disk->mimeType($path) ?: 'application/octet-stream';
+        $mime = $attachment->mime_type ?: (mime_content_type($fullPath) ?: 'application/octet-stream');
 
         $size = filesize($fullPath);
         $forceDownload = filter_var($request->query('download'), FILTER_VALIDATE_BOOL);
@@ -83,13 +81,12 @@ class MediaController extends Controller
         if (!$attachment->thumbnail_path) {
             abort(404);
         }
-        $disk = Storage::disk('public');
         $path = $attachment->thumbnail_path;
-        if (!$disk->exists($path)) {
+        $fullPath = public_path($path);
+        if (!is_file($fullPath)) {
             abort(404);
         }
-        $fullPath = $disk->path($path);
-        $mime = $disk->mimeType($path) ?: 'image/jpeg';
+        $mime = mime_content_type($fullPath) ?: 'image/jpeg';
         $size = filesize($fullPath);
 
         return response()->stream(function () use ($fullPath) {

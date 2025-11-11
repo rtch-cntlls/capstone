@@ -6,7 +6,6 @@ use App\Models\Message;
 use App\Models\MessageAttachment;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 
 class MessageService
@@ -53,7 +52,13 @@ class MessageService
 
         foreach ($attachments as $file) {
             if (!$file instanceof UploadedFile) continue;
-            $storedPath = $file->store('messages', 'public');
+            $destDir = public_path('messages');
+            if (!is_dir($destDir)) {
+                @mkdir($destDir, 0775, true);
+            }
+            $ext = $file->getClientOriginalExtension();
+            $filename = uniqid('', true) . ($ext ? ('.' . $ext) : '');
+            // Detect MIME/type BEFORE moving the file
             $mime = $file->getMimeType();
             $type = null;
             if ($mime && str_starts_with($mime, 'image/')) {
@@ -63,6 +68,9 @@ class MessageService
             } else {
                 $type = 'other';
             }
+            // Now move the file
+            $file->move($destDir, $filename);
+            $storedPath = 'messages/' . $filename;
 
             $thumbPath = $type === 'video' ? $this->generateVideoThumbnail($storedPath) : null;
 
@@ -85,9 +93,9 @@ class MessageService
             if ($ffmpeg === '') {
                 return null;
             }
-            $source = Storage::disk('public')->path($relativeStoredPath);
+            $source = public_path($relativeStoredPath);
             $thumbRel = 'messages/thumbnails/' . pathinfo($relativeStoredPath, PATHINFO_FILENAME) . '.jpg';
-            $thumbAbs = Storage::disk('public')->path($thumbRel);
+            $thumbAbs = public_path($thumbRel);
             if (!is_dir(dirname($thumbAbs))) {
                 @mkdir(dirname($thumbAbs), 0775, true);
             }

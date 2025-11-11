@@ -109,24 +109,19 @@ function fetchMessages() {
         .then(res => res.json())
         .then(messages => {
             messagesContainer.innerHTML = '';
-            const blobCache = window.__mediaBlobCache || (window.__mediaBlobCache = {});
             messages.forEach(message => {
                 const div = document.createElement('div');
                 div.className = `mb-2 d-flex ${message.sender_id == authUserId ? 'justify-content-end' : 'justify-content-start'}`;
                 let mediaHtml = '';
                 if (Array.isArray(message.attachments) && message.attachments.length) {
                     mediaHtml = message.attachments.map(att => {
-                        const key = `att_${att.attachment_id}`;
-                        const url = blobCache[key] || '';
+                        const mediaUrl = `${window.location.origin}/media/attachments/${att.attachment_id}?v=${Date.now()}`;
                         if (att.attachment_type === 'image') {
-                            const srcAttr = url ? `src=\"${url}\"` : '';
-                            return `<img data-attachment-id=\"${att.attachment_id}\" ${srcAttr} alt=\"image\" class=\"rounded mb-1\" style=\"max-width:120px; max-height:120px; cursor:pointer;\"/>`;
+                            return `<img data-attachment-id=\"${att.attachment_id}\" src=\"${mediaUrl}\" alt=\"image\" class=\"rounded mb-1\" style=\"max-width:120px; max-height:120px; cursor:pointer;\"/>`;
                         } else if (att.attachment_type === 'video') {
-                            const posterKey = att.thumbnail_path ? `att_thumb_${att.attachment_id}` : null;
-                            const posterUrl = posterKey && blobCache[posterKey] ? blobCache[posterKey] : '';
-                            const posterAttr = posterUrl ? `poster=\"${posterUrl}\"` : '';
-                            const srcAttr = url ? `src=\"${url}\"` : '';
-                            return `<video data-attachment-id=\"${att.attachment_id}\" class=\"rounded mb-1\" style=\"max-width:120px; max-height:120px; cursor:pointer;\" ${posterAttr}><source ${srcAttr} type=\"${att.mime_type || 'video/mp4'}\"></video>`;
+                            const thumbUrl = att.thumbnail_path ? `${window.location.origin}/media/attachments/${att.attachment_id}/thumbnail?v=${Date.now()}` : '';
+                            const posterAttr = thumbUrl ? `poster=\"${thumbUrl}\"` : '';
+                            return `<video data-attachment-id=\"${att.attachment_id}\" class=\"rounded mb-1\" style=\"max-width:120px; max-height:120px; cursor:pointer;\" ${posterAttr}><source src=\"${mediaUrl}\" type=\"${att.mime_type || 'video/mp4'}\"></video>`;
                         }
                         return '';
                     }).join('');
@@ -142,41 +137,7 @@ function fetchMessages() {
                 `;
                 messagesContainer.appendChild(div);
 
-                if (Array.isArray(message.attachments)) {
-                    message.attachments.forEach(att => {
-                        const key = `att_${att.attachment_id}`;
-                        if (!blobCache[key]) {
-                            const mediaUrl = `${window.location.origin}/media/attachments/${att.attachment_id}?v=${Date.now()}`;
-                            fetch(mediaUrl, { cache: 'no-store' })
-                                .then(r => r.ok ? r.blob() : Promise.reject())
-                                .then(b => {
-                                    const objUrl = URL.createObjectURL(b);
-                                    blobCache[key] = objUrl;
-                                    const el = messagesContainer.querySelector(`[data-attachment-id="${att.attachment_id}"]`);
-                                    if (el && el.tagName.toLowerCase() === 'img') {
-                                        el.src = objUrl;
-                                    } else if (el && el.tagName.toLowerCase() === 'video') {
-                                        const source = el.querySelector('source');
-                                        if (source) { source.src = objUrl; el.load(); }
-                                    }
-                                }).catch(()=>{});
-                        }
-                        if (att.thumbnail_path) {
-                            const tkey = `att_thumb_${att.attachment_id}`;
-                            if (!blobCache[tkey]) {
-                                const thumbUrl = `${window.location.origin}/media/attachments/${att.attachment_id}/thumbnail?v=${Date.now()}`;
-                                fetch(thumbUrl, { cache: 'no-store' })
-                                    .then(r => r.ok ? r.blob() : Promise.reject())
-                                    .then(b => {
-                                        const objUrl = URL.createObjectURL(b);
-                                        blobCache[tkey] = objUrl;
-                                        const v = messagesContainer.querySelector(`video[data-attachment-id="${att.attachment_id}"]`);
-                                        if (v) { v.poster = objUrl; }
-                                    }).catch(()=>{});
-                            }
-                        }
-                    });
-                }
+                // Direct src with cache-busting is used; no extra fetching required.
             });
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         })
@@ -284,6 +245,13 @@ if(sendForm){
             progressWrap.classList.add('d-none');
             progressBar.style.width = '0%';
             progressBar.textContent = '0%';
+            try {
+                const cache = window.__mediaBlobCache;
+                if (cache && typeof cache === 'object') {
+                    Object.values(cache).forEach(url => { try { URL.revokeObjectURL(url); } catch(_){} });
+                }
+                window.__mediaBlobCache = {};
+            } catch(_){}
             fetchMessages();
             sendForm.reset();
             pendingFiles = [];
