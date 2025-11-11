@@ -50,7 +50,7 @@
                 @if($selectedUser)
                     @if(!$messages->isEmpty())
                         @foreach($messages as $message)
-                            <div class="mb-2 d-flex {{ $message->sender_id == auth()->user()->user_id ? 'justify-content-end' : 'justify-content-start' }}">
+                            <div class="mb-2 d-flex {{ $message->sender_id == auth()->user()->user_id ? 'justify-content-end' : 'justify-content-start' }}" data-mid="{{ $message->message_id ?? $message->id ?? ($message->created_at->timestamp . '-' . $message->sender_id . '-' . strlen($message->content ?? '')) }}">
                                 <div class="p-2 rounded {{ $message->sender_id == auth()->user()->user_id ? 'border bg-light' : 'bg-light border' }}" style="max-width: 70%;">
                                     @if(!empty($message->content))
                                         {{ $message->content }} 
@@ -103,23 +103,34 @@
 const selectedUserId = {{ $selectedUser->user_id }};
 const authUserId = {{ auth()->user()->user_id }};
 const messagesContainer = document.getElementById('messagesContainer');
+// Track which messages have been rendered to avoid re-rendering/blinking
+const renderedMessageKeys = new Set(
+    Array.from(messagesContainer.querySelectorAll('[data-mid]')).map(el => el.getAttribute('data-mid'))
+);
 
 function fetchMessages() {
     fetch(`/admin/messages/poll/${selectedUserId}`)
         .then(res => res.json())
         .then(messages => {
-            messagesContainer.innerHTML = '';
+            let appended = false;
             messages.forEach(message => {
+                const keyRaw = (message.message_id || message.id || `${message.created_at}|${message.sender_id}|${message.content ? message.content.length : 0}`);
+                const mid = encodeURIComponent(String(keyRaw));
+                if (renderedMessageKeys.has(mid)) return; // already rendered
+
                 const div = document.createElement('div');
                 div.className = `mb-2 d-flex ${message.sender_id == authUserId ? 'justify-content-end' : 'justify-content-start'}`;
+                div.setAttribute('data-mid', mid);
+
                 let mediaHtml = '';
                 if (Array.isArray(message.attachments) && message.attachments.length) {
+                    const ver = new Date(message.created_at).getTime();
                     mediaHtml = message.attachments.map(att => {
-                        const mediaUrl = `${window.location.origin}/media/attachments/${att.attachment_id}?v=${Date.now()}`;
+                        const mediaUrl = `${window.location.origin}/media/attachments/${att.attachment_id}?v=${ver}`;
                         if (att.attachment_type === 'image') {
                             return `<img data-attachment-id=\"${att.attachment_id}\" src=\"${mediaUrl}\" alt=\"image\" class=\"rounded mb-1\" style=\"max-width:120px; max-height:120px; cursor:pointer;\"/>`;
                         } else if (att.attachment_type === 'video') {
-                            const thumbUrl = att.thumbnail_path ? `${window.location.origin}/media/attachments/${att.attachment_id}/thumbnail?v=${Date.now()}` : '';
+                            const thumbUrl = att.thumbnail_path ? `${window.location.origin}/media/attachments/${att.attachment_id}/thumbnail?v=${ver}` : '';
                             const posterAttr = thumbUrl ? `poster=\"${thumbUrl}\"` : '';
                             return `<video data-attachment-id=\"${att.attachment_id}\" class=\"rounded mb-1\" style=\"max-width:120px; max-height:120px; cursor:pointer;\" ${posterAttr}><source src=\"${mediaUrl}\" type=\"${att.mime_type || 'video/mp4'}\"></video>`;
                         }
@@ -136,10 +147,10 @@ function fetchMessages() {
                     </div>
                 `;
                 messagesContainer.appendChild(div);
-
-                // Direct src with cache-busting is used; no extra fetching required.
+                renderedMessageKeys.add(mid);
+                appended = true;
             });
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            if (appended) messagesContainer.scrollTop = messagesContainer.scrollHeight;
         })
         .catch(err => console.error(err));
 }
