@@ -4,7 +4,7 @@
         <div style="font-size: 15px;">
             @if ($recentSoldProducts->isEmpty())
                 <div class="text-center my-2">
-                    <img src="{{ asset('storage/images/empty.gif') }}" alt="No Orders" style="width: 135px;">
+                    <img src="{{ asset('images/empty.gif') }}" alt="No Orders" style="width: 135px;">
                     <p class="m-0">No recent sold items</p>
                 </div>
             @else
@@ -22,7 +22,7 @@
                             @foreach ($recentSoldProducts as $item)
                                 <tr>
                                     <td class="d-flex align-items-center gap-2">
-                                        <img src="{{ $item->product && $item->product->image ? asset('storage/' . $item->product->image) : asset('storage/images/placeholder.png') }}" 
+                                        <img src="{{ $item->product && $item->product->image ? asset($item->product->image) : asset('images/placeholder.png') }}" 
                                             width="50" class="rounded">                                   
                                        <div>
                                             <div class="fw-semibold">

@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="container text-center mt-5">
-        <img src="{{ asset('storage/images/500.gif')}}" alt="500" width="300">
+        <img src="{{ asset('images/500.gif')}}" alt="500" width="300">
         <p class="lead">Something went wrong. Please try again later.</p>
         <a href="{{ url()->previous() }}" class="btn btn-outline-secondary mt-3">Go Back</a>
     </div>

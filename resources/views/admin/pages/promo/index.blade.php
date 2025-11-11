@@ -7,7 +7,7 @@
     <div class="mt-3">
         @if ($promo->isEmpty())
             <div class="text-center my-5">
-                <img src="{{ asset('storage/images/empty.gif') }}" alt="No Products" style="width: 180px;">
+                <img src="{{ asset('images/empty.gif') }}" alt="No Products" style="width: 180px;">
                 <p class="text-muted mt-3 mb-0">No promotions found.</p>
                 <a href="{{ route('admin.promo.create') }}" class="btn btn-outline-primary mt-2">
                     <i class="fa fa-plus me-1"></i> Create Promo

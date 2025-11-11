@@ -48,7 +48,7 @@
                                 <tr class="text-center">
                                     <td>
                                         <div class="d-flex flex-column align-items-center">
-                                            <img src="{{ $item->product->image ? asset('storage/' . $item->product->image) : asset('storage/images/placeholder.png') }}" 
+                                            <img src="{{ $item->product->image ? asset($item->product->image) : asset('images/placeholder.png') }}" 
                                                 alt="Product Image" class="img-fluid rounded" width="50">
                                             <small class="text-muted mt-1">{{ $item->product->name ?? 'Product' }}</small>
                                         </div>

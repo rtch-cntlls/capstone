@@ -59,7 +59,7 @@
         <div class="card-body" style="max-height: 340px; overflow-y: auto;">
             @if(empty($cart))
                 <div class="text-center my-5">
-                    <img src="{{ asset('storage/images/empty.gif') }}" alt="No Products" style="width: 150px;">
+                    <img src="{{ asset('images/empty.gif') }}" alt="No Products" style="width: 150px;">
                     <div class="text-center text-muted">No items in cart</div>
                 </div>
             @else
@@ -135,7 +135,7 @@
     <div class="offcanvas-body">
         @if(empty($cart))
             <div class="text-center my-3">
-                <img src="{{ asset('storage/images/empty.gif') }}" alt="No Products" style="width: 120px;">
+                <img src="{{ asset('images/empty.gif') }}" alt="No Products" style="width: 120px;">
                 <div class="text-muted">No items in cart</div>
             </div>
         @else

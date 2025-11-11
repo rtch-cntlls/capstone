@@ -9,7 +9,7 @@
             <div class="row g-3" style="max-height: 75vh; overflow-y: auto;">
                 @if ($product->isEmpty())
                     <div class="text-center my-5">
-                        <img src="{{ asset('storage/images/empty.gif') }}" alt="No Products" style="width: 200px;">
+                        <img src="{{ asset('images/empty.gif') }}" alt="No Products" style="width: 200px;">
                         <p class="m-0">No products found</p>
                     </div>
                 @else
@@ -18,7 +18,7 @@
     						<div class="card h-100 shadow-sm">
                                 <a href="{{ route('admin.product.show', $item->product_id) }}" class="text-decoration-none text-dark">
                                     <div class="d-flex align-items-center justify-content-center position-relative">
-                                        <img src="{{ $item->image ? asset('storage/' . $item->image) : asset('storage/images/placeholder.png') }}" 
+                                        <img src="{{ $item->image ? asset($item->image) : asset('images/placeholder.png') }}" 
                                             alt="" style="height:200px; max-height:180%; max-width:100%; object-fit:contain;">
                                         <span class="badge bg-primary text-white position-absolute top-0 end-0 m-2">
                                             Stock: {{ $item->inventory->available_stock }}

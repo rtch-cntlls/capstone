@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Shop;
-use App\Models\PaymentMethods;
 
 class SettingsService
 {
@@ -23,44 +22,28 @@ class SettingsService
         DB::transaction(function () use ($request, $id) {
             $shop = Shop::findOrFail($id);
 
+            if ($request->has('enable_direct_buy')) {
+                $shop->update([
+                    'enable_direct_buy' => $request->boolean('enable_direct_buy'),
+                ]);
+            }
+
             if ($request->has('service_area')) {
                 $shop->update([
                     'service_area' => $request->input('service_area'),
                 ]);
             }
-            foreach ($request->except(['_token', 'shipping_fee']) as $field => $value) {
-                $shop->update([
-                    $field => $value === 'on' ? 1 : $value,
-                ]);
+
+            $updateData = [];
+            if ($request->has('payment_gcash')) {
+                $updateData['payment_gcash'] = $request->boolean('payment_gcash');
+            }
+            if ($request->has('payment_cod')) {
+                $updateData['payment_cod'] = $request->boolean('payment_cod');
             }
 
-            if ($request->has('shipping_fee')) {
-                foreach ($request->shipping_fee as $region => $fee) {
-                    $column = "shipping_fee_{$region}";
-                    if (in_array($column, [
-                        'shipping_fee_local',
-                        'shipping_fee_province',
-                        'shipping_fee_visayas',
-                        'shipping_fee_luzon',
-                        'shipping_fee_mindanao',
-                    ])) {
-                        $shop->update([
-                            $column => is_numeric($fee) ? $fee : 0,
-                        ]);
-                    }
-                }
-            }
-
-            $methods = [
-                'gcash' => 'GCash',
-                'cod'   => 'Cash on Delivery',
-            ];
-    
-            foreach ($methods as $key => $name) {
-                PaymentMethods::updateOrCreate(
-                    ['name' => $name],
-                    ['enabled' => $request->boolean("payment_$key")]
-                );
+            if (!empty($updateData)) {
+                $shop->update($updateData);
             }
         });
     }
@@ -109,13 +92,16 @@ class SettingsService
     public function changePassword(Request $request): bool
     {
         $admin = Auth::user();
+
         if (!Hash::check($request->current_password, $admin->password)) {
             return false;
         }
+
         DB::transaction(function () use ($request, $admin) {
             $admin->password = Hash::make($request->new_password);
             $admin->save();
         });
+
         return true;
     }
 }

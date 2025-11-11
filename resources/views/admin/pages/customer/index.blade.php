@@ -17,7 +17,7 @@
     </div>
     @if ($customers->isEmpty())
         <div class="text-center my-4">
-            <img src="{{ asset('storage/images/empty.gif') }}" alt="No Customers" style="width: 200px;">
+            <img src="{{ asset('images/empty.gif') }}" alt="No Customers" style="width: 200px;">
             <p class="m-0">No Customers found</p>
         </div>
     @else
@@ -37,7 +37,7 @@
                         <tr>
                             <td>
                                 <div class="d-flex align-items-center gap-2">
-                                    <img src="{{ $customer->user->profile ? asset($customer->user->profile) : asset('storage/profile/customer.webp') }}" 
+                                    <img src="{{ $customer->user->profile ? asset($customer->user->profile) : asset('profile/customer.webp') }}" 
                                         alt="Profile" width="30" style="border-radius:50%;">                               
                                     {{ $customer->user->firstname }} {{ $customer->user->lastname }}
                                     @if ($customer->user->deleted_at)

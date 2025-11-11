@@ -17,7 +17,7 @@
         @endif
         @if ($products->isEmpty())
             <div class="text-center py-5">
-                <img src="{{ asset('storage/images/empty.gif') }}" alt="No Products" style="width: 180px;">
+                <img src="{{ asset('images/empty.gif') }}" alt="No Products" style="width: 180px;">
                 <p class="text-muted mt-3 mb-0">No products found</p>
             </div>
         @else
@@ -37,7 +37,7 @@
                         @foreach ($products as $product)
                         <tr>
                             <td>
-                                <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('storage/images/placeholder.png') }}" 
+                                <img src="{{ $product->image ? asset($product->image) : asset('images/placeholder.png') }}" 
                                      width="40" class="rounded">
                             </td>                            
                             <td>

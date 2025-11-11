@@ -28,7 +28,7 @@
     <div class="row p-3">
         <div class="col-md-3">
             <div class="card p-3 text-center">
-                <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('storage/images/placeholder.png') }}" 
+                <img src="{{ $product->image ? asset($product->image) : asset('images/placeholder.png') }}" 
                      class="card-img-top image">
                 <div class="card-body">
                     <h6 class="card-title">{{ $product->product_name }}</h6>

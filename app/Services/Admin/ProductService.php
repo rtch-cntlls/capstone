@@ -73,7 +73,15 @@ class ProductService
         return DB::transaction(function () use ($request) {
             $imagePath = null;
             if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('products', 'public');
+                $destinationPath = public_path('products');
+                if (!file_exists($destinationPath)) {
+                    mkdir($destinationPath, 0775, true);
+                }
+    
+                $filename = time() . '_' . uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
+                $request->file('image')->move($destinationPath, $filename);
+
+                $imagePath = 'products/' . $filename;
             }
     
             $description = $request->description;

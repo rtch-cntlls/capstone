@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Admin\SettingsService;
 use App\Models\Shop;
-use App\Models\PaymentMethods;
 
 class SettingsController extends Controller
 {
@@ -23,10 +22,11 @@ class SettingsController extends Controller
         try {
             $shop = Shop::first();
             $admin = $this->settingsService->getAuthenticatedAdmin();
-            $methods = PaymentMethods::all();
-            return view('admin.pages.setting.index', compact('shop','admin','methods'));
+
+            return view('admin.pages.setting.index', compact('shop', 'admin'));
         } catch (\Throwable $e) {
-            report($e); 
+            report($e);
+            dd($e->getMessage());
             return response()->view('error.admin500');
         }
     }
@@ -37,7 +37,7 @@ class SettingsController extends Controller
             $this->settingsService->updateOrderSettings($request, $id);
             return back();
         } catch (\Throwable $e) {
-            report($e); 
+            report($e);
             return response()->view('error.admin500');
         }
     }
@@ -48,18 +48,18 @@ class SettingsController extends Controller
             $this->settingsService->updateStoreDetails($request, $id);
             return back();
         } catch (\Throwable $e) {
-            report($e); 
+            report($e);
             return response()->view('error.admin500');
         }
     }
 
     public function updateAdminAccount(Request $request, $id)
-    { 
+    {
         try {
             $this->settingsService->updateAdminAccount($request, $id);
             return back()->with('success', 'Admin account updated successfully.');
         } catch (\Throwable $e) {
-            report($e); 
+            report($e);
             return response()->view('error.admin500');
         }
     }
@@ -78,7 +78,7 @@ class SettingsController extends Controller
             Auth::logout();
             return redirect()->route('admin.login')->with('success', 'Password changed successfully. Please log in again.');
         } catch (\Throwable $e) {
-            report($e); 
+            report($e);
             return response()->view('error.admin500');
         }
     }

@@ -9,7 +9,7 @@
     </div>
     @if ($bookings->isEmpty())
         <div class="text-center my-4">
-            <img src="{{ asset('storage/images/empty.gif') }}" alt="No Bookings" style="width: 200px;">
+            <img src="{{ asset('images/empty.gif') }}" alt="No Bookings" style="width: 200px;">
             <p class="m-0 fw-bold">No bookings found</p>
         </div>
     @else

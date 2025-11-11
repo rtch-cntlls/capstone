@@ -22,7 +22,7 @@
                                 @foreach($promos->products as $product)
                                     <tr>
                                         <td class="fw-medium">
-                                            <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('storage/images/placeholder.png') }}" 
+                                            <img src="{{ $product->image ? asset($product->image) : asset('images/placeholder.png') }}" 
                                             width="50" class="me-2">
                                             {{ $product->product_name }}                                       
                                         </td>
