@@ -5,7 +5,7 @@
             <button class="btn btn-outline-secondary me-3" id="toggleSidebar">
                 <i class="fas fa-bars"></i>
             </button>
-            <img src="{{ asset('storage/images/primary-logo.png')}}" alt="Logo" width="50" class="me-2">
+            <img src="{{ asset('images/primary-logo.png')}}" alt="Logo" width="50" class="me-2">
             <h5 class="m-0 fw-bold">
                 <span class="text-primary">MOTO</span><span class="text-dark">SMART</span>
             </h5>

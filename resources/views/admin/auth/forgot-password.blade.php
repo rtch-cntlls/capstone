@@ -12,7 +12,7 @@
         <form id="forgotForm" action="{{ route('admin.forgot-password.send') }}" method="POST" class="col-md-3 p-4 shadow-lg rounded">
             @csrf
             <div class="text-center mb-4">
-                <img src="{{asset('storage/images/primary-logo.png')}}" alt="MotoSmart Logo" width="80">
+                <img src="{{asset('images/primary-logo.png')}}" alt="MotoSmart Logo" width="80">
                 <p class="form-text mt-2">Enter your email to reset your password</p>
             </div>
             @if (session('status'))

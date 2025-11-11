@@ -12,7 +12,7 @@
     <form action="{{ route('admin.reset-password.update') }}" method="POST" class="col-md-4 p-4 shadow-lg rounded bg-white">
         @csrf
         <div class="text-center mb-4">
-            <img src="{{ asset('storage/images/primary-logo.png') }}" alt="MotoSmart Logo" width="80">
+            <img src="{{ asset('images/primary-logo.png') }}" alt="MotoSmart Logo" width="80">
             <h4 class="mt-2">Reset Password</h4>
             <p class="form-text">Enter your new password to continue</p>
         </div>
