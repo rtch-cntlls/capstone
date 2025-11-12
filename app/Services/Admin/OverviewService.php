@@ -10,24 +10,55 @@ class OverviewService
 {
     public function getOverviewData(): array
     {
-        $periods = $this->getDatePeriods();
+        $now = Carbon::now();
 
-        $totalSales = Sale::sum('grand_total');
-        $totalRevenue = $this->calculateRevenue();
-        $totalOrders = Order::count();
+        $thisMonthPeriod = [
+            'start' => $now->copy()->startOfMonth(),
+            'end' => $now->copy()->endOfMonth(),
+        ];
 
-        $thisPeriod = $this->getPeriodData($periods['this']);
-        $lastPeriod = $this->getPeriodData($periods['last']);
+        $lastMonthPeriod = [
+            'start' => $now->copy()->subMonth()->startOfMonth(),
+            'end' => $now->copy()->subMonth()->endOfMonth(),
+        ];
 
+        $thisMonthData = $this->getPeriodData($thisMonthPeriod);
+        $lastMonthData = $this->getPeriodData($lastMonthPeriod);
+    
         return $this->buildCards([
-            'totalSales' => $totalSales,
-            'totalRevenue' => $totalRevenue,
-            'totalOrders' => $totalOrders,
-            'this' => $thisPeriod,
-            'last' => $lastPeriod,
+            'this' => $thisMonthData,
+            'last' => $lastMonthData,
         ]);
     }
     
+    public function getRevenueTrends(int $month, int $year, string $mode = 'daily'): array
+    {
+        $labels = [];
+        $data = [];
+
+        switch ($mode) {
+            case 'daily':
+                $items = SaleItem::with('product')
+                    ->whereYear('created_at', $year)
+                    ->whereMonth('created_at', $month)
+                    ->get()
+                    ->groupBy(fn($item) => $item->created_at->day);
+
+                $daysInMonth = Carbon::create($year, $month, 1)->daysInMonth;
+
+                for ($day = 1; $day <= $daysInMonth; $day++) {
+                    $labels[] = $day;
+                    $data[] = isset($items[$day])
+                        ? $items[$day]->sum(fn($i) => ($i->price - ($i->product?->cost_price ?? 0)) * $i->quantity)
+                        : 0;
+                }
+                break;
+
+        }
+
+        return ['labels' => $labels, 'data' => $data];
+    }
+
     public function getSalesTrends(int $month, int $year, string $mode = 'daily'): array
     {
         $labels = [];
@@ -152,32 +183,36 @@ class OverviewService
     {
         $growth = fn($current, $previous) => [
             'difference' => $current - $previous,
-            'percent' => $previous == 0
-                ? ($current > 0 ? 100 : 0)
-                : round((($current - $previous) / $previous) * 100, 1),
+            'percent' => min(
+                $previous == 0
+                    ? ($current > 0 ? 100 : 0)
+                    : round((($current - $previous) / $previous) * 100, 1),
+                100 
+            ),
         ];
 
         return [
             [
                 'title' => 'Total Sales',
-                'value' => $this->formatNumber($data['totalSales']),
+                'value' => $this->formatNumber($data['this']['sales']),
                 'type' => '₱',
                 'growth' => $growth($data['this']['sales'], $data['last']['sales']),
             ],
             [
                 'title' => 'Total Revenue',
-                'value' => $this->formatNumber($data['totalRevenue']),
+                'value' => $this->formatNumber($data['this']['revenue']),
                 'type' => '₱',
                 'growth' => $growth($data['this']['revenue'], $data['last']['revenue']),
             ],
             [
                 'title' => 'Total Orders',
-                'value' => $data['totalOrders'],
+                'value' => $data['this']['orders'],
                 'type' => '',
                 'growth' => $growth($data['this']['orders'], $data['last']['orders']),
             ],
         ];
     }
+    
 
     public function getTopProducts(int $limit = 5, ?int $month = null, ?int $year = null): array
     {

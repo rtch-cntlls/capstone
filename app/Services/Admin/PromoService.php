@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 class PromoService
 {
-    /**
-     * Update expired promos automatically
-     */
     protected function updateExpiredPromos(): void
     {
         Discount::where('status', '!=', 'Expired')
@@ -19,9 +16,6 @@ class PromoService
             ->update(['status' => 'Expired']);
     }
 
-    /**
-     * Determine the status of a promo based on start and expiry dates
-     */
     protected function determineStatus(string $startDate, string $expiryDate): string
     {
         $today = now()->toDateString();
@@ -34,18 +28,12 @@ class PromoService
         }
     }
 
-    /**
-     * Get all promos with automatic expired update
-     */
     public function getAllPromos()
     {
         $this->updateExpiredPromos();
         return Discount::with('products')->paginate(10);
     }
 
-    /**
-     * Get promos filtered by status
-     */
     public function getPromosByStatus(string $status)
     {
         $this->updateExpiredPromos();
@@ -54,17 +42,15 @@ class PromoService
             ->paginate(10);
     }
 
-    /**
-     * Get products not in any promo
-     */
     public function getProductsWithoutPromo(int $perPage = 9)
     {
-        return Product::doesntHave('discount')->paginate($perPage);
-    }
+        return Product::doesntHave('discount')
+            ->whereHas('inventory', function($q) {
+                $q->where('available_stock', '>', 0);
+            })
+            ->paginate($perPage);
+    }    
 
-    /**
-     * Create a new promo
-     */
     public function createPromo(Request $request): void
     {
         DB::transaction(function () use ($request) {
@@ -82,9 +68,6 @@ class PromoService
         });
     }
 
-    /**
-     * Reactivate a promo with new dates
-     */
     public function reactivatePromo(int $id, string $startDate, string $expiryDate)
     {
         $promo = Discount::findOrFail($id);
@@ -98,12 +81,9 @@ class PromoService
         ]);
     }
 
-    /**
-     * Get dashboard promo cards
-     */
     public function getPromoCards(): array
     {
-        $this->updateExpiredPromos(); // ensure accurate counts
+        $this->updateExpiredPromos();
         $allPromos = Discount::all();
 
         $activeCount   = $allPromos->where('status', 'Active')->count();

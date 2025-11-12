@@ -24,6 +24,7 @@ class OverviewController extends Controller
 
         $cards = $this->overviewService->getOverviewData();
         $salesTrends = $this->overviewService->getSalesTrends($month, $year, $mode);
+        $revenueTrends = $this->overviewService->getRevenueTrends($month, $year, $mode);
 
         $topProducts = $this->overviewService->getTopProducts();
         $categoryRevenue = $this->overviewService->getCategoryRevenueShare();
@@ -31,7 +32,7 @@ class OverviewController extends Controller
         $recentSoldProducts = $this->overviewService->getRecentSoldProducts();
 
         return view('admin.pages.overview.index', compact(
-            'cards', 'salesTrends', 'month', 'year', 
+            'cards', 'salesTrends', 'revenueTrends', 'month', 'year', 
             'mode', 'topProducts', 'categoryRevenue', 'recentSoldProducts' 
         ));
     }

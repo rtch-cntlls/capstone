@@ -6,7 +6,7 @@
         @if (session('success-alert'))
             <x-alert type="success" :message="session('success-alert')" />
         @endif
-        <div class="">
+        <div class="w-50 ">
             <form method="GET" action="{{ route('admin.customer.index') }}">
                 <input type="search" name="search" value="{{ request('search') }}" 
                        class="form-control inv-search search" 

@@ -19,5 +19,6 @@
 <script>
     const salesTrendsLabels = @json($salesTrends['labels']);
     const salesTrendsData   = @json($salesTrends['data']);
+    const revenueTrendsData = @json($revenueTrends['data']);
 </script>
 <script src="{{ asset('script/admin/chart/sale-trends.js') }}"></script>

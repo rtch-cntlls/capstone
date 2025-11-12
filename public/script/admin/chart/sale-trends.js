@@ -1,9 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    if (typeof salesTrendsLabels === 'undefined' || typeof salesTrendsData === 'undefined') return;
+    if (typeof salesTrendsLabels === 'undefined' 
+        || typeof salesTrendsData === 'undefined' 
+        || typeof revenueTrendsData === 'undefined') return;
 
     const labels = salesTrendsLabels;
-    const data   = salesTrendsData;
+    const salesData = salesTrendsData;
+    const revenueData = revenueTrendsData;
 
     const options = {
         chart: {
@@ -22,9 +25,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 export: {
                     csv: {
-                        filename: 'Sales_Trends',
+                        filename: 'Sales_Revenue_Trends',
                         headerCategory: 'Date',
-                        headerValue: 'Sales',
+                        headerValue: 'Amount',
                         formatter: function(seriesName, opts) {
                             const value = opts.w.globals.series[opts.seriesIndex][opts.dataPointIndex];
                             return value.toLocaleString('en-PH', {
@@ -39,7 +42,10 @@ document.addEventListener('DOMContentLoaded', function () {
             zoom: { enabled: false },
             animations: { enabled: true, easing: 'easeinout', speed: 800 }
         },
-        series: [{ name: 'Sales', data }],
+        series: [
+            { name: 'Sales', data: salesData },
+            { name: 'Revenue', data: revenueData }
+        ],
         xaxis: {
             categories: labels,
             labels: { style: { colors: '#6c757d', fontSize: '12px' } },
@@ -60,14 +66,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 shade: 'light',
                 type: 'vertical',
                 shadeIntensity: 0.5,
-                gradientToColors: ['rgba(54,162,235,0.05)'],
+                gradientToColors: ['rgba(54,162,235,0.05)', 'rgba(75,192,192,0.05)'],
                 opacityFrom: 0.4,
                 opacityTo: 0.05
             }
         },
         markers: {
             size: 4,
-            colors: ['#36A2EB'],
+            colors: ['#36A2EB', '#4BC0C0'],
             strokeColors: '#fff',
             strokeWidth: 2,
             hover: { size: 6 }
@@ -76,7 +82,14 @@ document.addEventListener('DOMContentLoaded', function () {
             theme: 'light',
             y: { formatter: val => '₱' + new Intl.NumberFormat().format(val) }
         },
-        grid: { borderColor: '#e0e0e0', row: { colors: ['transparent'], opacity: 0.5 } }
+        legend: {
+            position: 'top',
+            horizontalAlign: 'right'
+        },
+        grid: { 
+            borderColor: '#e0e0e0', 
+            row: { colors: ['transparent'], opacity: 0.5 } 
+        }
     };
 
     const chart = new ApexCharts(document.querySelector("#salesTrendsApex"), options);
@@ -88,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
             chart.dataURI().then(uri => {
                 const link = document.createElement('a');
                 link.href = uri.imgURI;
-                link.download = 'Sales_Trends.png';
+                link.download = 'Sales_Revenue_Trends.png';
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);

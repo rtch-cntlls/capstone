@@ -54,12 +54,19 @@ class DashboardService
     private function getDashboardCards(): array
     {
         $totalProducts = Product::where('status', 'Active')->count();
+    
         $totalUsers = User::where('role_id', DashboardService::CUSTOMER_ROLE)
-            ->whereHas('customer.orders')
+            ->where(function ($query) {
+                $query->whereHas('customer.orders')
+                      ->orWhereHas('customer.bookings', function ($q) {
+                          $q->where('status', 'Completed');
+                      });
+            })
             ->count();
+    
         $totalOrder = OrderItem::with('product')->count();
         $totalBooking = Booking::with('service')->count();
-
+    
         return [
             [
                 'title' => 'Store Products',
@@ -82,7 +89,7 @@ class DashboardService
                 'icon'  => 'fas fa-user bg-secondary text-secondary p-2 rounded bg-opacity-25',
             ],
         ];
-    }
+    }    
 
     public function getTotalProductValue(): float
     {

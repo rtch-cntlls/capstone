@@ -1,4 +1,4 @@
-@if(Auth::check() && isset($receiverId) && $receiverId)
+@if(Auth::check() && !empty($receiverId))
     <button id="chatToggleBtn" class="btn btn-success rounded-circle shadow-lg"
             style="position:fixed; bottom:20px; right:20px; width:60px; height:60px; z-index:1050;">
         <i class="fas fa-comments"></i>
