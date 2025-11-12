@@ -35,8 +35,8 @@ class MyGarageController extends Controller
             'brand' => 'required|string|in:' . implode(',', array_keys($brands)),
             'model' => 'required|string|max:255',
             'mileage_at_service' => 'required|integer|min:0|max:100000',
-            'last_done_at' => 'nullable|date',
-            'service_type' => 'nullable|string|max:255',
+            'last_done_at' => 'required|date|before_or_equal:today',
+            'service_type' => 'required|string|max:255',
         ]);
 
         $result = $this->garageService->storeMotorcycle($request->only([

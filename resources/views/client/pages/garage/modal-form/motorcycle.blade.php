@@ -38,7 +38,7 @@
                         <label for="last_done_at" class="form-label fw-semibold">Last Service Date</label>
                         <input type="date" name="last_done_at" id="last_done_at" 
                             class="form-control rounded-3" 
-                            max="{{ date('Y-m-d') }}">
+                           required>
                     </div>
                     <div class="mb-3">
                         <label for="service_type" class="form-label fw-semibold">Last Service Type</label>
@@ -108,10 +108,5 @@
         btnLoader.classList.remove('d-none');
 
         saveBtn.disabled = true;
-
-        const inputs = form.querySelectorAll('input, select, textarea, button');
-        inputs.forEach(el => {
-            el.disabled = true;
-        });
     });
 </script>

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('motorcycle_id');
             $table->string('service_type');
             $table->integer('mileage_at_service')->nullable();
-            $table->date('last_done_at')->nullable();
+            $table->date('last_done_at');
             $table->text('ai_reasoning')->nullable();
             $table->date('next_due_date')->nullable();
             $table->integer('next_due_mileage')->nullable();
