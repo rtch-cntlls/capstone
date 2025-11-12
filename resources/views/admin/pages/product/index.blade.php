@@ -1,5 +1,6 @@
 @extends('admin.layouts.admin')
 @section('content')
+@include('components.ModalAlertWarning')
 @include('admin.pages.product.includes.cards')
 <div class="card shadow-sm mx-2 mb-4 p-2">
     <div class="card-body">

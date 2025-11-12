@@ -45,30 +45,48 @@ class RegisterController extends Controller
             'login' => 'required|string',
         ]);
     
-        $login = $request->input('login');
-    
-        if (filter_var($login, FILTER_VALIDATE_EMAIL)) {
+        $login = trim($request->input('login'));
 
+        if (preg_match('/^\d+$/', $login)) {
+ 
+            $phone = $login;
+    
+          
+            if (strlen($phone) == 10 && substr($phone, 0, 1) == '9') {
+                $phone = '+63' . $phone;
+            } else {
+                return back()->withErrors(['login' => 'Invalid Philippine phone number.']);
+            }
+
+            if (\App\Models\Customer::where('phone', $phone)->exists()) {
+                return back()->withErrors(['login' => 'Phone number is already registered.']);
+            }
+    
+            Session::put('register_method', 'phone');
+            Session::put('register_phone', $phone);
+    
+            $this->registerService->sendOtp($phone, 'phone');
+    
+            return back()->with('status', 'OTP sent to your phone via SMS.');
+        } else {
+            // Treat as email
+            if (!filter_var($login, FILTER_VALIDATE_EMAIL)) {
+                return back()->withErrors(['login' => 'Invalid email format.']);
+            }
+    
             if (\App\Models\User::where('email', $login)->exists()) {
                 return back()->withErrors(['login' => 'Email is already registered.']);
             }
+    
             Session::put('register_method', 'email');
             Session::put('register_email', $login);
     
             $this->registerService->sendOtp($login, 'email');
+    
             return back()->with('status', 'OTP sent to your email.');
-    
-        } else {
-            if (\App\Models\Customer::where('phone', $login)->exists()) {
-                return back()->withErrors(['login' => 'Phone number is already registered.']);
-            }
-            Session::put('register_method', 'phone');
-            Session::put('register_phone', $login);
-    
-            $this->registerService->sendOtp($login, 'phone');
-            return back()->with('status', 'OTP sent to your phone via SMS.');
         }
     }
+    
     
     protected function handleOtpStep(Request $request)
     {
@@ -86,15 +104,29 @@ class RegisterController extends Controller
     protected function handlePasswordStep(Request $request)
     {
         $request->validate([
-            'email'     => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:users,email',
             'firstname' => 'required|string|max:100',
-            'lastname'  => 'required|string|max:100',
-            'phone'     => 'required|string|max:20',
-            'password'  => 'required|string|min:6|confirmed',
+            'lastname' => 'required|string|max:100',
+            'phone' => [
+                'required',
+                'string',
+                'max:20',
+
+                function ($attribute, $value, $fail) {
+                    $digits = preg_replace('/[^0-9]/', '', $value);
+                    if (!(strlen($digits) == 10 && substr($digits, 0, 1) == '9') &&
+                        !(strlen($digits) == 12 && substr($digits, 0, 3) == '63')) {
+                        $fail('The ' . $attribute . ' must be a valid Philippine phone number.');
+                    }
+                },
+            ],
+            'password' => 'required|string|min:6|confirmed',
         ]);
     
+
         Session::put('register_email', $request->email);
     
+  
         $user = $this->registerService->createUser(
             $request->password,
             $request->firstname,
@@ -102,6 +134,7 @@ class RegisterController extends Controller
             $request->phone
         );
     
+        // Preserve any pending sessions
         $sessions = $request->only(['buy_now', 'wishlist_pending', 'cart_pending', 'booking_pending']);
         $request->session()->regenerate(true);
         foreach ($sessions as $key => $value) {
@@ -114,6 +147,7 @@ class RegisterController extends Controller
             ->route('auth.customer.login')
             ->with('success', 'Your account has been created successfully! You can now log in.');
     }
+    
     
 
     public function resendOtp()

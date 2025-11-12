@@ -1,5 +1,6 @@
 @extends('admin.layouts.admin')
 @section('content')
+@include('components.ModalAlertWarning')
 @include('admin.pages.order.includes.cards')
 <div class="card p-4 mx-2 mb-3 shadow-sm rounded-3" style="font-size: 14px;">
     @if (session('success-alert'))

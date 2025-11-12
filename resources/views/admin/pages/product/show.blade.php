@@ -4,7 +4,7 @@
 @include('admin.pages.product.edit-price')
 @include('components.ModalAlertSuccess')
 @include('components.ModalAlertError')
-@include('components.AdminLoader')
+@include('components.ModalAlertWarning')
 <div class="mt-2 mb-2">
     <a href="{{ url()->previous() }}" class="text-decoration-none small text-muted">
         <i class="fas fa-arrow-left me-1"></i> Back

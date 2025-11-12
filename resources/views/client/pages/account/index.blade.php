@@ -1,5 +1,6 @@
 @extends('client.layouts.clientNoFooter')
 @section('content')
+@include('components.ModalAlertWarning')
 <div class="container">
     <div class="row">
         <div class="col-md-3">

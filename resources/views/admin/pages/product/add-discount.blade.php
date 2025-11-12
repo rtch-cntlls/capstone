@@ -16,18 +16,18 @@
                         <label class="form-label fw-bold">Select Discount Percentage</label>
                         <div class="d-flex flex-wrap gap-2 justify-content-center mt-2">
                             @foreach([5, 10, 15, 20, 25, 30, 35, 40, 45, 50] as $percent)
-                                <input type="radio" class="btn-check" name="discount_percent" id="discount_{{ $percent }}" value="{{ $percent }}" required>
+                                <input type="radio" class="btn-check" name="discount_percent" id="discount_{{ $percent }}" value="{{ $percent }}" >
                                 <label class="btn btn-outline-danger btn-sm px-3 py-1" for="discount_{{ $percent }}">{{ $percent }}%</label>
                             @endforeach
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="start_date" class="form-label fw-bold">Start Date</label>
-                        <input type="date" name="start_date" id="start_date" class="form-control" required>
+                        <input type="date" name="start_date" id="start_date" class="form-control" >
                     </div>
                     <div class="mb-3">
                         <label for="expiry_date" class="form-label fw-bold">Expiry Date</label>
-                        <input type="date" name="expiry_date" id="expiry_date" class="form-control" required>
+                        <input type="date" name="expiry_date" id="expiry_date" class="form-control" >
                     </div>
                 </div>
                 <div class="modal-footer">

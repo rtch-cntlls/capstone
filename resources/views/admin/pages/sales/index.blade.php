@@ -28,9 +28,13 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $startNumber = 1000;
+                    @endphp
+                    
                     @foreach ($sales as $sale)
                         <tr>
-                            <td class="fw-medium">{{ $sale->sale_code }}</td>
+                            <td class="fw-medium">ST{{ $startNumber + $loop->iteration - 1 }}</td>
                             <td>
                                 @if ($sale->sale_type === 'walk_in')
                                     <span class="badge bg-success">Walk-in</span>
@@ -48,7 +52,7 @@
                                 @include('admin.pages.sales.show')
                             </td>
                         </tr>
-                    @endforeach
+                    @endforeach                
                 </tbody>
             </table>
         </div>
@@ -57,4 +61,15 @@
         </div>
     @endif
 </div>
+<script>
+    function printSale(saleId) {
+        const printContents = document.getElementById('printableSale' + saleId).innerHTML;
+        const originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+        window.location.reload();
+    }
+</script>
 @endsection

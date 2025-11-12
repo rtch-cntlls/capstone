@@ -7,7 +7,7 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body printable" id="printableSale{{ $sale->sale_id }}">
                 <div class="text-center mb-3 border-bottom pb-2">
                     <h6 class="mb-0 fw-bold">{{ $shop->shop_name}}</h6>
                     <div>{{ $shop->barangay}}, {{ $shop->city}}, {{ $shop->province}}</div><br>
@@ -24,7 +24,6 @@
                             <span>Online Order</span>
                         @endif
                     </div>
-                    <div><span class="fw-bold">Sale Code:</span> {{ $sale->sale_code ?? 'N/A' }}</div>
                 </div>
                 <div class="table-responsive table-wrapper">
                     <table class="table border-top border-bottom">
@@ -75,6 +74,10 @@
                 <div class="text-center mt-3">
                     <div>Thank you for your purchase!</div><br>
                 </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="printSale({{ $sale->sale_id }})">Print</button>
             </div>
         </div>
     </div>

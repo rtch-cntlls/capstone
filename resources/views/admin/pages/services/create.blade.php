@@ -14,7 +14,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="name" class="form-label fw-semibold">Service Name</label>
-                                <select name="name" id="name" class="form-select form-select-sm" required>
+                                <select name="name" id="name" class="form-select form-select-sm">
                                     <option value="" disabled selected>Select a service</option>
                                     @foreach($servicesData as $category)
                                         <optgroup label="{{ $category['category'] }}">
@@ -30,7 +30,7 @@
                             <div class="mb-3">
                                 <label for="price" class="form-label fw-semibold">Price (₱)</label>
                                 <input type="number" step="0.01" class="form-control form-control-sm" 
-                                       id="price" name="price" placeholder="e.g., 500.00" required>
+                                       id="price" name="price" placeholder="e.g., 500.00">
                                 <small class="text-muted">Enter service price in PHP.</small>
                             </div>
                         </div>

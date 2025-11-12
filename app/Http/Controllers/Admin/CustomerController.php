@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Services\Admin\CustomerService;
+use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
@@ -14,13 +15,14 @@ class CustomerController extends Controller
         $this->customerService = $customerService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         try {
-            [$customers, $cards] = $this->customerService->getCustomersWithCards();
+            $search = $request->input('search', null);
+            [$customers, $cards] = $this->customerService->getCustomersWithCards(10, $search);
             return view('admin.pages.customer.index', compact('customers', 'cards'));
         } catch (\Throwable $e) {
-            report($e); 
+            report($e);
             return response()->view('error.admin500');
         }
     }

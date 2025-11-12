@@ -49,10 +49,14 @@ class OrderManagementController extends Controller
         
         $request->validate([
             'status' => 'required|in:pending,processing,out_for_delivery,completed,cancelled,ready_for_pick_up,shipped',
-            'estimated_date' => 'nullable|date', 
-            'courier' => 'nullable|string|max:100',
-            'tracking_number' => 'nullable|string|max:100', 
-            'expected_delivery_date' => 'nullable|date', 
+            'estimated_date' => 'required_if:order_type,province,local|date',
+            'courier' => 'required_if:order_type,province,local|string|max:100',
+            'tracking_number' => 'required_if:order_type,province,local|string|max:100',
+            'expected_delivery_date' => 'nullable|date',
+        ], [
+            'estimated_date.required_if' => 'Estimated delivery date is required for province or local orders.',
+            'courier.required_if' => 'Courier is required for province or local orders.',
+            'tracking_number.required_if' => 'Tracking number is required for province or local orders.',
         ]);
     
         try {

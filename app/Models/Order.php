@@ -55,4 +55,9 @@ class Order extends Model
     {
         return $this->hasOne(Shipment::class, 'order_id', 'order_id');
     }
+
+    public function sale()
+    {
+        return $this->hasOne(Sale::class, 'order_id', 'order_id');
+    }
 }

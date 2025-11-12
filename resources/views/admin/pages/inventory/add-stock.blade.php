@@ -18,7 +18,7 @@
                                id="stock_quantity" 
                                min="1" 
                                placeholder="Enter quantity" 
-                               required>
+                               >
                         <small class="text-muted">Enter the number of items to add to stock.</small>
                     </div>
                 </div>

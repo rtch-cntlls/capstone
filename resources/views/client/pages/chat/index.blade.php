@@ -78,7 +78,7 @@
         window.messagePollUrl = '{{ route("message.poll") }}';
         window.messageStoreUrl = '{{ route("message.store") }}';
     </script>
-    <script src="{{ asset('script/customer/chatbox.js') }}"></script>
+    <script src="{{ asset('script/customer/messagebox.js') }}"></script>
     <div class="modal fade preview-modal" id="chatPreviewModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content" style="background: transparent; border: 0; box-shadow: none; position: relative;">
