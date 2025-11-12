@@ -36,7 +36,7 @@ class DashboardService
             'onlineVsWalkin'   => $this->getOnlineVsWalkin(), 
             'dailyServiceRevenue'    => $this->getDailyServiceRevenue(),
             'weeklyServiceRevenue'   => $this->getWeeklyServiceRevenue(),
-            'lastWeekServiceRevenue' => $this->getLastWeekServiceRevenue(),
+            'lastWeekServiceRevenue' => $this->getLastWeekServiceRevenue(), 
         ];
     }
 
@@ -92,7 +92,7 @@ class DashboardService
 
     public function getTotalSoldProductValue(): float
     {
-        return Sale::sum('grand_total');
+        return SaleItem::sum('total');
     }
 
     public function getTodaySalesTotal(): string
@@ -139,7 +139,7 @@ class DashboardService
         $today = Carbon::now();
         $weekStart = $today->copy()->startOfWeek();
         $weekEnd = $today->copy()->endOfWeek();
-
+        
         return Sale::whereBetween('sale_date', [$weekStart, $weekEnd])
             ->sum('grand_total');
     }

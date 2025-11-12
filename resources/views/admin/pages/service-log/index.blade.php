@@ -79,7 +79,7 @@
                 </tbody>
             </table>
             <div class="mt-2">
-                {{ $logs->links() }}
+                {{ $logs->links('pagination::bootstrap-5') }}
             </div>
         </div>
     @endif

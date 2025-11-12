@@ -20,10 +20,7 @@ class PromoController extends Controller
         try {
             $status = $request->get('status', 'all');
 
-            $promo = $status === 'all'
-                ? $this->promoService->getAllPromos()
-                : $this->promoService->getPromosByStatus($status);
-
+            $promo = $this->promoService->getPromosByStatus($status);
             $cards = $this->promoService->getPromoCards();
 
             return view('admin.pages.promo.index', compact('promo', 'cards'));
@@ -37,7 +34,6 @@ class PromoController extends Controller
     {
         try {
             $products = $this->promoService->getProductsWithoutPromo();
-
             return view('admin.pages.promo.create', compact('products'));
         } catch (\Throwable $e) {
             report($e); 
@@ -63,7 +59,6 @@ class PromoController extends Controller
             return redirect()->route('admin.promo.index')->with('success', 'Promo applied to selected products.');
         } catch (\Throwable $e) {
             report($e); 
-            dd($request->all());
             return response()->view('error.admin500');
         }
     }

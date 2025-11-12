@@ -145,9 +145,14 @@ class ProductService
             }
     
             $description = $request->description;
+
             if (empty($description)) {
                 $aiService = app(MotorcycleAIService::class);
                 $description = $aiService->generateDescription($request->name);
+            
+                if (empty($description) || strtolower($description) === 'null') {
+                    $description = "No description available for this product at the moment. Please check back later.";
+                }
             }
             
             $specs = $request->input('specs') ? json_encode(json_decode($request->input('specs'))) : null;

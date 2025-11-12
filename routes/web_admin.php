@@ -136,6 +136,7 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
         Route::get('/', [PromoController::class, 'index'])->name('index');
         Route::get('/create', [PromoController::class, 'create'])->name('create');
         Route::post('/store', [PromoController::class, 'store'])->name('store');
+        Route::post('/reactivate/{id}', [PromoController::class, 'reactivate'])->name('reactivate');
     });
 
     // MESSAGES

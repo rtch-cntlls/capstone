@@ -20,15 +20,14 @@ class ServiceReportController extends Controller
         $from = $request->input('from') ?: now()->startOfMonth()->toDateString();
         $to   = $request->input('to') ?: now()->endOfMonth()->toDateString();
 
-        $results = $this->service->getBookingsAndLogs($from, $to, true);
+        $results = $this->service->getBookingsAndLogs($from, $to, true, 10);
 
-        $dailyTrends = $this->service->getDailyTrends($results['bookings'], $results['logs']);
+        $dailyTrends = $this->service->getDailyTrends($results['allItems']);
 
         return view('admin.pages.service-report.index', [
             'from' => $from,
             'to' => $to,
-            'bookings' => $results['bookings'],
-            'logs' => $results['logs'],
+            'bookingsLogs' => $results['bookingsLogs'],
             'dailyTrends' => $dailyTrends
         ]);
     }
@@ -40,7 +39,7 @@ class ServiceReportController extends Controller
 
         $results = $this->service->getBookingsAndLogs($from, $to);
 
-        return $this->service->exportPdf($results['bookings'], $results['logs'], $from, $to);
+        return $this->service->exportPdf($results['allItems'], $from, $to);
     }
 
     public function exportCsv(Request $request)
@@ -50,6 +49,6 @@ class ServiceReportController extends Controller
 
         $results = $this->service->getBookingsAndLogs($from, $to);
 
-        return $this->service->exportCsv($results['bookings'], $results['logs'], $from, $to);
+        return $this->service->exportCsv($results['allItems'], $from, $to);
     }
 }
