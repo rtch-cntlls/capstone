@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\Shop\OrderService; 
 use App\Models\Shop;
 use Illuminate\Http\Request;
+use App\Models\Order;
 
 class OrderController extends Controller
 {
@@ -42,5 +43,10 @@ class OrderController extends Controller
         return redirect()
             ->route('order.index')
             ->with('success', 'Your order has been successfully cancelled.');
+    }
+
+    public function downloadInvoice(Order $order)
+    {
+        return $this->orderService->downloadInvoice($order->order_id);
     }
 }

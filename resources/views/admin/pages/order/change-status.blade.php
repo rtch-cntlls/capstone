@@ -234,16 +234,31 @@
                     @if($order->order_type === 'province' || $order->order_type === 'local')
                         <div id="deliveryDateWrapper_{{ $order->order_id }}" class="mt-3 d-none">
                             <label class="form-label fw-semibold">Courier</label>
-                            <input type="text" class="form-control mb-2" name="courier" value="J&T Express" readonly>                              
+                            <input type="text" class="form-control mb-2 @error('courier') is-invalid @enderror" 
+                                name="courier" value="J&T Express" readonly>
+                            @error('courier')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                    
                             <label class="form-label fw-semibold">Tracking Number</label>
-                            <input type="text" class="form-control mb-2"
-                                    name="tracking_number" value="{{ old('tracking_number', optional($order->shipment)->tracking_number) }}"
-                                    placeholder="Enter tracking number">
+                            <input type="text" class="form-control mb-2 @error('tracking_number') is-invalid @enderror"
+                                name="tracking_number" 
+                                value="{{ old('tracking_number', optional($order->shipment)->tracking_number) }}"
+                                placeholder="Enter tracking number">
+                            @error('tracking_number')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                    
                             <label for="estimated_date_{{ $order->order_id }}" class="form-label fw-semibold">
                                 Estimated Delivery Date
                             </label>
-                            <input type="date" class="form-control" id="estimated_date_{{ $order->order_id }}" 
+                            <input type="date" class="form-control @error('estimated_date') is-invalid @enderror" 
+                                id="estimated_date_{{ $order->order_id }}" 
                                 name="estimated_date" value="{{ old('estimated_date') }}">
+                            @error('estimated_date')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                    
                             <small class="text-muted">Provide the expected date the customer will receive their order.</small>
                         </div>
                     @endif
@@ -251,14 +266,24 @@
                     @if($order->order_type === 'nationwide')
                         <div id="shippedWrapper_{{ $order->order_id }}" class="mt-3 d-none">
                             <label class="form-label fw-semibold">Courier</label>
-                            <input type="text" class="form-control mb-2" name="courier" value="J&T Express" readonly>                              
+                            <input type="text" class="form-control mb-2 @error('courier') is-invalid @enderror" 
+                                name="courier" value="J&T Express" readonly>
+                            @error('courier')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                    
                             <label class="form-label fw-semibold">Tracking Number</label>
-                            <input type="text" class="form-control mb-2"
-                                    name="tracking_number" value="{{ old('tracking_number', optional($order->shipment)->tracking_number) }}"
-                                    placeholder="Enter tracking number">
+                            <input type="text" class="form-control mb-2 @error('tracking_number') is-invalid @enderror"
+                                name="tracking_number" 
+                                value="{{ old('tracking_number', optional($order->shipment)->tracking_number) }}"
+                                placeholder="Enter tracking number">
+                            @error('tracking_number')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                    
                             <input type="hidden" name="shipped_at" value="{{ now() }}">
                         </div>
-                    @endif
+                    @endif                
 
                     <div class="text-end mt-4">
                         <button type="submit" class="btn btn-primary px-4">

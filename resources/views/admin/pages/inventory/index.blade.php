@@ -2,6 +2,7 @@
 @section('content')
 @include('components.ModalAlertSuccess')
 @include('components.ModalAlertError')
+@include('components.ModalAlertWarning')
 @include('components.adminloader')
 @include('admin.pages.inventory.includes.cards')
 <div class="card mx-2 mb-4 p-4 shadow-sm">

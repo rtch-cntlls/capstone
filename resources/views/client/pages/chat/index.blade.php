@@ -1,4 +1,4 @@
-@if(Auth::check() && isset($receiverId) && $receiverId)
+@if(Auth::check() && !empty($receiverId))
     <button id="chatToggleBtn" class="btn btn-success rounded-circle shadow-lg"
             style="position:fixed; bottom:20px; right:20px; width:60px; height:60px; z-index:1050;">
         <i class="fas fa-comments"></i>
@@ -78,7 +78,7 @@
         window.messagePollUrl = '{{ route("message.poll") }}';
         window.messageStoreUrl = '{{ route("message.store") }}';
     </script>
-    <script src="{{ asset('script/customer/chatbox.js') }}"></script>
+    <script src="{{ asset('script/customer/messagebox.js') }}"></script>
     <div class="modal fade preview-modal" id="chatPreviewModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content" style="background: transparent; border: 0; box-shadow: none; position: relative;">

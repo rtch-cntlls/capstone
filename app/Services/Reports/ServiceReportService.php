@@ -6,66 +6,70 @@ use App\Models\Booking;
 use App\Models\ServiceLog;
 use PDF;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ServiceReportService
 {
+    /**
+     * Get bookings and logs (merged) with optional pagination
+     */
     public function getBookingsAndLogs(?string $from, ?string $to, bool $paginate = false, int $perPage = 10)
     {
-        $bookingQuery = Booking::with(['customer.user', 'service'])
-            ->where('status', 'completed');
+        $bookings = Booking::with(['customer.user', 'service'])
+            ->where('status', 'completed')
+            ->when($from && $to, fn($q) => $q->whereBetween('schedule', [$from, $to]))
+            ->orderBy('schedule', 'asc')
+            ->get();
 
-        if ($from && $to) {
-            $bookingQuery->whereBetween('schedule', [$from, $to]);
-        }
+        $logs = ServiceLog::with('service')
+            ->when($from && $to, fn($q) => $q->whereBetween('created_at', [$from . ' 00:00:00', $to . ' 23:59:59']))
+            ->orderBy('created_at', 'asc')
+            ->get();
 
-        $bookingQuery->orderBy('schedule', 'asc');
-
-        $bookings = $paginate 
-            ? $bookingQuery->paginate($perPage)->withQueryString() 
-            : $bookingQuery->get();
-
-        $logQuery = ServiceLog::with('service');
-
-        if ($from && $to) {
-            $logQuery->whereBetween('created_at', [$from . ' 00:00:00', $to . ' 23:59:59']);
-        }
-
-        $logQuery->orderBy('created_at', 'asc');
-
-        $logs = $paginate 
-            ? $logQuery->paginate($perPage)->withQueryString() 
-            : $logQuery->get();
+        // Merge both collections and sort by date
+        $merged = $bookings->concat($logs)->sortBy(function ($item) {
+            return $item->schedule ?? $item->created_at;
+        })->values(); // reindex keys
 
         if ($paginate) {
-            return ['bookings' => $bookings, 'logs' => $logs];
+            $currentPage = request()->get('page', 1);
+            $items = $merged->slice(($currentPage - 1) * $perPage, $perPage)->all();
+
+            $paginated = new LengthAwarePaginator(
+                $items,
+                $merged->count(),
+                $perPage,
+                $currentPage,
+                ['path' => request()->url(), 'query' => request()->query()]
+            );
+
+            return ['bookingsLogs' => $paginated, 'allItems' => $merged];
         }
 
-        return ['bookings' => $bookings, 'logs' => $logs];
+        return ['bookingsLogs' => $merged, 'allItems' => $merged];
     }
 
-    public function getDailyTrends($bookings, $logs): array
+    /**
+     * Prepare daily trends for chart
+     */
+    public function getDailyTrends($merged)
     {
         $trends = [];
-
-        foreach ($bookings as $b) {
-            $date = date('Y-m-d', strtotime($b->schedule));
+        foreach ($merged as $entry) {
+            $date = date('Y-m-d', strtotime($entry->schedule ?? $entry->created_at));
             $trends[$date] = ($trends[$date] ?? 0) + 1;
         }
-
-        foreach ($logs as $l) {
-            $date = date('Y-m-d', strtotime($l->created_at));
-            $trends[$date] = ($trends[$date] ?? 0) + 1;
-        }
-
         ksort($trends);
         return $trends;
     }
 
-    public function exportPdf($bookings, $logs, string $from, string $to)
+    /**
+     * Export PDF
+     */
+    public function exportPdf($merged, string $from, string $to)
     {
         $pdf = PDF::loadView('admin.pages.service-report.export-pdf', [
-            'bookings' => $bookings,
-            'logs' => $logs,
+            'entries' => $merged,
             'from' => $from,
             'to' => $to
         ])->setPaper('a4', 'landscape');
@@ -73,7 +77,10 @@ class ServiceReportService
         return $pdf->download("service_report_{$from}_to_{$to}.pdf");
     }
 
-    public function exportCsv($bookings, $logs, string $from, string $to)
+    /**
+     * Export CSV
+     */
+    public function exportCsv($merged, string $from, string $to)
     {
         $filename = "service_report_{$from}_to_{$to}.csv";
 
@@ -84,31 +91,22 @@ class ServiceReportService
 
         $columns = ['Date', 'Customer Name', 'Service', 'Type', 'Price'];
 
-        $callback = function () use ($bookings, $logs, $columns) {
+        $callback = function () use ($merged, $columns) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
 
-            foreach ($bookings as $b) {
-                $customerName = ($b->customer && $b->customer->user)
-                    ? $b->customer->user->firstname . ' ' . $b->customer->user->lastname
-                    : 'N/A';
+            foreach ($merged as $entry) {
+                $type = $entry instanceof \App\Models\Booking ? 'Booking' : 'Walk-in';
+                $customerName = $type === 'Booking'
+                    ? ($entry->customer && $entry->customer->user ? $entry->customer->user->firstname . ' ' . $entry->customer->user->lastname : 'N/A')
+                    : ($entry->customer_name ?? 'N/A');
 
                 fputcsv($file, [
-                    date('Y-m-d', strtotime($b->schedule)),
+                    date('Y-m-d', strtotime($entry->schedule ?? $entry->created_at)),
                     trim($customerName),
-                    $b->service->name ?? 'N/A',
-                    'Booking',
-                    $b->service->price ?? 'N/A'
-                ]);
-            }
-
-            foreach ($logs as $l) {
-                fputcsv($file, [
-                    date('Y-m-d', strtotime($l->created_at)),
-                    $l->customer_name ?? 'N/A',
-                    $l->service->name ?? 'N/A',
-                    'Walk-in',
-                    $l->service->price ?? 'N/A'
+                    $entry->service->name ?? 'N/A',
+                    $type,
+                    $entry->service->price ?? 'N/A'
                 ]);
             }
 

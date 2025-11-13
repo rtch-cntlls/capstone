@@ -2,6 +2,7 @@
 @section('content')
 @include('components.ModalAlertSuccess')
 @include('components.ModalAlertError')
+@include('components.ModalAlertWarning')
 <div class="p-2 mt-3">
     <div class="row">
         <div class="col-md-8">

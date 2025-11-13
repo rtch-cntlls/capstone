@@ -13,6 +13,7 @@
 <body>
     @include('components.ModalAlertSuccess')
     @include('components.ModalAlertError')
+    @include('components.ModalAlertWarning')
     <div class="position-absolute top-0 start-0 p-3 d-flex align-items-center">
         <a class="navbar-brand fw-bold" href="/">
             <h3 class="fw-bold ms-2 logo">

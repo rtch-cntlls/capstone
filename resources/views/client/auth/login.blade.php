@@ -33,12 +33,12 @@
                     <form method="POST" action="{{ route('auth.customer.login.submit') }}">
                         @csrf
                         <div class="mb-3">
-                            <label class="form-label"><i class="fas fa-envelope me-2"></i>Email</label>
-                            <input type="text" name="email" id="email" class="form-control" placeholder="Enter your email">
-                            @error('email')
+                            <label class="form-label"><i class="fas fa-user me-2"></i>Email or Phone</label>
+                            <input type="text" name="login" id="login" class="form-control" placeholder="Enter your email or phone number">
+                            @error('login')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
-                        </div>
+                        </div>                        
                         <div class="mb-3">
                             <label class="form-label"><i class="fas fa-lock me-2"></i>Password</label>
                             <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password">

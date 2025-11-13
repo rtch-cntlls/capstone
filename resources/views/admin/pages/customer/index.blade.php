@@ -6,13 +6,13 @@
         @if (session('success-alert'))
             <x-alert type="success" :message="session('success-alert')" />
         @endif
-        <div class="">
-            <form method="GET" action="">
-                <input type="search" name="search" value="" 
+        <div class="w-50 ">
+            <form method="GET" action="{{ route('admin.customer.index') }}">
+                <input type="search" name="search" value="{{ request('search') }}" 
                        class="form-control inv-search search" 
                        placeholder="Search customer name" 
                        aria-label="Search">
-            </form>                
+            </form>                                  
         </div>
     </div>
     @if ($customers->isEmpty())

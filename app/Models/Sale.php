@@ -22,10 +22,10 @@ class Sale extends Model
         'sale_date' => 'datetime',
     ];
 
-    public function getSaleCodeAttribute()
-    {
-        return 'ST' . $this->created_at->format('mdy');
-    }
+    // public function getSaleCodeAttribute()
+    // {
+    //     return 'ST' . $this->created_at->format('mdy');
+    // }
 
     public function items()
     {

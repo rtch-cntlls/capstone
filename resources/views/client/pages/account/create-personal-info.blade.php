@@ -14,29 +14,46 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label for="firstname" class="form-label fw-semibold">First Name</label>
-                            <input type="text" class="form-control" id="firstname" name="firstname"
+                            <input type="text" class="form-control @error('firstname') is-invalid @enderror" 
+                                   id="firstname" name="firstname"
                                    value="{{ old('firstname', Auth::user()->firstname) }}" required>
+                            @error('firstname')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
-
+                
                         <div class="col-md-6">
                             <label for="lastname" class="form-label fw-semibold">Last Name</label>
-                            <input type="text" class="form-control" id="lastname" name="lastname"
+                            <input type="text" class="form-control @error('lastname') is-invalid @enderror" 
+                                   id="lastname" name="lastname"
                                    value="{{ old('lastname', Auth::user()->lastname) }}" required>
+                            @error('lastname')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
-
+                
                         <div class="col-md-6">
                             <label for="email" class="form-label fw-semibold">Email</label>
-                            <input type="email" class="form-control" id="email" name="email"
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" 
+                                   id="email" name="email"
                                    value="{{ old('email', Auth::user()->email) }}" required>
+                            @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
-
+                
                         <div class="col-md-6">
                             <label for="phone" class="form-label fw-semibold">Phone Number</label>
-                            <input type="text" class="form-control" id="phone" name="phone"
+                            <input type="text" class="form-control @error('phone') is-invalid @enderror" 
+                                   id="phone" name="phone"
                                    value="{{ old('phone', Auth::user()->customer->phone ?? '') }}">
+                            @error('phone')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                 </div>
+                
 
                 <div class="modal-footer border-0 p-3">
                     <button type="button" class="btn btn-light border" data-bs-dismiss="modal">
@@ -50,3 +67,11 @@
         </div>
     </div>
 </div>
+@if ($errors->any())
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var editProfileModal = new bootstrap.Modal(document.getElementById('editProfileModal'));
+            editProfileModal.show();
+        });
+    </script>
+@endif

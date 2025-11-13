@@ -61,11 +61,11 @@ class AccountController extends Controller
     public function updateProfile(Request $request)
     {
         $request->validate([
-            'firstname' => 'required|string|max:255',
-            'lastname'  => 'required|string|max:255',
+            'firstname' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\\s]+$/'],
+            'lastname'  => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\\s]+$/'],
             'email'     => 'required|email|unique:users,email,' . auth()->id() . ',user_id',
-            'phone'     => 'nullable|string|max:20',
-        ]);
+            'phone'     => ['required', 'regex:/^(\+63|0)\d{10}$/'], 
+        ]);             
 
         $user = auth()->user();
         $user->update([

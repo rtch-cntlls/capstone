@@ -2,6 +2,7 @@
 @section('content')
 @include('components.ModalAlertSuccess')
 @include('components.ModalAlertError')
+@include('components.ModalAlertWarning')
 @include('admin.pages.inventory.add-stock')
 <div class="p-2">
     <div class="mt-2 mb-2">

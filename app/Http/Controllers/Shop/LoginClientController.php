@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\Shop;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Auth\StoreLoginService;
+use App\Models\User;
+use App\Models\Customer;
+use Illuminate\Support\Facades\Hash;
 
 class LoginClientController extends Controller
 {
@@ -25,22 +28,32 @@ class LoginClientController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
+        $request->validate([
+            'login' => ['required'],
             'password' => ['required'],
         ]);
+    
+        $loginInput = $request->input('login');
 
-        if (Auth::guard('web')->attempt($credentials)) {
+        if (filter_var($loginInput, FILTER_VALIDATE_EMAIL)) {
+            $user = User::where('email', $loginInput)->first();
+        } else {
+            $customer = Customer::where('phone', $loginInput)->first();
+            $user = $customer ? $customer->user : null;
+        }
+    
+        if ($user && Hash::check($request->password, $user->password)) {
+            Auth::login($user);
             $request->session()->regenerate();
-            $user = Auth::user(); 
-            $shop = Shop::first(); 
-            $welcomeMessage = "Welcome back, {$user->name}! You’re now logged in to {$shop->name}.";
+    
+            $shop = Shop::first();
+            $welcomeMessage = "Welcome back, {$user->firstname}! You’re now logged in to {$shop->shop_name}.";
             session()->flash('success', $welcomeMessage);
-
+    
             return $this->loginHandler->handlePostLogin($request);
         }
-
+    
         return back()->with('error', 'Invalid credentials. Please try again.')
-                     ->onlyInput('email');
+                     ->onlyInput('login');
     }
 }

@@ -41,9 +41,27 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Promo Duration</label>
-                        <input type="date" name="start_date" value="{{ old('start_date') }}" class="form-control mb-2">
-                        <input type="date" name="expiry_date" value="{{ old('expiry_date') }}" class="form-control">
-                    </div>
+                        @php
+                            $today = date('Y-m-d');
+                        @endphp
+                        <input type="date" 
+                               name="start_date" 
+                               value="{{ old('start_date') }}" 
+                               class="form-control mb-2 @error('start_date') is-invalid @enderror" 
+                               min="{{ $today }}">
+                        @error('start_date')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    
+                        <input type="date" 
+                               name="expiry_date" 
+                               value="{{ old('expiry_date') }}" 
+                               class="form-control @error('expiry_date') is-invalid @enderror" 
+                               min="{{ $today }}">
+                        @error('expiry_date')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>                    
                 </div>
                 <div class="text-end mt-3 d-md-none">
                     <button type="button" class="btn btn-outline-primary w-100"

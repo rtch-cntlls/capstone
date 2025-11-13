@@ -1,5 +1,6 @@
 @extends('admin.layouts.admin')
 @section('content')
+@include('components.ModalAlertWarning')
 @include('admin.pages.service-log.create')
 <div class="py-3 px-2">
     <div class="d-flex justify-content-between align-items-center mb-3 mt-1 flex-wrap gap-2">
@@ -78,7 +79,7 @@
                 </tbody>
             </table>
             <div class="mt-2">
-                {{ $logs->links() }}
+                {{ $logs->links('pagination::bootstrap-5') }}
             </div>
         </div>
     @endif

@@ -2,6 +2,7 @@
 @section('content')
 @include('components.ModalAlertSuccess')
 @include('components.ModalAlertError')
+@include('components.ModalAlertWarning')
 @include('admin.pages.services.create')
 @include('admin.pages.services.includes.cards')
 <div class="card p-4 mx-2 shadow-sm">

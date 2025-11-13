@@ -5,6 +5,10 @@ namespace App\Services\Shop;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Sale;
+use App\Models\Shop;
+
 
 class OrderService
 {
@@ -38,9 +42,26 @@ class OrderService
     {
         $customer = Auth::user()->customer;
 
-        return Order::with('orderItems.product', 'address')
+        return Order::with('orderItems.product', 'address', 'sale')
             ->where('customer_id', $customer->customer_id)
             ->findOrFail($orderId);
+    }
+
+    public function downloadInvoice(int $orderId)
+    {
+        $order = Order::with('sale.items.product')->findOrFail($orderId);
+        $sale = $order->sale;
+
+        if (!$sale) {
+            abort(404, 'Invoice not found for this order.');
+        }
+
+        $shop = Shop::first();
+
+        $pdf = Pdf::loadView('client.pages.myorder.invoice', compact('sale', 'shop'));
+        $filename = 'Invoice-' . $sale->sale_code . '.pdf';
+
+        return $pdf->download($filename);
     }
 
     public function cancelCustomerOrder(int $orderId): void

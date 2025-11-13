@@ -3,10 +3,17 @@
 @include('components.ModalAlertSuccess')
 @include('components.ModalAlertError')
 <div class="container">
-    <div class="mb-3">
+    <div class="mb-3 d-flex justify-content-between align-items-center">
         <a href="{{ route('order.index') }}" class="text-decoration-none small text-muted">
             <i class="fas fa-arrow-left me-1"></i> Back to Orders
         </a>
+        @if($order->status === 'completed' && $order->sale)
+            <div>
+                <a href="{{ route('order.invoice.download', $order->order_id) }}" class="btn btn-primary">
+                    <i class="fas fa-download me-2"></i> Download Invoice
+                </a>
+            </div>
+        @endif
     </div>
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body">
@@ -14,7 +21,7 @@
                 <div>
                     <h4 class="fw-bold mb-3 text-primary">
                         <i class="fas fa-box me-2"></i> Order #{{ $order->order_number }}
-                    </h4>
+                    </h4>                        
                     <p class="mb-1"><span class="fw-semibold text-dark">Customer:</span> {{ $order->customer->user->firstname }} {{ $order->customer->user->lastname }}</p>
                     <p class="mb-1"><span class="fw-semibold text-dark">Email:</span> {{ $order->customer->user->email }}</p>
                     <p class="mb-1"><span class="fw-semibold text-dark">Phone number:</span> {{ $order->customer->phone }}</p>
@@ -47,7 +54,7 @@
                                 </a>
                             @endif
                         @endif
-                    @endif
+                    @endif             
                     @if ($order->status == 'ready_for_pick_up')
                         <p class="mb-0"><span class="fw-semibold text-dark">Ready for picked up since:</span> 
                             {{ date('M. d, Y h:i A', strtotime($order->expected_delivery_date)) }}
@@ -85,6 +92,25 @@
                             @endif
                         @endif
                     @endif
+                </div>
+                <div class="bg-light p-3 rounded-3 border-start border-3 border-success">
+                   <h6 class="fw-bold text-success mb-2">
+                        <i class="fas fa-credit-card me-2"></i>Payment Methods
+                    </h6>
+                   <p class="m-1">
+                        <span class="fw-bold">Method:</span>
+                        <span class="mb-1 text-uppercase">{{ $order->payment_method ?? 'N/A' }}</span>
+                    </p>
+
+                    <p class="m-1">
+                        <span class="fw-bold">Status:</span>
+                        <span class="mb-1 text-uppercase">{{ $order->payment_status ?? 'N/A' }}</span>
+                    </p>
+
+                    <p class="m-1">
+                        <span class="fw-bold">Type:</span>
+                        <span class="mb-1 text-uppercase">{{ $order->delivery_type ?? 'N/A' }}</span>
+                    </p>
                 </div>
                 <div class="bg-light p-3 rounded-3 border-start border-3 border-danger">
                     <h6 class="fw-bold text-danger mb-2"><i class="fas fa-map-marker-alt me-2"></i>Delivery Address</h6>

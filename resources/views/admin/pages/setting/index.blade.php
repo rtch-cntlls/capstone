@@ -2,6 +2,7 @@
 @section('content')
 @include('components.ModalAlertSuccess')
 @include('components.ModalAlertError')
+@include('components.ModalAlertWarning')
 <div class="row mt-4 m-3 settings">
     <div class="col-md-6">
         @include('admin.pages.setting.includes.store-details')

@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\Sale;
 use App\Models\SaleItem;
 use App\Models\Shipment;
+use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Mail\OrderOutForDeliveryMail;
@@ -13,6 +14,7 @@ use App\Mail\OrderReadyForPickupMail;
 use App\Mail\OrderShippedMail;
 use Illuminate\Support\Facades\Mail;
 use App\Services\Notification\SmsService;
+use App\Mail\InvoiceMail;
 
 class OrderService
 {
@@ -250,6 +252,26 @@ class OrderService
                'total'       => $order->subtotal
             ]);
         }
+
+        $sale->load(['customer.user', 'items.product']);
+
+        $shop = Shop::first();
+        $email = $sale->customer?->user?->email;
+
+        if ($shop && $email) {
+            try {
+                Mail::to($email)->send(new InvoiceMail($sale, $shop));
+                \Log::info("InvoiceMail sent to: {$email}");
+            } catch (\Exception $e) {
+                \Log::error("InvoiceMail failed: {$e->getMessage()}");
+            }
+        } else {
+            \Log::warning('InvoiceMail not sent: Shop or customer email is missing.', [
+                'shop' => $shop?->shop_name,
+                'email' => $email,
+            ]);
+        }  
+      
     }
 
     private function handleCancelled(Order $order): void

@@ -82,6 +82,7 @@ Route::prefix('order')->name('order.')->group(function () {
     Route::get('/', [OrderController::class, 'index'])->name('index');
     Route::get('/{order_id}', [OrderController::class, 'show'])->name('show');
     Route::post('/{order}/cancel', [OrderController::class, 'cancel'])->name('cancel');
+    Route::get('/{order}/invoice/download', [OrderController::class, 'downloadInvoice'])->name('invoice.download');
 });
 
 //CHECKOUT

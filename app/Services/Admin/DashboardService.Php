@@ -36,7 +36,7 @@ class DashboardService
             'onlineVsWalkin'   => $this->getOnlineVsWalkin(), 
             'dailyServiceRevenue'    => $this->getDailyServiceRevenue(),
             'weeklyServiceRevenue'   => $this->getWeeklyServiceRevenue(),
-            'lastWeekServiceRevenue' => $this->getLastWeekServiceRevenue(),
+            'lastWeekServiceRevenue' => $this->getLastWeekServiceRevenue(), 
         ];
     }
 
@@ -54,12 +54,19 @@ class DashboardService
     private function getDashboardCards(): array
     {
         $totalProducts = Product::where('status', 'Active')->count();
+    
         $totalUsers = User::where('role_id', DashboardService::CUSTOMER_ROLE)
-            ->whereHas('customer.orders')
+            ->where(function ($query) {
+                $query->whereHas('customer.orders')
+                      ->orWhereHas('customer.bookings', function ($q) {
+                          $q->where('status', 'Completed');
+                      });
+            })
             ->count();
+    
         $totalOrder = OrderItem::with('product')->count();
         $totalBooking = Booking::with('service')->count();
-
+    
         return [
             [
                 'title' => 'Store Products',
@@ -82,7 +89,7 @@ class DashboardService
                 'icon'  => 'fas fa-user bg-secondary text-secondary p-2 rounded bg-opacity-25',
             ],
         ];
-    }
+    }    
 
     public function getTotalProductValue(): float
     {
@@ -92,7 +99,7 @@ class DashboardService
 
     public function getTotalSoldProductValue(): float
     {
-        return Sale::sum('grand_total');
+        return SaleItem::sum('total');
     }
 
     public function getTodaySalesTotal(): string
@@ -139,7 +146,7 @@ class DashboardService
         $today = Carbon::now();
         $weekStart = $today->copy()->startOfWeek();
         $weekEnd = $today->copy()->endOfWeek();
-
+        
         return Sale::whereBetween('sale_date', [$weekStart, $weekEnd])
             ->sum('grand_total');
     }

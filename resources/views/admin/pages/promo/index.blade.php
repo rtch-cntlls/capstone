@@ -37,28 +37,43 @@
                                 <div class="flex-grow-1"></div>
                                 <div class="d-grid mt-2">
                                     @if ($promos->status === 'Expired')
-                                        <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#reactivateModal{{ $promos->id }}">
-                                            <i class="fa fa-redo me-1"></i> Reactivate
-                                        </button>
-                                        <div class="modal fade" id="reactivateModal{{ $promos->id }}" tabindex="-1" aria-labelledby="reactivateModalLabel{{ $promos->id }}" aria-hidden="true">
+                                    <button class="btn btn-sm btn-outline-warning" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#reactivateModal{{ $promos->discount_id }}">
+                                        <i class="fa fa-redo me-1"></i> Reactivate
+                                    </button>
+                            
+                                        <div class="modal fade" id="reactivateModal{{ $promos->discount_id }}" tabindex="-1" aria-labelledby="reactivateModalLabel{{ $promos->discount_id }}" aria-hidden="true">
                                             <div class="modal-dialog">
-                                                <form method="POST" action="{{ route('admin.promo.reactivate', $promos->id) }}">
+                                                <form method="POST" action="{{ route('admin.promo.reactivate', $promos->discount_id) }}">
                                                     @csrf
-                                                    @method('PATCH')
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="reactivateModalLabel{{ $promos->id }}">Reactivate Promo</h5>
+                                                            <h5 class="modal-title" id="reactivateModalLabel{{ $promos->discount_id }}">Reactivate Promo</h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="mb-3">
-                                                                <label for="start_date_{{ $promos->id }}" class="form-label">Start Date</label>
-                                                                <input type="date" class="form-control" name="start_date" id="start_date_{{ $promos->id }}" value="{{ now()->toDateString() }}" required>
+                                                                <label for="start_date_{{ $promos->discount_id }}" class="form-label">Start Date</label>
+                                                                <input type="date" 
+                                                                       class="form-control" 
+                                                                       name="start_date" 
+                                                                       id="start_date_{{ $promos->discount_id }}" 
+                                                                       value="{{ now()->toDateString() }}" 
+                                                                       min="{{ now()->toDateString() }}" 
+                                                                       required>
                                                             </div>
                                                             <div class="mb-3">
-                                                                <label for="expiry_date_{{ $promos->id }}" class="form-label">Expiry Date</label>
-                                                                <input type="date" class="form-control" name="expiry_date" id="expiry_date_{{ $promos->id }}" value="{{ now()->addDays(7)->toDateString() }}" required>
+                                                                <label for="expiry_date_{{ $promos->discount_id }}" class="form-label">Expiry Date</label>
+                                                                <input type="date" 
+                                                                       class="form-control" 
+                                                                       name="expiry_date" 
+                                                                       id="expiry_date_{{ $promos->discount_id }}" 
+                                                                       value="{{ now()->addDays(7)->toDateString() }}" 
+                                                                       min="{{ now()->toDateString() }}" 
+                                                                       required>
                                                             </div>
+                                                            
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="submit" class="btn btn-primary">Reactivate</button>
@@ -68,6 +83,7 @@
                                                 </form>
                                             </div>
                                         </div>
+                                        
                                     @else
                                     @include('admin.pages.promo.includes.view-product', ['promos' => $promos])
                                     <button class="btn btn-sm btn-outline-primary" 

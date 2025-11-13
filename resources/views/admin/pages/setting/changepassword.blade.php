@@ -10,21 +10,21 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">Current Password</label>
-                        <input type="password" class="form-control @error('current_password') is-invalid @enderror" name="current_password" required>
+                        <input type="password" class="form-control @error('current_password') is-invalid @enderror" name="current_password" >
                         @error('current_password')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="mb-3">
                         <label class="form-label">New Password</label>
-                        <input type="password" class="form-control @error('new_password') is-invalid @enderror" name="new_password" required>
+                        <input type="password" class="form-control @error('new_password') is-invalid @enderror" name="new_password" >
                         @error('new_password')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Confirm New Password</label>
-                        <input type="password" class="form-control @error('new_password_confirmation') is-invalid @enderror" name="new_password_confirmation" required>
+                        <input type="password" class="form-control @error('new_password_confirmation') is-invalid @enderror" name="new_password_confirmation" >
                         @error('new_password_confirmation')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror

@@ -9,17 +9,16 @@ class ShopService
 {
     public function getProducts($filters = [])
     {
-        return Product::with('discounts')
+        return Product::with(['discounts' => fn($q) => $q->where('status', 'Active')])
             ->where('status', 'Active')
-            ->when($filters['new'] ?? false, fn($q) => $q->where('condition', 'New'))
-            ->when($filters['sale'] ?? false, fn($q) =>
-                $q->whereHas('discounts', fn($q) => $q->where('discount_percent', '>', 0)->where('status', 'Active')))
             ->when(!empty($filters['categories']), fn($q) =>
-                $q->whereIn('category_id', $filters['categories']))
+                $q->whereIn('category_id', $filters['categories'])
+            )
             ->latest()
             ->get()
             ->map(fn($product) => $this->formatProduct($product));
     }
+    
     
     protected function formatProduct($product)
     {

@@ -37,8 +37,8 @@
                     <div class="mb-3">
                         <label for="last_done_at" class="form-label fw-semibold">Last Service Date</label>
                         <input type="date" name="last_done_at" id="last_done_at" 
-                            class="form-control rounded-3" 
-                           required>
+                               class="form-control rounded-3" 
+                               required>
                     </div>
                     <div class="mb-3">
                         <label for="service_type" class="form-label fw-semibold">Last Service Type</label>
@@ -109,4 +109,8 @@
 
         saveBtn.disabled = true;
     });
+
+    const lastDoneInput = document.getElementById('last_done_at');
+    const today = new Date().toISOString().split('T')[0];
+    lastDoneInput.setAttribute('max', today);
 </script>
