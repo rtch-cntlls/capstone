@@ -14,6 +14,9 @@
                     @if($message->sender_id == Auth::id())
                         <div class="d-flex justify-content-end mb-2">
                             <div class="p-2 bg-primary text-white rounded-3">
+                                @if(!empty($message->content))
+                                    {{ $message->content }}
+                                @endif
                                 @if(isset($message->attachments) && $message->attachments->count())
                                     @foreach($message->attachments as $att)
                                         @if($att->attachment_type === 'image')
@@ -25,9 +28,6 @@
                                         @endif
                                     @endforeach
                                 @endif
-                                @if(!empty($message->content))
-                                    {{ $message->content }}
-                                @endif
                                 <div class="form-text text-end mt-1" style="font-size: 10px;">
                                     {{ $message->created_at->format('D h:i A') }}
                                 </div>
@@ -36,6 +36,9 @@
                     @else
                         <div class="d-flex justify-content-start mb-2">
                             <div class="p-2 bg-light rounded-3">
+                                @if(!empty($message->content))
+                                    {{ $message->content }}
+                                @endif
                                 @if(isset($message->attachments) && $message->attachments->count())
                                     @foreach($message->attachments as $att)
                                         @if($att->attachment_type === 'image')
@@ -46,9 +49,6 @@
                                             </video>
                                         @endif
                                     @endforeach
-                                @endif
-                                @if(!empty($message->content))
-                                    {{ $message->content }}
                                 @endif
                             </div>
                         </div>
