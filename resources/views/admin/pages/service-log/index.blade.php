@@ -61,19 +61,34 @@
                     <tr>
                         <th>Customer Name</th>
                         <th>Contact Number</th>
-                        <th>Service</th>
-                        <th>(₱) Generated</th>
+                        <th>Last Service Type</th>
                         <th>Date / Time</th>
+                        <th style="width: 140px;">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($logs as $log)
+                        @php
+                            $nextDue = $log->last_service_date
+                                ? \Carbon\Carbon::parse($log->last_service_date)->addMonths(3)->format('M d, Y')
+                                : null;
+                        @endphp
                         <tr>
                             <td>{{ $log->customer_name ?? 'N/A' }}</td>
                             <td>{{ $log->contact_number ?? 'N/A' }}</td>
-                            <td>{{ $log->service->name ?? 'N/A' }}</td>
-                            <td>{{ $log->service->price ? number_format($log->service->price, 2) : 'N/A' }}</td>
+                            <td>{{ $log->last_service_type ?? 'N/A' }}</td>
                             <td>{{ $log->created_at->format('M. d, y (h:i A)') }}</td>
+                            <td>
+                                <div class="d-flex flex-column gap-1">
+                                    <a href="{{ route('admin.service-logs.maintenance', $log) }}" class="badge bg-light text-dark border text-decoration-none mb-1" style="font-size: 11px; font-weight: 500;">View Maintenance</a>
+                                    <button type="button" class="btn btn-sm btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#logServiceModal"
+                                        data-mode="add-motor"
+                                        data-service-log-id="{{ $log->id }}"
+                                        style="font-size: 11px;">
+                                        <i class="bi bi-plus-circle"></i> Add Motor
+                                    </button>
+                                </div>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

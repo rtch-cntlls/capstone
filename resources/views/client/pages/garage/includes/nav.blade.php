@@ -1,9 +1,3 @@
-@php
-    $hasMaintenanceData = isset($maintenanceOverview, $maintenanceSchedule)
-        && (!empty($maintenanceOverview) || !empty($maintenanceSchedule));
-    $isMaintenanceDisabled = !$hasMaintenanceData;
-@endphp
-
 <a class="text-decoration-none mb-3 text-dark d-inline-block" href="{{ route('garage.index') }}">
     <i class="fas fa-arrow-left me-1"></i> Back
 </a>
@@ -25,9 +19,8 @@
     </li>
     <li class="nav-item">
         <a 
-            href="{{ $isMaintenanceDisabled ? '#' : route('garage.maintenance', $motorcycle->motorcycle_id) }}"
-            class="nav-link {{ request()->routeIs('garage.maintenance') ? 'active' : '' }} {{ $isMaintenanceDisabled ? 'disabled text-muted' : '' }}"
-            @if($isMaintenanceDisabled) tabindex="-1" aria-disabled="true" @endif>
+            href="{{ route('garage.maintenance', $motorcycle->motorcycle_id) }}"
+            class="nav-link {{ request()->routeIs('garage.maintenance') ? 'active' : '' }}">
             <i class="fas fa-tools me-1"></i>
             <span class="d-none d-md-inline">Maintenance</span>
         </a>

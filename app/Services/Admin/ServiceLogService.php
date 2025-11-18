@@ -6,12 +6,13 @@ use App\Models\ServiceLog;
 use App\Models\Service;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ServiceLogService
 {
     public function getLogs(array $filters = [], bool $paginate = true, int $perPage = 10)
     {
-        $query = ServiceLog::with('service');
+        $query = ServiceLog::with(['service']);
 
         if (!empty($filters['search'])) {
             $search = $filters['search'];
@@ -28,7 +29,39 @@ class ServiceLogService
                   ->whereDate('created_at', '<=', $filters['to']);
         }
 
-        return $paginate ? $query->latest()->paginate($perPage)->withQueryString() : $query->get();
+        // Get all matching logs ordered by latest service date, then created_at
+        $allLogs = $query
+            ->orderByDesc('last_service_date')
+            ->orderByDesc('created_at')
+            ->get();
+
+        // Group by customer + motorcycle (brand + model) and take the latest per group
+        $grouped = $allLogs
+            ->groupBy(function (ServiceLog $log) {
+                return $log->customer_name;
+            })
+            ->map->first()
+            ->values();
+
+        if (!$paginate) {
+            return $grouped;
+        }
+
+        $page = request()->get('page', 1);
+        $page = (int) ($page ?: 1);
+
+        $items = $grouped->forPage($page, $perPage)->values();
+
+        return new LengthAwarePaginator(
+            $items,
+            $grouped->count(),
+            $perPage,
+            $page,
+            [
+                'path' => request()->url(),
+                'query' => request()->query(),
+            ]
+        );
     }
 
     public function getActiveServices()
@@ -44,13 +77,12 @@ class ServiceLogService
         $callback = function() use ($logs) {
             $file = fopen('php://output', 'w');
             if ($logs->isNotEmpty()) {
-                fputcsv($file, ['Customer Name','Contact Number','Service','Price','Date / Time']);
+                fputcsv($file, ['Customer Name','Contact Number','Service','Date / Time']);
                 foreach ($logs as $log) {
                     fputcsv($file, [
                         $log->customer_name,
                         $log->contact_number ?? '-',
-                        $log->service->name ?? '-',
-                        $log->service->price ?? '-',
+                        optional($log->service)->name ?? '-',
                         $log->created_at->format('M. d, Y h:i A'),
                     ]);
                 }

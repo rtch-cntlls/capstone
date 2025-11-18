@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Shop;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Motorcycle;
+use App\Models\ServiceLog;
 use App\Services\Shop\MyGarageService;
 use App\Services\Api\MaintenancePredictionService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class MyGarageController extends Controller
 {
@@ -71,14 +73,40 @@ class MyGarageController extends Controller
     public function maintenance(Motorcycle $motorcycle)
     {
         $shop = $this->garageService->getShop();
+        $user = Auth::user();
+
+        $serviceLogs = collect();
+        $latestServiceLog = null;
+
+        if ($user && !empty($user->email)) {
+            $serviceLogs = ServiceLog::query()
+                ->where('gmail', $user->email)
+                ->where('motorcycle_brand', $motorcycle->brand)
+                ->where('motorcycle_model', $motorcycle->model)
+                ->orderByDesc('last_service_date')
+                ->orderByDesc('created_at')
+                ->get();
+
+            $latestServiceLog = $serviceLogs->first();
+        }
+
+        if ($serviceLogs->isNotEmpty()) {
+            return view('client.pages.garage.maintenance', [
+                'shop' => $shop,
+                'motorcycle' => $motorcycle,
+                'latestMaintenance' => $latestServiceLog,
+                'serviceLogs' => $serviceLogs,
+            ]);
+        }
+
         $latestMaintenance = $motorcycle->maintenanceLogs()->latest('last_done_at')->first();
         $currentMileage = (int) ($motorcycle->current_mileage ?? 0);
-    
+
         $latestPrediction = $latestMaintenance;
-    
+
         if ($latestMaintenance) {
             $aiAlreadyAttempted = $latestMaintenance->ai_attempted ?? false;
-    
+
             if (!$aiAlreadyAttempted && (
                 empty($latestMaintenance->next_due_mileage) ||
                 empty($latestMaintenance->next_due_date) ||
@@ -92,13 +120,14 @@ class MyGarageController extends Controller
                     }
 
                     $latestMaintenance->update(['ai_attempted' => true]);
-    
+
                 } catch (\Throwable $e) {
                     \Log::error("Maintenance AI prediction failed for motorcycle ID {$motorcycle->id}: " . $e->getMessage());
                     $latestMaintenance->update(['ai_attempted' => true]);
                 }
             }
         }
+
         return view('client.pages.garage.maintenance', [
             'shop' => $shop,
             'motorcycle' => $motorcycle,

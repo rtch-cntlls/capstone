@@ -129,6 +129,14 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
         Route::get('/', [ServiceLogController::class, 'index'])->name('index');
         Route::get('/create', [ServiceLogController::class, 'create'])->name('create');
         Route::post('/store', [ServiceLogController::class, 'store'])->name('store');
+        Route::get('/{serviceLog}/maintenance', [ServiceLogController::class, 'maintenance'])->name('maintenance');
+        Route::post('/{serviceLog}/gmail', [ServiceLogController::class, 'updateGmail'])->name('gmail.update');
+        Route::post('/{serviceLog}/add-motor', [ServiceLogController::class, 'addMotor'])->name('add-motor');
+        Route::post('/maintenance-logs/{log}/remarks', [ServiceLogController::class, 'updateMaintenanceRemarks'])->name('maintenance-remarks.update');
+        Route::post('/{serviceLog}/maintenance-history', [ServiceLogController::class, 'storeMaintenanceLog'])->name('maintenance-logs.store');
+        Route::post('/maintenance-logs/{log}/refresh', [ServiceLogController::class, 'refreshPrediction'])->name('maintenance-logs.refresh');
+        Route::delete('/maintenance-logs/{log}', [ServiceLogController::class, 'destroyMaintenanceLog'])->name('maintenance-logs.destroy');
+        Route::delete('/{serviceLog}/motor', [ServiceLogController::class, 'deleteMotor'])->name('motor.destroy');
     });
 
     // PROMOS

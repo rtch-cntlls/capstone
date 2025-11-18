@@ -11,21 +11,14 @@
             <div class="d-flex justify-content-between align-items-center mt-3">
                 <div>
                     <h4 class="fw-bold mb-1">My Motorcycles</h4>    
+                    <p class="text-muted small mb-0">Motorcycles are automatically shown here when the shop logs a service under your Gmail.</p>
                 </div>
-                @if ($motorcycles->isNotEmpty())
-                    <button type="button" class="btn btn-primary rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#motorcycleModal">
-                        <i class="fas fa-plus me-2"></i> Add Motorcycle
-                    </button>
-                @endif
             </div>
             @if($motorcycles->isEmpty())
                 <div class="text-center py-5 bg-white border rounded shadow-sm my-3">
                     <img src="{{ asset('images/garage.jpg') }}" alt="No motorcycles" width="120">
-                    <h5 class="fw-semibold mb-2">No Motorcycles Registered</h5>
-                    <p class="text-muted mb-3">You haven't added any motorcycles yet. Click below to add your first one.</p>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#motorcycleModal">
-                        Add Motorcycle
-                    </button>
+                    <h5 class="fw-semibold mb-2">No Motorcycles Found</h5>
+                    <p class="text-muted mb-0">Once the shop logs a service under your Gmail, your motorcycle will appear here automatically.</p>
                 </div>
             @else
                 <div class="row g-3 mt-2">
@@ -69,5 +62,4 @@
         </div>
     </div>
 </div>
-@include('client.pages.garage.modal-form.motorcycle')
 @endsection

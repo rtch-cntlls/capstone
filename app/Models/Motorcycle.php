@@ -33,4 +33,9 @@ class Motorcycle extends Model
     {
         return $this->hasMany(MotorcycleMaintenanceLog::class, 'motorcycle_id', 'motorcycle_id');
     }
+
+    public function latestMaintenanceLog()
+    {
+        return $this->hasOne(MotorcycleMaintenanceLog::class, 'motorcycle_id', 'motorcycle_id')->latestOfMany('last_done_at');
+    }
 }

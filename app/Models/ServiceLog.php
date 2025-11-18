@@ -9,11 +9,31 @@ class ServiceLog  extends Model
     protected $fillable = [
         'customer_name',
         'contact_number',
+        'gmail',
+        'motorcycle_brand',
+        'motorcycle_model',
+        'last_mileage',
+        'last_service_date',
+        'last_service_type',
+        'motorcycle_id',
         'service_id',
+        'next_due_mileage',
+        'next_due_date',
+        'ai_reasoning',
+        'remarks',
+    ];
+
+    protected $casts = [
+        'ai_reasoning' => 'array',
     ];
 
     public function service()
     {
         return $this->belongsTo(Service::class, 'service_id', 'service_id');
+    }
+
+    public function motorcycle()
+    {
+        return $this->belongsTo(Motorcycle::class, 'motorcycle_id', 'motorcycle_id');
     }
 }

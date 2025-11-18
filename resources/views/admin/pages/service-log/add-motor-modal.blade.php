@@ -1,51 +1,37 @@
-<div class="modal fade" id="logServiceModal" tabindex="-1" aria-labelledby="logServiceModalLabel" aria-hidden="true">
+<!-- Add Motor Modal -->
+<div class="modal fade" id="addMotorModal" tabindex="-1" aria-labelledby="addMotorModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-3 shadow-sm border-0">
-            <form action="{{ route('admin.service-logs.store') }}" method="POST" class="p-3" id="logServiceForm">
+            <form action="{{ route('admin.service-logs.add-motor', 0) }}" method="POST" id="addMotorForm" class="p-3">
                 @csrf
-                <input type="hidden" name="service_id" id="service_id_hidden">
+                <input type="hidden" name="service_id" id="service_id">
+                
                 <div class="modal-header border-0 pb-0">
-                    <h5 class="modal-title fw-bold" id="logServiceModalLabel">Log New Service</h5>
+                    <h5 class="modal-title fw-bold" id="addMotorModalLabel">Add Motorcycle Service Record</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body pt-2">
-                    <div class="mb-3" id="customer_name_group">
-                        <label for="customer_name" class="form-label fw-medium">Customer Name</label>
-                        <input type="text" id="customer_name" name="customer_name" class="form-control form-control-lg @error('customer_name') is-invalid @enderror" placeholder="Enter customer name">
-                        @error('customer_name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="mb-3" id="contact_number_group">
-                        <label for="contact_number" class="form-label fw-medium">Contact Number</label>
-                        <input type="text" id="contact_number" name="contact_number" class="form-control form-control-lg @error('contact_number') is-invalid @enderror" placeholder="Enter contact number">
-                        @error('contact_number')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="mb-3" id="gmail_group">
-                        <label for="gmail" class="form-label fw-medium">Gmail (optional)</label>
-                        <input type="email" id="gmail" name="gmail" class="form-control form-control-lg @error('gmail') is-invalid @enderror" placeholder="Enter Gmail address">
-                        @error('gmail')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <hr>
                     <div class="mb-3">
-                        <label for="motorcycle_brand" class="form-label fw-medium">Motorcycle Brand (optional)</label>
-                        <select id="motorcycle_brand" name="motorcycle_brand" class="form-select form-select-lg @error('motorcycle_brand') is-invalid @enderror">
-                            <option value="" selected>-- Select Brand --</option>
-                            @foreach($brands as $brand => $models)
-                                <option value="{{ $brand }}" {{ old('motorcycle_brand') == $brand ? 'selected' : '' }}>{{ $brand }}</option>
-                            @endforeach
-                        </select>
+                        <label for="motorcycle_brand" class="form-label fw-medium">Motorcycle Brand</label>
+                        <div class="input-group mb-2">
+                            <select id="motorcycle_brand" name="motorcycle_brand" class="form-select form-select-lg @error('motorcycle_brand') is-invalid @enderror" required>
+                                <option value="" selected>-- Select Brand --</option>
+                                @foreach($brands ?? [] as $brand => $models)
+                                    <option value="{{ $brand }}" {{ old('motorcycle_brand') == $brand ? 'selected' : '' }}>{{ $brand }}</option>
+                                @endforeach
+                                <option value="other">Other (Specify)</option>
+                            </select>
+                        </div>
+                        <div id="newBrandContainer" class="mb-2" style="display: none;">
+                            <input type="text" class="form-control form-control-lg" id="new_brand" name="new_brand" placeholder="Enter new brand name">
+                        </div>
                         @error('motorcycle_brand')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="motorcycle_model" class="form-label fw-medium">Motorcycle Model (optional)</label>
-                        <select id="motorcycle_model" name="motorcycle_model" class="form-select form-select-lg @error('motorcycle_model') is-invalid @enderror">
+                        <label for="motorcycle_model" class="form-label fw-medium">Motorcycle Model</label>
+                        <select id="motorcycle_model" name="motorcycle_model" class="form-select form-select-lg @error('motorcycle_model') is-invalid @enderror" required>
                             <option value="" selected>-- Select Model --</option>
                             @if(old('motorcycle_brand') && isset($brands[old('motorcycle_brand')]))
                                 @foreach($brands[old('motorcycle_brand')] as $model)
@@ -59,23 +45,23 @@
                     </div>
                     <div class="mb-3">
                         <label for="last_mileage" class="form-label fw-medium">Last Mileage at Service (km)</label>
-                        <input type="number" id="last_mileage" name="last_mileage" class="form-control form-control-lg @error('last_mileage') is-invalid @enderror" placeholder="Enter last service mileage" min="0">
+                        <input type="number" id="last_mileage" name="last_mileage" class="form-control form-control-lg @error('last_mileage') is-invalid @enderror" placeholder="Enter last service mileage" min="0" value="{{ old('last_mileage') }}">
                         @error('last_mileage')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="mb-3">
                         <label for="last_service_date" class="form-label fw-medium">Last Service Date</label>
-                        <input type="date" id="last_service_date" name="last_service_date" class="form-control form-control-lg @error('last_service_date') is-invalid @enderror">
+                        <input type="date" id="last_service_date" name="last_service_date" class="form-control form-control-lg @error('last_service_date') is-invalid @enderror" required max="{{ date('Y-m-d') }}" value="{{ old('last_service_date', date('Y-m-d')) }}">
                         @error('last_service_date')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="mb-3">
                         <label for="last_service_type" class="form-label fw-medium">Last Service Type</label>
-                        <select id="last_service_type" name="last_service_type" class="form-select form-select-lg @error('last_service_type') is-invalid @enderror">
-                            <option value="" selected>-- Select Last Service Type --</option>
-                            <option value="Change oil">Change oil</option>
+                        <select id="last_service_type" name="last_service_type" class="form-select form-select-lg @error('last_service_type') is-invalid @enderror" required>
+                            <option value="" {{ old('last_service_type') === null ? 'selected' : '' }}>-- Select Service Type --</option>
+                            <option value="Change oil" {{ old('last_service_type') == 'Change oil' ? 'selected' : '' }}>Change oil</option>
                             <option value="Oil filter replacement">Oil filter replacement</option>
                             <option value="Air filter cleaning">Air filter cleaning</option>
                             <option value="Air filter replacement">Air filter replacement</option>
@@ -179,111 +165,174 @@
                     </div>
                 </div>
                 <div class="modal-footer border-0 pt-0">
-                    <button type="submit" class="btn btn-primary btn-lg" id="logServiceSubmitBtn">Log Service</button>
+                    <button type="submit" class="btn btn-primary btn-lg">Add Motorcycle</button>
                     <button type="button" class="btn btn-outline-secondary btn-lg" data-bs-dismiss="modal">Close</button>
                 </div>
             </form>
         </div>
     </div>
-    <script>
-        (function() {
-            const brands = @json($brands ?? []);
-            const brandSelect = document.getElementById('motorcycle_brand');
-            const modelSelect = document.getElementById('motorcycle_model');
-            const modal = document.getElementById('logServiceModal');
-            const form = document.getElementById('logServiceForm');
-            const titleEl = document.getElementById('logServiceModalLabel');
-            const submitBtn = document.getElementById('logServiceSubmitBtn');
-            const customerNameGroup = document.getElementById('customer_name_group');
-            const contactNumberGroup = document.getElementById('contact_number_group');
-            const gmailGroup = document.getElementById('gmail_group');
+</div>
 
-            // Populate models when brand changes
-            if (brandSelect && modelSelect) {
-                brandSelect.addEventListener('change', function () {
-                    const selectedBrand = this.value;
-                    modelSelect.innerHTML = '<option value="" selected>-- Select Model --</option>';
-                    if (selectedBrand && brands[selectedBrand]) {
-                        brands[selectedBrand].forEach(function(model) {
-                            const option = document.createElement('option');
-                            option.value = model;
-                            option.textContent = model;
-                            modelSelect.appendChild(option);
-                        });
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set default date to today
+        const dateInput = document.getElementById('last_service_date');
+        if (dateInput && !dateInput.value) {
+            dateInput.value = new Date().toISOString().split('T')[0];
+        }
+        
+        // Handle brand and model dropdowns
+        const brands = @json($brands ?? []);
+        const brandSelect = document.getElementById('motorcycle_brand');
+        const modelSelect = document.getElementById('motorcycle_model');
+        const newBrandContainer = document.getElementById('newBrandContainer');
+        const newModelContainer = document.getElementById('newModelContainer');
+
+        // Function to update models based on selected brand
+        function updateModels(selectedBrand) {
+            if (!modelSelect) return;
+            
+            // Store the current selected model (if any)
+            const currentModel = modelSelect.value;
+            
+            // Clear existing options
+            modelSelect.innerHTML = '<option value="" selected>-- Select Model --</option>';
+            
+            if (selectedBrand && selectedBrand !== 'other' && brands[selectedBrand]) {
+                // Sort models alphabetically
+                const sortedModels = [...brands[selectedBrand]].sort();
+                
+                // Add new options
+                sortedModels.forEach(function(model) {
+                    const option = document.createElement('option');
+                    option.value = model;
+                    option.textContent = model;
+                    if (currentModel === model) {
+                        option.selected = true;
                     }
+                    modelSelect.appendChild(option);
                 });
-            }
-
-            function setAddMotorMode(serviceLogId) {
-                if (!form) return;
-                // Change action to add-motor route with id
-                const baseAddUrl = '{{ url('admin/service-logs') }}';
-                if (!serviceLogId) {
-                    console.warn('No serviceLogId provided for add-motor');
+                
+                // Add 'Other' option
+                const otherOption = document.createElement('option');
+                otherOption.value = 'other';
+                otherOption.textContent = 'Other (Specify)';
+                if (currentModel === 'other') {
+                    otherOption.selected = true;
                 }
-                form.action = `${baseAddUrl}/${serviceLogId}/add-motor`;
-                // UI text
-                if (titleEl) titleEl.textContent = 'Add Motorcycle Service Record';
-                if (submitBtn) submitBtn.textContent = 'Add Motorcycle';
-                // Hide customer fields
-                if (customerNameGroup) customerNameGroup.style.display = 'none';
-                if (contactNumberGroup) contactNumberGroup.style.display = 'none';
-                if (gmailGroup) gmailGroup.style.display = 'none';
-                // Set hidden service id
-                const serviceIdHidden = document.getElementById('service_id_hidden');
-                if (serviceIdHidden) serviceIdHidden.value = serviceLogId || '';
-                // Make motorcycle fields required
-                if (brandSelect) brandSelect.required = true;
-                if (modelSelect) modelSelect.required = true;
+                modelSelect.appendChild(otherOption);
+                
+                modelSelect.disabled = false;
+                
+                // If there's a selected model from form validation, select it
+                if (currentModel && currentModel !== 'other') {
+                    const option = modelSelect.querySelector(`option[value="${currentModel}"]`);
+                    if (option) {
+                        option.selected = true;
+                    }
+                }
+            } else {
+                modelSelect.disabled = true;
+            }
+        }
+
+        // Initialize the model dropdown when the page loads
+        if (brandSelect && modelSelect) {
+            // Set up the change event handler for the brand dropdown
+            brandSelect.addEventListener('change', function() {
+                const selectedBrand = this.value;
+                
+                // Show/hide new brand input
+                if (selectedBrand === 'other') {
+                    newBrandContainer.style.display = 'block';
+                    document.getElementById('new_brand').setAttribute('required', 'required');
+                    modelSelect.disabled = true;
+                    // Clear model select when 'Other' is selected for brand
+                    modelSelect.innerHTML = '<option value="" selected>-- Select Model --</option>';
+                } else {
+                    newBrandContainer.style.display = 'none';
+                    document.getElementById('new_brand').removeAttribute('required');
+                    updateModels(selectedBrand);
+                }
+            });
+            
+            // If there's a selected brand on page load (from form validation), update models
+            if (brandSelect.value) {
+                updateModels(brandSelect.value);
+            }
+            
+            // Handle model select change for 'Other' option
+            modelSelect.addEventListener('change', function() {
+                if (this.value === 'other') {
+                    newModelContainer.style.display = 'block';
+                    document.getElementById('new_model').setAttribute('required', 'required');
+                } else {
+                    newModelContainer.style.display = 'none';
+                    document.getElementById('new_model').removeAttribute('required');
+                }
+            });
+            
+            // Show new brand input if 'Other' is selected for brand (from form validation)
+            if (brandSelect.value === 'other') {
+                newBrandContainer.style.display = 'block';
+            }
+            
+            // If there's a selected model from form validation, select it
+            const selectedModel = '{{ old('motorcycle_model') }}';
+            if (selectedModel && selectedModel !== 'other') {
+                // Small delay to ensure options are populated
+                setTimeout(() => {
+                    const option = modelSelect.querySelector(`option[value="${selectedModel}"]`);
+                    if (option) {
+                        option.selected = true;
+                    }
+                }, 100);
+            }
+        }
+        
+        // Handle modal show event
+        const addMotorModal = document.getElementById('addMotorModal');
+        if (addMotorModal) {
+            addMotorModal.addEventListener('show.bs.modal', function(event) {
+                // Reset form
+                const form = document.getElementById('addMotorForm');
+                if (form) {
+                    form.reset();
+                }
+                
+                // Set default date to today
                 const dateInput = document.getElementById('last_service_date');
-                const typeSelect = document.getElementById('last_service_type');
-                if (dateInput) dateInput.required = true;
-                if (typeSelect) typeSelect.required = true;
-                // Default date today if empty
-                if (dateInput && !dateInput.value) {
+                if (dateInput) {
                     dateInput.value = new Date().toISOString().split('T')[0];
                 }
-            }
-
-            function setDefaultMode() {
-                if (!form) return;
-                form.action = '{{ route('admin.service-logs.store') }}';
-                if (titleEl) titleEl.textContent = 'Log New Service';
-                if (submitBtn) submitBtn.textContent = 'Log Service';
-                if (customerNameGroup) customerNameGroup.style.display = '';
-                if (contactNumberGroup) contactNumberGroup.style.display = '';
-                if (gmailGroup) gmailGroup.style.display = '';
-                const serviceIdHidden = document.getElementById('service_id_hidden');
-                if (serviceIdHidden) serviceIdHidden.value = '';
-                // Require fields needed for AI prediction
-                if (brandSelect) brandSelect.required = true;
-                if (modelSelect) modelSelect.required = true;
-                const dateInput = document.getElementById('last_service_date');
-                const typeSelect = document.getElementById('last_service_type');
-                if (dateInput) {
-                    dateInput.required = true;
-                    if (!dateInput.value) dateInput.value = new Date().toISOString().split('T')[0];
+                
+                // Reset model dropdown and hide new brand/model inputs
+                if (modelSelect) {
+                    modelSelect.innerHTML = '<option value="" selected>-- Select Model --</option>';
+                    modelSelect.disabled = true;
                 }
-                if (typeSelect) typeSelect.required = true;
-            }
-
-            if (modal) {
-                modal.addEventListener('show.bs.modal', function (event) {
-                    const button = event.relatedTarget;
-                    const mode = button ? button.getAttribute('data-mode') : null;
-                    if (mode === 'add-motor') {
-                        const serviceLogId = button.getAttribute('data-service-log-id');
-                        setAddMotorMode(serviceLogId);
-                    } else {
-                        setDefaultMode();
+                
+                if (newBrandContainer) newBrandContainer.style.display = 'none';
+                if (newModelContainer) newModelContainer.style.display = 'none';
+                
+                // If there's a related target (button that opened the modal)
+                const button = event.relatedTarget;
+                if (button) {
+                    // Update form action URL if service_log_id is provided
+                    const serviceLogId = button.getAttribute('data-service-log-id');
+                    if (serviceLogId && form) {
+                        form.action = form.action.replace(/\/service-logs\/\d+\/add-motor$/, 
+                            `/service-logs/${serviceLogId}/add-motor`);
                     }
-                });
-                modal.addEventListener('hidden.bs.modal', function () {
-                    // Reset to default when closed
-                    setDefaultMode();
-                    if (form) form.reset();
-                });
-            }
-        })();
-    </script>
-</div>
+                    
+                    // If there's a selected brand from form validation, update models
+                    if (brandSelect.value) {
+                        updateModels(brandSelect.value);
+                    }
+                }
+            });
+        }
+    });
+</script>
+@endpush

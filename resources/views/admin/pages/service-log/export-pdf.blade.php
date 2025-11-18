@@ -20,7 +20,6 @@
                 <th>Customer Name</th>
                 <th>Contact Number</th>
                 <th>Service</th>
-                <th>Price</th>
                 <th>Date / Time</th>
             </tr>
         </thead>
@@ -29,8 +28,7 @@
                 <tr>
                     <td>{{ $log->customer_name }}</td>
                     <td>{{ $log->contact_number ?? '-' }}</td>
-                    <td>{{ $log->service->name ?? '-' }}</td>
-                    <td>{{ $log->service->price ?? '-' }}</td>
+                    <td>{{ optional($log->service)->name ?? '-' }}</td>
                     <td>{{ $log->created_at->format('M. d, Y h:i A') }}</td>
                 </tr>
             @endforeach

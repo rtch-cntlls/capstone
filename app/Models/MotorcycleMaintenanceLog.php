@@ -22,6 +22,7 @@ class MotorcycleMaintenanceLog extends Model
         'ai_reasoning',
         'next_due_date',
         'next_due_mileage',
+        'remarks',
     ];
 
     public function motorcycle()
