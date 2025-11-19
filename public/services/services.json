@@ -1,98 +1,144 @@
 [
   {
-    "category": "Preventive Maintenance",
+    "category": "Engine & General Maintenance",
     "services": [
-      "Oil Change (Engine Oil / Gear Oil)",
-      "Tune-up (Spark Plug, Air Filter, Carb/Injector Cleaning)",
-      "Chain Cleaning, Adjustment & Lubrication",
-      "Brake Adjustment (Front / Rear)",
-      "Tire Pressure Check",
-      "Battery Check / Charging",
-      "General Check-up / Diagnostics"
-    ]
-  },
-  {
-    "category": "Electrical Services",
-    "services": [
-      "Battery Replacement",
-      "Charging System Check",
-      "Starter Motor Repair / Replacement",
-      "Lighting System Check (Headlight, Signal, Taillight)",
-      "Horn Installation / Repair",
-      "Wiring Troubleshooting",
-      "ECU Diagnostics / Tuning",
-      "ABS System Check"
-    ]
-  },
-  {
-    "category": "Tires & Wheels",
-    "services": [
-      "Tire Replacement (Front / Rear)",
-      "Tire Patching (Vulcanizing)",
-      "Wheel Balancing",
-      "Spoke Tightening / Wheel Alignment",
-      "Tube Replacement"
-    ]
-  },
-  {
-    "category": "Brake Services",
-    "services": [
-      "Brake Pad Replacement (Disc)",
-      "Brake Shoe Replacement (Drum)",
-      "Brake Fluid Replacement / Bleeding",
-      "Disc Rotor Resurfacing / Replacement"
-    ]
-  },
-  {
-    "category": "Engine & Transmission",
-    "services": [
-      "Engine Overhaul",
-      "Valve Adjustment",
-      "Carburetor Cleaning / Repair",
-      "Fuel Injection Cleaning",
-      "Clutch Plate Replacement",
-      "Transmission Gear Adjustment / Repair",
-      "Fuel Filter Replacement",
-      "Fuel Pump Check / Repair",
-      "Throttle Body Cleaning"
+      "Change oil",
+      "Oil filter replacement",
+      "Air filter cleaning",
+      "Air filter replacement",
+      "Fuel filter replacement",
+      "Spark plug replacement",
+      "Carburetor cleaning",
+      "Carburetor rebuild",
+      "Fuel injector cleaning",
+      "Throttle body cleaning",
+      "Valve clearance adjustment",
+      "Engine tune-up",
+      "Engine flush",
+      "Top overhaul",
+      "Full engine overhaul",
+      "Cylinder head gasket replacement",
+      "Piston ring replacement",
+      "Piston replacement",
+      "Timing chain replacement",
+      "Engine mount replacement",
+      "Intake manifold repair",
+      "Exhaust gasket replacement"
     ]
   },
   {
     "category": "Cooling System",
     "services": [
-      "Radiator Cleaning",
-      "Coolant Flush / Replacement",
-      "Thermostat Check / Replacement"
+      "Radiator coolant replacement",
+      "Radiator cleaning",
+      "Radiator fan repair",
+      "Water pump replacement",
+      "Thermostat replacement"
     ]
   },
   {
-    "category": "Exhaust / Muffler",
+    "category": "Clutch & Transmission",
     "services": [
-      "Muffler Repair / Replacement",
-      "Exhaust Pipe Cleaning / Polishing"
+      "Clutch lining replacement",
+      "Clutch spring replacement",
+      "Clutch assembly replacement",
+      "Clutch cable replacement",
+      "Gear oil replacement (scooters)",
+      "Transmission oil replacement",
+      "CVT belt replacement",
+      "CVT roller/slider replacement",
+      "CVT clutch shoe replacement",
+      "CVT cleaning"
+    ]
+  },
+  {
+    "category": "Chain & Sprocket",
+    "services": [
+      "Chain cleaning",
+      "Chain lubrication",
+      "Chain replacement",
+      "Sprocket (front) replacement",
+      "Sprocket (rear) replacement",
+      "Chain and sprocket set replacement"
+    ]
+  },
+  {
+    "category": "Brakes",
+    "services": [
+      "Brake pad replacement",
+      "Brake shoe replacement",
+      "Brake fluid bleeding",
+      "Brake fluid replacement",
+      "Brake caliper cleaning",
+      "Caliper rebuild",
+      "Brake hose replacement",
+      "Master cylinder rebuild",
+      "Disc rotor replacement",
+      "Brake lever replacement"
+    ]
+  },
+  {
+    "category": "Electrical & Electronics",
+    "services": [
+      "Battery replacement",
+      "Battery charging",
+      "Regulator/rectifier replacement",
+      "Stator coil replacement",
+      "CDI/ECU replacement",
+      "Wiring harness repair",
+      "Starter motor repair",
+      "Starter relay replacement",
+      "Spark plug cap replacement",
+      "Fuse replacement",
+      "Headlight bulb replacement",
+      "Taillight bulb replacement",
+      "Signal light bulb replacement",
+      "Horn replacement",
+      "Switch assembly replacement (handlebar switches)",
+      "Voltage test & diagnostics"
     ]
   },
   {
     "category": "Suspension & Steering",
     "services": [
-      "Front Fork Oil Change / Repair",
-      "Rear Shock Absorber Replacement",
-      "Steering Bearing Adjustment / Replacement",
-      "Suspension Tuning / Aftermarket Parts Installation"
+      "Front fork oil replacement",
+      "Front fork seal replacement",
+      "Shock absorber replacement",
+      "Steering bearing replacement",
+      "Swing arm bushing replacement",
+      "Suspension tuning"
     ]
   },
   {
-    "category": "Customization / Extra Services",
+    "category": "Wheels & Tires",
     "services": [
-      "Accessory Installation (Side Mirrors, Grips, Guards, etc.)",
-      "Decals & Stickers Application",
-      "Seat Cover Replacement",
-      "Paint Jobs / Repainting",
-      "Performance Exhaust Installation",
-      "Engine Remapping / Tuning",
-      "Full Motorcycle Wash",
-      "Polishing and Waxing",
-      "Rust Prevention Treatment"
+      "Tire replacement",
+      "Inner tube replacement",
+      "Tire vulcanizing",
+      "Wheel balancing",
+      "Wheel alignment",
+      "Rim repair (bengkong repair)",
+      "Spoke tightening/truing",
+      "Wheel bearing replacement"
+    ]
+  },
+  {
+    "category": "Body, Controls & Accessories",
+    "services": [
+      "Side mirror replacement",
+      "Handlebar replacement",
+      "Footrest replacement",
+      "Brake lever replacement",
+      "Clutch lever replacement",
+      "Seat foam repair",
+      "Seat cover replacement",
+      "Body fairing repair",
+      "Body paint refresh",
+      "Windshield replacement",
+      "License plate holder replacement",
+      "Crash guard installation",
+      "Top box installation",
+      "Underbone frame welding"
     ]
   }
 ]
