@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\Admin\ServiceLogService;
 use App\Models\ServiceLog;
+use App\Models\Service;
 use App\Services\Admin\ServiceLogPredictionService;
 
 class ServiceLogController extends Controller
@@ -33,7 +34,6 @@ class ServiceLogController extends Controller
             'customer_name' => 'nullable|string|max:255',
         ]);
 
-        // Update the name on this log (optional), and gmail across this customer's logs for consistency
         if (!empty($data['customer_name'])) {
             $serviceLog->update(['customer_name' => $data['customer_name']]);
         }
@@ -44,11 +44,6 @@ class ServiceLogController extends Controller
         return back()->with('success', 'Customer details updated.');
     }
     
-    /**
-     * Get motorcycle brands and models from JSON file
-     * 
-     * @return array
-     */
     protected function getMotorcycleBrands()
     {
         $brands = [];
@@ -80,10 +75,8 @@ class ServiceLogController extends Controller
         $from = $filters['from'] ?? null;
         $to = $filters['to'] ?? null;
 
-        // Load brands data
         $brands = $this->getMotorcycleBrands();
 
-        // Share brands with all views that might need it
         view()->share('brands', $brands);
 
         return view('admin.pages.service-log.index', compact('logs', 'services', 'from', 'to', 'brands'));
@@ -114,7 +107,6 @@ class ServiceLogController extends Controller
             'last_mileage' => 'nullable|integer|min:0',
             'last_service_date' => 'required|date|before_or_equal:today',
             'last_service_type' => 'required|string|max:255',
-            'service_id' => 'nullable|exists:services,service_id',
         ]);
 
         $data = $request->only([
@@ -126,7 +118,6 @@ class ServiceLogController extends Controller
             'last_mileage',
             'last_service_date',
             'last_service_type',
-            'service_id',
         ]);
 
         $log = $this->service->createLog($data);
@@ -140,6 +131,7 @@ class ServiceLogController extends Controller
 
     public function maintenance(ServiceLog $serviceLog)
     {
+        
         $logs = ServiceLog::query()
             ->when($serviceLog->customer_name, function ($q) use ($serviceLog) {
                 $q->where('customer_name', $serviceLog->customer_name);
@@ -152,9 +144,9 @@ class ServiceLogController extends Controller
             })
             ->orderByDesc('last_service_date')
             ->orderByDesc('created_at')
-            ->get();
+            ->paginate(10);
+    
 
-        // Get distinct motorcycles for this customer and pick the latest log per motor
         $distinctMotors = ServiceLog::query()
             ->where('customer_name', $serviceLog->customer_name)
             ->whereNotNull('motorcycle_brand')
@@ -172,11 +164,14 @@ class ServiceLogController extends Controller
                 ->orderByDesc('created_at')
                 ->first();
         })->filter();
+        
+        $services = Service::orderBy('name')->get(); 
 
         return view('admin.pages.service-log.maintenance-history', [
             'baseLog' => $serviceLog,
             'logs' => $logs,
             'motors' => $motors,
+            'services' => $services,
         ]);
     }
 
@@ -211,7 +206,6 @@ class ServiceLogController extends Controller
             'last_mileage' => $data['last_mileage'] ?? null,
             'last_service_date' => $data['last_service_date'],
             'last_service_type' => $data['last_service_type'],
-            'service_id' => $serviceLog->service_id,
         ]);
 
         $predictionService->predict($newLog);
@@ -286,7 +280,6 @@ class ServiceLogController extends Controller
             'last_mileage' => $validated['last_mileage'] ?? null,
             'last_service_date' => $validated['last_service_date'],
             'last_service_type' => $validated['last_service_type'],
-            'service_id' => $serviceLog->service_id,
         ]);
 
         // Generate AI prediction for the new motorcycle

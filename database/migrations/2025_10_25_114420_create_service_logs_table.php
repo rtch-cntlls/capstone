@@ -15,10 +15,20 @@ return new class extends Migration
             $table->id();
             $table->string('customer_name')->nullable();
             $table->string('contact_number')->nullable();
-            $table->unsignedBigInteger('service_id');
+            $table->string('gmail')->nullable();
+            $table->string('motorcycle_brand')->nullable();
+            $table->string('motorcycle_model')->nullable();
+            $table->integer('last_mileage')->nullable();
+            $table->date('last_service_date')->nullable();
+            $table->string('last_service_type')->nullable();
+
+            $table->integer('next_due_mileage')->nullable();
+            $table->date('next_due_date')->nullable();
+            $table->text('ai_reasoning')->nullable();
+            $table->text('remarks')->nullable();
+
             $table->timestamps(); 
 
-            $table->foreign('service_id')->references('service_id')->on('services')->onDelete('cascade');
         });
     }
 

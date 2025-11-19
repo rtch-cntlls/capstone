@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('ai_reasoning')->nullable();
             $table->date('next_due_date')->nullable();
             $table->integer('next_due_mileage')->nullable();
+            $table->text('remarks')->nullable();
             $table->timestamps();
 
             $table->foreign('motorcycle_id')->references('motorcycle_id')->on('motorcycles')->onDelete('cascade');

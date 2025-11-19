@@ -65,20 +65,26 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="last_service_date" class="form-label fw-medium">Last Service Date</label>
-                        <input type="date" id="last_service_date" name="last_service_date" class="form-control form-control-lg @error('last_service_date') is-invalid @enderror">
+                        <label for="last_service_date" class="form-label fw-medium">Service Date</label>
+                        <input type="date" id="last_service_date" name="last_service_date" 
+                            class="form-control form-control-lg @error('last_service_date') is-invalid @enderror"
+                            value="{{ old('last_service_date', date('Y-m-d')) }}" readonly>
                         @error('last_service_date')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                    </div>
+                    </div>                    
                     <div class="mb-3">
-                        <label for="last_service_type" class="form-label fw-medium">Last Service Type</label>
-                        <select name="" id="">
-                            <option value="{{old() }}"></option>
-                        </select>
-                        @error('last_service_type')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <label for="last_service_type" class="form-label fw-medium">Service Type</label>
+                        <select id="last_service_type" name="last_service_type" 
+                            class="form-select @error('last_service_type') is-invalid @enderror">
+                            <option value="">-- Select Service Type --</option>
+                            @foreach($services as $service)
+                                <option value="{{ $service->name }}"
+                                    {{ old('last_service_type') == $service->name ? 'selected' : '' }}>
+                                    {{ $service->name }}
+                                </option>
+                            @endforeach
+                        </select>     
                     </div>
                 </div>
                 <div class="modal-footer border-0 pt-0">

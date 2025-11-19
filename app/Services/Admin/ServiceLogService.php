@@ -29,13 +29,11 @@ class ServiceLogService
                   ->whereDate('created_at', '<=', $filters['to']);
         }
 
-        // Get all matching logs ordered by latest service date, then created_at
         $allLogs = $query
             ->orderByDesc('last_service_date')
             ->orderByDesc('created_at')
             ->get();
 
-        // Group by customer + motorcycle (brand + model) and take the latest per group
         $grouped = $allLogs
             ->groupBy(function (ServiceLog $log) {
                 return $log->customer_name;
