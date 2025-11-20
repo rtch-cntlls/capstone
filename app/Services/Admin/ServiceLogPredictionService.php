@@ -102,6 +102,16 @@ Estimate:
 2. The next due date (based on the interval and typical usage).
 3. A short reasoning paragraph.
 
+ Applicability rule:
+ - First, determine if the selected service actually applies to the given motorcycle brand/model.
+ - If the service is NOT applicable (e.g., carburetor service on a fuel-injected model, drum brake service on a disc brake setup, 2-stroke vs 4-stroke specifics, model design limitations, etc.), then set both fields to null and explain why in reasoning.
+ - Non-applicable response format in that case:
+   {
+     "next_due_mileage": null,
+     "next_due_date": null,
+     "reasoning": "Explain why the service does not apply to this motorcycle and suggest appropriate alternatives if relevant."
+   }
+
 Respond strictly in raw JSON with this format:
 {
   "next_due_mileage": number,
