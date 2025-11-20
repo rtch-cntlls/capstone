@@ -83,6 +83,8 @@ class ServiceLogPredictionService
         $currentMileage = (int) ($log->last_mileage ?? 0);
         $serviceType = $log->service->name ?? '';
         $serviceDate = $log->last_service_date ?? null;
+        $roadCondition = $log->road_condition ?? 'Unknown';
+        $usageFrequency = $log->usage_frequency ?? 'Unknown';
 
         return <<<PROMPT
 IMPORTANT: Respond strictly in valid JSON format only.
@@ -90,6 +92,10 @@ No markdown, no explanations, no extra text outside JSON.
 
 You are an expert motorcycle maintenance AI.
 Focus ONLY on the service type related to: "{$serviceType}".
+
+Consider the rider context:
+- Typical Road Condition: {$roadCondition}
+- Usage Frequency: {$usageFrequency}
 
 Estimate:
 1. The next due mileage.

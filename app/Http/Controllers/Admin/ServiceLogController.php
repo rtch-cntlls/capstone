@@ -107,6 +107,10 @@ class ServiceLogController extends Controller
             'last_mileage' => 'nullable|integer|min:0',
             'last_service_date' => 'required|date|before_or_equal:today',
             'service_id' => 'required|string|max:255',
+            'road_condition' => 'nullable|string|max:255',
+            'road_condition_other' => 'nullable|string|max:255',
+            'usage_frequency' => 'nullable|string|max:255',
+            'usage_frequency_other' => 'nullable|string|max:255',
         ]);
 
         $data = $request->only([
@@ -118,7 +122,18 @@ class ServiceLogController extends Controller
             'last_mileage',
             'last_service_date',
             'service_id',
+            'road_condition',
+            'road_condition_other',
+            'usage_frequency',
+            'usage_frequency_other',
         ]);
+        
+        $roadCondition = ($data['road_condition'] ?? null) === 'others'
+            ? ($data['road_condition_other'] ?? null)
+            : ($data['road_condition'] ?? null);
+        $usageFrequency = ($data['usage_frequency'] ?? null) === 'others'
+            ? ($data['usage_frequency_other'] ?? null)
+            : ($data['usage_frequency'] ?? null);
         
        $log = ServiceLog::create([
             'customer_name' => $data['customer_name'],
@@ -129,6 +144,8 @@ class ServiceLogController extends Controller
             'last_mileage' => $data['last_mileage'] ?? null,
             'last_service_date' => $data['last_service_date'],
             'service_id' => $data['service_id'],
+            'road_condition' => $roadCondition,
+            'usage_frequency' => $usageFrequency,
         ]);
 
     
@@ -205,7 +222,18 @@ class ServiceLogController extends Controller
             'last_mileage' => 'nullable|integer|min:0',
             'last_service_date' => 'required|date|before_or_equal:today',
             'service_id' => 'required|string|max:255',
+            'road_condition' => 'nullable|string|max:255',
+            'road_condition_other' => 'nullable|string|max:255',
+            'usage_frequency' => 'nullable|string|max:255',
+            'usage_frequency_other' => 'nullable|string|max:255',
         ]);
+
+        $roadCondition = ($data['road_condition'] ?? null) === 'others'
+            ? ($data['road_condition_other'] ?? null)
+            : ($data['road_condition'] ?? null);
+        $usageFrequency = ($data['usage_frequency'] ?? null) === 'others'
+            ? ($data['usage_frequency_other'] ?? null)
+            : ($data['usage_frequency'] ?? null);
 
         $newLog = ServiceLog::create([
             'customer_name' => $serviceLog->customer_name,
@@ -216,6 +244,8 @@ class ServiceLogController extends Controller
             'last_mileage' => $data['last_mileage'] ?? null,
             'last_service_date' => $data['last_service_date'],
             'service_id' => $data['service_id'],
+            'road_condition' => $roadCondition,
+            'usage_frequency' => $usageFrequency,
         ]);
 
         $predictionService->predict($newLog);
@@ -278,7 +308,18 @@ class ServiceLogController extends Controller
             'last_mileage' => 'nullable|integer|min:0',
             'last_service_date' => 'required|date|before_or_equal:today',
             'service_id' => 'required|string|max:255',
+            'road_condition' => 'nullable|string|max:255',
+            'road_condition_other' => 'nullable|string|max:255',
+            'usage_frequency' => 'nullable|string|max:255',
+            'usage_frequency_other' => 'nullable|string|max:255',
         ]);
+
+        $roadCondition = ($validated['road_condition'] ?? null) === 'others'
+            ? ($validated['road_condition_other'] ?? null)
+            : ($validated['road_condition'] ?? null);
+        $usageFrequency = ($validated['usage_frequency'] ?? null) === 'others'
+            ? ($validated['usage_frequency_other'] ?? null)
+            : ($validated['usage_frequency'] ?? null);
 
         // Create a new service log for the new motorcycle
         $newLog = ServiceLog::create([
@@ -290,6 +331,8 @@ class ServiceLogController extends Controller
             'last_mileage' => $validated['last_mileage'] ?? null,
             'last_service_date' => $validated['last_service_date'],
             'service_id' => $validated['service_id'],
+            'road_condition' => $roadCondition,
+            'usage_frequency' => $usageFrequency,
         ]);
 
         // Generate AI prediction for the new motorcycle

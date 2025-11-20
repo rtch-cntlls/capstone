@@ -86,6 +86,29 @@
                             @endforeach
                         </select>   
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Road Condition</label>
+                        <select id="road_condition" name="road_condition" class="form-select">
+                            <option value="" selected>-- Select Road Condition --</option>
+                            <option value="Rough Road">Rough Road</option>
+                            <option value="Cement / Concrete Road">Cement / Concrete Road</option>
+                            <option value="Asphalt Road">Asphalt Road</option>
+                            <option value="Mixed Roads">Mixed Roads</option>
+                            <option value="others">Others</option>
+                        </select>
+                        <input type="text" id="road_condition_other" name="road_condition_other" class="form-control mt-2 d-none" placeholder="Specify other road condition">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Usage Frequency</label>
+                        <select id="usage_frequency" name="usage_frequency" class="form-select">
+                            <option value="" selected>-- Select Usage Frequency --</option>
+                            <option value="Daily Use">Daily Use</option>
+                            <option value="Seldom Use">Seldom Use</option>
+                            <option value="Weekly Use">Weekly Use</option>
+                            <option value="others">Others</option>
+                        </select>
+                        <input type="text" id="usage_frequency_other" name="usage_frequency_other" class="form-control mt-2 d-none" placeholder="Specify other usage frequency">
+                    </div>
                 </div>
                 <div class="modal-footer border-0 pt-0">
                     <button type="submit" class="btn btn-primary btn-lg" id="logServiceSubmitBtn">Log Service</button>
@@ -121,6 +144,22 @@
                         });
                     }
                 });
+            }
+
+            const roadSelect = document.getElementById('road_condition');
+            const roadOther = document.getElementById('road_condition_other');
+            const usageSelect = document.getElementById('usage_frequency');
+            const usageOther = document.getElementById('usage_frequency_other');
+            function toggleOther(selectEl, inputEl) {
+                if (!selectEl || !inputEl) return;
+                inputEl.classList.toggle('d-none', selectEl.value !== 'others');
+                if (selectEl.value !== 'others') inputEl.value = '';
+            }
+            if (roadSelect && roadOther) {
+                roadSelect.addEventListener('change', () => toggleOther(roadSelect, roadOther));
+            }
+            if (usageSelect && usageOther) {
+                usageSelect.addEventListener('change', () => toggleOther(usageSelect, usageOther));
             }
 
             function setAddMotorMode(serviceLogId) {
@@ -191,6 +230,8 @@
                     // Reset to default when closed
                     setDefaultMode();
                     if (form) form.reset();
+                    toggleOther(roadSelect, roadOther);
+                    toggleOther(usageSelect, usageOther);
                 });
             }
         })();

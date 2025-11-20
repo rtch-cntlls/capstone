@@ -76,7 +76,7 @@
                         <tr>
                             <td>{{ $log->customer_name ?? 'N/A' }}</td>
                             <td>{{ $log->contact_number ?? 'N/A' }}</td>
-                            <td>{{ $log->last_service_type ?? 'N/A' }}</td>
+                            <td>{{ $log->service->name ?? 'N/A' }}</td>
                             <td>{{ $log->created_at->format('M. d, y (h:i A)') }}</td>
                             <td>
                                 <div class="d-flex flex-column gap-1">

@@ -20,6 +20,8 @@ class ServiceLog  extends Model
         'next_due_date',
         'ai_reasoning',
         'remarks',
+        'road_condition',
+        'usage_frequency',
     ];
 
     protected $casts = [
