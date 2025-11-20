@@ -12,19 +12,6 @@
     "Yamaha Bolt R-SPEC", "Yamaha Tenere 700", "Yamaha TMAX 560", "Yamaha MT-09 SP", "Yamaha Tracer 9 GT",
     "Yamaha Super Tenere ES", "Yamaha MT-10 SP", "Yamaha YZF-R1M"],
 
-    "Vespa": ["Vespa S 125", "Vespa Primavera", "Vespa Sprint", "Vespa GTS Super 300", "Vespa GTS Super Sport",
-    "Vespa GTS 300 Supertech", "Vespa GTV 300"],
-
-    "KTM": ["KTM 200 Duke", "KTM RC 200", "KTM 390 Duke", "KTM RC 390", "KTM 390 Adventure", "KTM 790 Duke",
-    "KTM 690 Duke", "KTM 250 SX-F", "KTM 300 EXC-F TPI", "KTM 790 Adventure S", "KTM 450 SX-F", "KTM 350 EXC-F",
-    "KTM 790 Adventure R", "KTM 1090 Adventure R", "KTM 1090 Adventure S", "KTM 1290 Super Duke R", "KTM 1290 Super Duke GT",
-    "KTM 1290 Super Adventure S", "KTM 690 Enduro R", "KTM 690 SMC R"],
-
-    "Ducati": ["Ducati Scrambler Icon", "Ducati Scrambler Night Shift", "Ducati Hypermotard 698", 
-    "Ducati Scrambler Full Throttle", "Ducati Monster 937", "Ducati Scrambler Desert Sled", "Ducati Scrambler Urban Motard",
-    "Ducati Scrambler 1100", "Ducati Hypermotard 950", "Ducati SuperSport 950", "Ducati Desert X", "Ducati Panigale V2",
-    "Ducati Streetfighter V2", "Ducati XDiavel", "Ducati Multistrada V2", "Ducati Streetfighter V4", "Ducati Multistrada V4",
-    "Ducati Diavel 1260", "Ducati Panigale V4", "Ducati Diavel V4", "Ducati Superleggera V4"],
 
     "Kawasaki": ["Kawasaki Barako", "Kawasaki KLX 150 S", "Kawasaki KLX 140", "Kawasaki KLX230", "Kawasaki KLX300",
     "Kawasaki Z500", "Kawasaki Ninja 500", "Kawasaki Eliminator", "Kawasaki Ninja ZX-25R", "Kawasaki KLR650",
@@ -50,24 +37,10 @@
     "Honda CBR650R", "Honda Transalp XL750", "Honda Rebel 1100", "Honda CB1000R Hornet", "Honda X-ADV", "Honda CB1000R",
     "Honda Africa Twin", "Honda Africa Twin Adventure Sports", "Honda CBR1000RR-R Fireblade SP", "Honda Gold Wing"],
 
-    "Royal Enfield": ["Royal Enfield Classic 350", "Royal Enfield Hunter 350", "Royal Enfield Bullet 350", 
-    "Royal Enfield Meteor 350", "Royal Enfield Scram 411", "Royal Enfield Guerrilla 450", "Royal Enfield Himalayan 450",
-    "Royal Enfield Interceptor 650", "Royal Enfield Continental GT 650", "Royal Enfield Shotgun 650", "Royal Enfield Super Meteor 650"],
-
-    "Bristol": ["Bristol BR 250", "Bristol Classic 250", "Bristol BR 400i", "Bristol Classic 400i", "Bristol Invictus 400RR",
-    "Bristol Venturi 500", "Bristol Bobber 650"],
-
-    "BMW": ["BMW G 310 R", "BMW G 310 GS", "BMW C 400 GT", "BMW F 750 GS", "BMW F 900 R", "BMW F 850 GS",
-    "BMW F 900 XR", "BMW R nine T Pure 1200", "BMW R nine T Scrambler 1200", "BMW R nine T Urban G/S 1200",
-    "BMW R nine T 1200", "BMW S 1000 R", "BMW R 1250 GS", "BMW S 1000 RR", "BMW S 1000 XR", "BMW R 1250 GS Adventure",
-    "BMW R18", "BMW R 1250 RT"],
 
     "Kymco": ["Kymco Super 8 150 E3 Regular", "Kymco Like 125 Italia E3", "Kymco Sky Town 150", "Kymco Like 150i", "Kymco Like II 150",
     "Kymco Dink R 150", "Kymco Dink R 150 SE", "Kymco KRV 180i", "Kymco KRV 180 Moto", "Kymco XTOWN 300i", "Kymco XTOWN CT300i",
     "Kymco DTX360", "Kymco Downtown 350i", "Kymco Xciting S 400", "Kymco Xciting VS400", "Kymco AK550"],
-
-    "Keeway": ["Keeway RCX 125", "Keeway RCS 125", "Keeway KEE 125", "Keeway SIP 125", "Keeway Cafe Racer 152", "Keeway RKS 150 Sport",
-    "Keeway SuperLight 200", "Keeway Brusco 125", "Keeway CS 110", "Keeway Hyperbrusco 175", "Keeway RKS 150 GS"],
 
     "Motorstar": ["Motorstar Star-X 125S", "Motorstar Viber", "Motorstar Star X 125 II", "Motorstar Moto R155", "Motorstar Moto X155",
     "Motorstar MSX200-II", "Motorstar Xplorer 250R", "Motorstar Cafe 400", "Motorstar MSX 125M", "Motorstar MSX 150X", "Motorstar MSX125S-II",

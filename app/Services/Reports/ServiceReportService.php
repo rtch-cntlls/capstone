@@ -21,7 +21,7 @@ class ServiceReportService
             ->orderBy('schedule', 'asc')
             ->get();
 
-        $logs = ServiceLog::with('service')
+        $logs = ServiceLog::with(relations: 'service')
             ->when($from && $to, fn($q) => $q->whereBetween('created_at', [$from . ' 00:00:00', $to . ' 23:59:59']))
             ->orderBy('created_at', 'asc')
             ->get();

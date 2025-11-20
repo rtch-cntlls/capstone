@@ -75,16 +75,16 @@
                     </div>                    
                     <div class="mb-3">
                         <label for="last_service_type" class="form-label fw-medium">Service Type</label>
-                        <select id="last_service_type" name="last_service_type" 
-                            class="form-select @error('last_service_type') is-invalid @enderror">
+                        <select id="service_id" name="service_id" 
+                            class="form-select @error('service_id') is-invalid @enderror">
                             <option value="">-- Select Service Type --</option>
                             @foreach($services as $service)
-                                <option value="{{ $service->name }}"
-                                    {{ old('last_service_type') == $service->name ? 'selected' : '' }}>
+                                <option value="{{ $service->service_id }}"
+                                    {{ old('service_id') == $service->service_id ? 'selected' : '' }}>
                                     {{ $service->name }}
                                 </option>
                             @endforeach
-                        </select>     
+                        </select>   
                     </div>
                 </div>
                 <div class="modal-footer border-0 pt-0">

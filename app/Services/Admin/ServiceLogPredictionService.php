@@ -22,7 +22,7 @@ class ServiceLogPredictionService
 
     public function predict(ServiceLog $log): ?ServiceLog
     {
-        if (empty($log->last_service_type)) {
+       if (empty($log->service?->name)) {
             return null;
         }
 
@@ -81,7 +81,7 @@ class ServiceLogPredictionService
         $brand = $log->motorcycle_brand ?? 'Unknown';
         $model = $log->motorcycle_model ?? '';
         $currentMileage = (int) ($log->last_mileage ?? 0);
-        $serviceType = $log->last_service_type ?? '';
+        $serviceType = $log->service->name ?? '';
         $serviceDate = $log->last_service_date ?? null;
 
         return <<<PROMPT

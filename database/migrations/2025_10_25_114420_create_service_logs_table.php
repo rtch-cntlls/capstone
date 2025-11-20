@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('motorcycle_model')->nullable();
             $table->integer('last_mileage')->nullable();
             $table->date('last_service_date')->nullable();
-            $table->string('last_service_type')->nullable();
+            $table->unsignedBigInteger('service_id');
 
             $table->integer('next_due_mileage')->nullable();
             $table->date('next_due_date')->nullable();
@@ -29,6 +29,7 @@ return new class extends Migration
 
             $table->timestamps(); 
 
+             $table->foreign('service_id')->references('service_id')->on('services')->onDelete('cascade');
         });
     }
 

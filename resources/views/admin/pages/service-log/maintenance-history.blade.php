@@ -102,7 +102,7 @@
                             </div>
                             <div>
                                 <p class="mb-0 text-muted small">Service Type</p>
-                                <h6 class="fw-bold mb-0">{{ $latest->last_service_type }}</h6>
+                                <h6 class="fw-bold mb-0">{{ $latest->service->name ?? 'N/A' }}</h6>
                             </div>
                         </div>
                     </div>
@@ -185,7 +185,7 @@
                             <div class="d-flex justify-content-between flex-wrap gap-2 mb-2">
                                 <div>
                                     <p class="mb-0 text-muted small">Service Type</p>
-                                    <h6 class="fw-bold mb-0">{{ $log->last_service_type ?? 'N/A' }}</h6>
+                                    <h6 class="fw-bold mb-0">{{ $log->service->name ?? 'N/A' }}</h6>
                                 </div>
                                 <div>
                                     <p class="mb-0 text-muted small">Mileage at Service</p>
@@ -252,13 +252,10 @@
                     </div>                    
                     <div class="mb-3">
                         <label for="last_service_type" class="form-label fw-medium">Service Type</label>
-                        <select id="last_service_type" name="last_service_type" class="form-select" required>
+                       <select id="service_id" name="service_id" class="form-select" required>
                             <option value="">-- Select Service Type --</option>
                             @foreach($services as $service)
-                                <option value="{{ $service->name }}"
-                                    {{ old('last_service_type') == $service->name ? 'selected' : '' }}>
-                                    {{ $service->name }}
-                                </option>
+                                <option value="{{ $service->id }}">{{ $service->name }}</option>
                             @endforeach
                         </select>
                     </div>

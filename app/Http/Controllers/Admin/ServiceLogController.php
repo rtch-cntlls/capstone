@@ -106,7 +106,7 @@ class ServiceLogController extends Controller
             'motorcycle_model' => 'required|string|max:255',
             'last_mileage' => 'nullable|integer|min:0',
             'last_service_date' => 'required|date|before_or_equal:today',
-            'last_service_type' => 'required|string|max:255',
+            'service_id' => 'required|string|max:255',
         ]);
 
         $data = $request->only([
@@ -117,11 +117,21 @@ class ServiceLogController extends Controller
             'motorcycle_model',
             'last_mileage',
             'last_service_date',
-            'last_service_type',
+            'service_id',
+        ]);
+        
+       $log = ServiceLog::create([
+            'customer_name' => $data['customer_name'],
+            'contact_number' => $data['contact_number'],
+            'gmail' => $data['gmail'],
+            'motorcycle_brand' => $data['motorcycle_brand'],
+            'motorcycle_model' => $data['motorcycle_model'],
+            'last_mileage' => $data['last_mileage'] ?? null,
+            'last_service_date' => $data['last_service_date'],
+            'service_id' => $data['service_id'],
         ]);
 
-        $log = $this->service->createLog($data);
-
+    
         // Run AI prediction for this new log so results appear in maintenance view
         $predictionService->predict($log);
 
@@ -194,7 +204,7 @@ class ServiceLogController extends Controller
         $data = $request->validate([
             'last_mileage' => 'nullable|integer|min:0',
             'last_service_date' => 'required|date|before_or_equal:today',
-            'last_service_type' => 'required|string|max:255',
+            'service_id' => 'required|string|max:255',
         ]);
 
         $newLog = ServiceLog::create([
@@ -205,7 +215,7 @@ class ServiceLogController extends Controller
             'motorcycle_model' => $serviceLog->motorcycle_model,
             'last_mileage' => $data['last_mileage'] ?? null,
             'last_service_date' => $data['last_service_date'],
-            'last_service_type' => $data['last_service_type'],
+            'service_id' => $data['service_id'],
         ]);
 
         $predictionService->predict($newLog);
@@ -267,7 +277,7 @@ class ServiceLogController extends Controller
             'motorcycle_model' => 'required|string|max:255',
             'last_mileage' => 'nullable|integer|min:0',
             'last_service_date' => 'required|date|before_or_equal:today',
-            'last_service_type' => 'required|string|max:255',
+            'service_id' => 'required|string|max:255',
         ]);
 
         // Create a new service log for the new motorcycle
@@ -279,7 +289,7 @@ class ServiceLogController extends Controller
             'motorcycle_model' => $validated['motorcycle_model'],
             'last_mileage' => $validated['last_mileage'] ?? null,
             'last_service_date' => $validated['last_service_date'],
-            'last_service_type' => $validated['last_service_type'],
+            'service_id' => $validated['service_id'],
         ]);
 
         // Generate AI prediction for the new motorcycle
