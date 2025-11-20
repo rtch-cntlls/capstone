@@ -63,7 +63,7 @@
                         <th>Contact Number</th>
                         <th>Last Service Type</th>
                         <th>Date / Time</th>
-                        <th style="width: 140px;">Action</th>
+                        <th class="text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -79,16 +79,20 @@
                             <td>{{ $log->service->name ?? 'N/A' }}</td>
                             <td>{{ $log->created_at->format('M. d, y (h:i A)') }}</td>
                             <td>
-                                <div class="d-flex flex-column gap-1">
-                                    <a href="{{ route('admin.service-logs.maintenance', $log) }}" class="badge bg-light text-dark border text-decoration-none mb-1" style="font-size: 11px; font-weight: 500;">View Maintenance</a>
-                                    <button type="button" class="btn btn-sm btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#logServiceModal"
-                                        data-mode="add-motor"
-                                        data-service-log-id="{{ $log->id }}"
-                                        style="font-size: 11px;">
-                                        <i class="bi bi-plus-circle"></i> Add Motor
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a href="{{ route('admin.service-logs.maintenance', $log) }}" 
+                                       class="btn btn-outline-secondary shadow-sm" >
+                                       <i class="bi bi-eye me-1"></i>View Maintenance
+                                    </a>
+                                    <button type="button" class="btn btn-outline-primary shadow-sm" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#logServiceModal"
+                                            data-mode="add-motor"
+                                            data-service-log-id="{{ $log->id }}">
+                                        <i class="bi bi-plus-circle me-1"></i>Add Motor
                                     </button>
                                 </div>
-                            </td>
+                            </td>                            
                         </tr>
                     @endforeach
                 </tbody>

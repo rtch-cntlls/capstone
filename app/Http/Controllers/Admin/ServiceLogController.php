@@ -99,19 +99,22 @@ class ServiceLogController extends Controller
     public function store(Request $request, ServiceLogPredictionService $predictionService)
     {
         $request->validate([
-            'customer_name' => 'nullable|string|max:255',
-            'contact_number' => 'nullable|string|max:20',
-            'gmail' => 'nullable|email|max:255',
+            'customer_name' => 'required|string|max:255',
+            'contact_number' => 'required|string|max:20',
+            'gmail' => 'required|email|max:255',
             'motorcycle_brand' => 'required|string|max:255',
             'motorcycle_model' => 'required|string|max:255',
-            'last_mileage' => 'nullable|integer|min:0',
-            'last_service_date' => 'required|date|before_or_equal:today',
+            'mileage' => 'required|integer|min:0',
+            'service_date' => 'required|date|before_or_equal:today',
             'service_id' => 'required|string|max:255',
             'road_condition' => 'nullable|string|max:255',
             'road_condition_other' => 'nullable|string|max:255',
             'usage_frequency' => 'nullable|string|max:255',
             'usage_frequency_other' => 'nullable|string|max:255',
+        ], [
+            'service_id.required' => 'The service type field is required.',
         ]);
+        
 
         $data = $request->only([
             'customer_name',
@@ -119,8 +122,8 @@ class ServiceLogController extends Controller
             'gmail',
             'motorcycle_brand',
             'motorcycle_model',
-            'last_mileage',
-            'last_service_date',
+            'mileage',
+            'service_date',
             'service_id',
             'road_condition',
             'road_condition_other',
@@ -141,15 +144,13 @@ class ServiceLogController extends Controller
             'gmail' => $data['gmail'],
             'motorcycle_brand' => $data['motorcycle_brand'],
             'motorcycle_model' => $data['motorcycle_model'],
-            'last_mileage' => $data['last_mileage'] ?? null,
-            'last_service_date' => $data['last_service_date'],
+            'mileage' => $data['mileage'] ?? null,
+            'service_date' => $data['service_date'],
             'service_id' => $data['service_id'],
             'road_condition' => $roadCondition,
             'usage_frequency' => $usageFrequency,
         ]);
 
-    
-        // Run AI prediction for this new log so results appear in maintenance view
         $predictionService->predict($log);
 
         return redirect()->route('admin.service-logs.maintenance', $log)
@@ -169,7 +170,7 @@ class ServiceLogController extends Controller
             ->when($serviceLog->motorcycle_model, function ($q) use ($serviceLog) {
                 $q->where('motorcycle_model', $serviceLog->motorcycle_model);
             })
-            ->orderByDesc('last_service_date')
+            ->orderByDesc('service_date')
             ->orderByDesc('created_at')
             ->paginate(10);
     
@@ -187,7 +188,7 @@ class ServiceLogController extends Controller
                 ->where('customer_name', $serviceLog->customer_name)
                 ->where('motorcycle_brand', $m->motorcycle_brand)
                 ->where('motorcycle_model', $m->motorcycle_model)
-                ->orderByDesc('last_service_date')
+                ->orderByDesc('service_date')
                 ->orderByDesc('created_at')
                 ->first();
         })->filter();
@@ -213,14 +214,11 @@ class ServiceLogController extends Controller
         return back()->with('success', 'Remarks updated successfully.');
     }
 
-    public function storeMaintenanceLog(
-        Request $request,
-        ServiceLog $serviceLog,
-        ServiceLogPredictionService $predictionService
-    ) {
+    public function storeMaintenanceLog(Request $request, ServiceLog $serviceLog, ServiceLogPredictionService $predictionService ) 
+    {
         $data = $request->validate([
-            'last_mileage' => 'nullable|integer|min:0',
-            'last_service_date' => 'required|date|before_or_equal:today',
+            'mileage' => 'nullable|integer|min:0',
+            'service_date' => 'required|date|before_or_equal:today',
             'service_id' => 'required|string|max:255',
             'road_condition' => 'nullable|string|max:255',
             'road_condition_other' => 'nullable|string|max:255',
@@ -241,8 +239,8 @@ class ServiceLogController extends Controller
             'gmail' => $serviceLog->gmail,
             'motorcycle_brand' => $serviceLog->motorcycle_brand,
             'motorcycle_model' => $serviceLog->motorcycle_model,
-            'last_mileage' => $data['last_mileage'] ?? null,
-            'last_service_date' => $data['last_service_date'],
+            'mileage' => $data['mileage'] ?? null,
+            'service_date' => $data['service_date'],
             'service_id' => $data['service_id'],
             'road_condition' => $roadCondition,
             'usage_frequency' => $usageFrequency,
@@ -263,7 +261,7 @@ class ServiceLogController extends Controller
             ->where('customer_name', $customer)
             ->where('motorcycle_brand', $brand)
             ->where('motorcycle_model', $model)
-            ->orderByDesc('last_service_date')
+            ->orderByDesc('service_date')
             ->orderByDesc('created_at')
             ->first();
         if ($target) {
@@ -286,7 +284,7 @@ class ServiceLogController extends Controller
             ->delete();
 
         $remaining = ServiceLog::where('customer_name', $customer)
-            ->orderByDesc('last_service_date')
+            ->orderByDesc('service_date')
             ->orderByDesc('created_at')
             ->first();
         if ($remaining) {
@@ -296,17 +294,14 @@ class ServiceLogController extends Controller
         return redirect()->route('admin.service-logs.index')
             ->with('success', 'Motor and all its history deleted.');
     }
-    
-    /**
-     * Add a new motor for an existing customer
-     */
+
     public function addMotor(Request $request, ServiceLog $serviceLog, ServiceLogPredictionService $predictionService)
     {
         $validated = $request->validate([
             'motorcycle_brand' => 'required|string|max:255',
             'motorcycle_model' => 'required|string|max:255',
-            'last_mileage' => 'nullable|integer|min:0',
-            'last_service_date' => 'required|date|before_or_equal:today',
+            'mileage' => 'required|integer|min:0',
+            'service_date' => 'required|date|before_or_equal:today',
             'service_id' => 'required|string|max:255',
             'road_condition' => 'nullable|string|max:255',
             'road_condition_other' => 'nullable|string|max:255',
@@ -321,21 +316,19 @@ class ServiceLogController extends Controller
             ? ($validated['usage_frequency_other'] ?? null)
             : ($validated['usage_frequency'] ?? null);
 
-        // Create a new service log for the new motorcycle
         $newLog = ServiceLog::create([
             'customer_name' => $serviceLog->customer_name,
             'contact_number' => $serviceLog->contact_number,
             'gmail' => $serviceLog->gmail,
             'motorcycle_brand' => $validated['motorcycle_brand'],
             'motorcycle_model' => $validated['motorcycle_model'],
-            'last_mileage' => $validated['last_mileage'] ?? null,
-            'last_service_date' => $validated['last_service_date'],
+            'mileage' => $validated['mileage'] ?? null,
+            'service_date' => $validated['service_date'],
             'service_id' => $validated['service_id'],
             'road_condition' => $roadCondition,
             'usage_frequency' => $usageFrequency,
         ]);
 
-        // Generate AI prediction for the new motorcycle
         $predictionService->predict($newLog);
 
         return redirect()->route('admin.service-logs.maintenance', $newLog)

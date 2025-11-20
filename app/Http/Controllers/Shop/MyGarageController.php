@@ -83,7 +83,7 @@ class MyGarageController extends Controller
                 ->where('gmail', $user->email)
                 ->where('motorcycle_brand', $motorcycle->brand)
                 ->where('motorcycle_model', $motorcycle->model)
-                ->orderByDesc('last_service_date')
+                ->orderByDesc('service_date')
                 ->orderByDesc('created_at')
                 ->get();
 

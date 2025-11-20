@@ -22,7 +22,7 @@
             href="{{ route('garage.maintenance', $motorcycle->motorcycle_id) }}"
             class="nav-link {{ request()->routeIs('garage.maintenance') ? 'active' : '' }}">
             <i class="fas fa-tools me-1"></i>
-            <span class="d-none d-md-inline">Maintenance</span>
+            <span class="d-none d-md-inline">Maintenance History</span>
         </a>
     </li>
 </ul>

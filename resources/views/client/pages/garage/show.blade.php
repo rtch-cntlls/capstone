@@ -7,11 +7,9 @@
     $publicPath = public_path($imagePath);
     $basicCount = count($issues['basic'] ?? []);
     $mechanicCount = count($issues['mechanic_required'] ?? []);
-@endphp
-
-<div class="container">
+@endphp 
+<div class="container small">
     @include('client.pages.garage.includes.nav')
-
     <div class="row mb-4 position-relative">
         @if(!$basicCount && !$mechanicCount)
             <div class="section-overlay d-flex flex-column justify-content-center align-items-center">
@@ -20,14 +18,13 @@
                 <p class="text-secondary small mb-0">Please wait while Gemini AI generates troubleshooting insights.</p>
             </div>
         @endif
-
         <div class="col-lg-4 col-md-5 mb-3">
             <div class="card border-0 shadow-sm overflow-hidden h-100">
                 <img src="{{ file_exists($publicPath) ? asset($imagePath) : asset('images/motorcycle.jpg') }}"
                     alt="{{ $motorcycle->model }}" 
                     class="img-fluid w-100">
                 <div class="card-body text-center">
-                    <h4 class="fw-bold mb-1 text-dark">{{ $motorcycle->model }}</h4>
+                    <h5 class="fw-bold mb-1 text-dark">{{ $motorcycle->model }}</h5>
                     <p class="text-muted mb-0 text-uppercase small">{{ $motorcycle->brand }}</p>
                 </div>
             </div>

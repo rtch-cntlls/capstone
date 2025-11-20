@@ -4,7 +4,7 @@
     $maintenanceOverview = $maintenance['overview'] ?? '';
     $maintenanceSchedule = $maintenance['schedule'] ?? [];
 @endphp
-<div class="container">
+<div class="container small">
     @include('client.pages.garage.includes.nav')
     @if($maintenanceOverview === '' && empty($maintenanceSchedule))
         <div class="text-center py-5 bg-white">
@@ -16,10 +16,6 @@
         </div>
     @else
         <div class="card border-0 shadow-sm mb-4">
-            <div class="card-header bg-white py-3 px-4 d-flex align-items-center">
-                <i class="fas fa-motorcycle me-2 fs-5"></i>
-                <h5 class="mb-0 fw-bold">Motorcycle Overview</h5>
-            </div>
             <div class="card-body p-4">
                 <p class="text-muted mb-0" style="line-height: 1.7;">
                     {{ $maintenanceOverview !== '' ? $maintenanceOverview : 'No overview available for this motorcycle.' }}
@@ -55,18 +51,13 @@
                     </div>
                 @else
                     <div class="text-center py-4">
-                        <img src="{{ asset('images/empty-schedule.svg') }}" alt="No Schedule" width="120" class="mb-3">
                         <h6 class="fw-bold text-muted">No Maintenance Schedule Available</h6>
-                        <p class="text-secondary small mb-0">
-                            Once MotoSmart AI collects more data, it will generate a recommended schedule for you.
-                        </p>
                     </div>
                 @endif
             </div>
         </div>
     @endif
 </div>
-
 @if($maintenanceOverview === '' && empty($maintenanceSchedule))
 <script>
     setTimeout(() => location.reload(), 10000);

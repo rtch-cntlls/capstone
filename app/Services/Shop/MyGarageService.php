@@ -48,7 +48,7 @@ class MyGarageService
             ->where('gmail', $email)
             ->whereNotNull('motorcycle_brand')
             ->whereNotNull('motorcycle_model')
-            ->orderByDesc('last_service_date')
+            ->orderByDesc('service_date')
             ->orderByDesc('created_at')
             ->get();
 
@@ -140,7 +140,6 @@ class MyGarageService
             ]);
         }
     
-        // Run synchronously so results are available without a queue worker
         FetchMotorcycleData::dispatchSync($motorcycle->getKey());
     
         return [

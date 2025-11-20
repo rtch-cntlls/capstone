@@ -30,7 +30,7 @@ class ServiceLogService
         }
 
         $allLogs = $query
-            ->orderByDesc('last_service_date')
+            ->orderByDesc('service_date')
             ->orderByDesc('created_at')
             ->get();
 
@@ -97,9 +97,6 @@ class ServiceLogService
         return $pdf->download('service_logs_' . now()->format('Ymd_His') . '.pdf');
     }
 
-    /**
-     * Create a service log within a DB transaction
-     */
     public function createLog(array $data): ServiceLog
     {
         return DB::transaction(function () use ($data) {

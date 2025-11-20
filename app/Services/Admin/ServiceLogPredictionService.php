@@ -80,54 +80,54 @@ class ServiceLogPredictionService
     {
         $brand = $log->motorcycle_brand ?? 'Unknown';
         $model = $log->motorcycle_model ?? '';
-        $currentMileage = (int) ($log->last_mileage ?? 0);
+        $currentMileage = (int) ($log->mileage ?? 0);
         $serviceType = $log->service->name ?? '';
-        $serviceDate = $log->last_service_date ?? null;
+        $serviceDate = $log->service_date ?? null;
         $roadCondition = $log->road_condition ?? 'Unknown';
         $usageFrequency = $log->usage_frequency ?? 'Unknown';
 
         return <<<PROMPT
-IMPORTANT: Respond strictly in valid JSON format only.
-No markdown, no explanations, no extra text outside JSON.
+            IMPORTANT: Respond strictly in valid JSON format only.
+            No markdown, no explanations, no extra text outside JSON.
 
-You are an expert motorcycle maintenance AI.
-Focus ONLY on the service type related to: "{$serviceType}".
+            You are an expert motorcycle maintenance AI.
+            Focus ONLY on the service type related to: "{$serviceType}".
 
-Consider the rider context:
-- Typical Road Condition: {$roadCondition}
-- Usage Frequency: {$usageFrequency}
+            Consider the rider context:
+            - Typical Road Condition: {$roadCondition}
+            - Usage Frequency: {$usageFrequency}
 
-Estimate:
-1. The next due mileage.
-2. The next due date (based on the interval and typical usage).
-3. A short reasoning paragraph.
+            Estimate:
+            1. The next due mileage.
+            2. The next due date (based on the interval and typical usage).
+            3. A short reasoning paragraph.
 
- Applicability rule:
- - First, determine if the selected service actually applies to the given motorcycle brand/model.
- - If the service is NOT applicable (e.g., carburetor service on a fuel-injected model, drum brake service on a disc brake setup, 2-stroke vs 4-stroke specifics, model design limitations, etc.), then set both fields to null and explain why in reasoning.
- - Non-applicable response format in that case:
-   {
-     "next_due_mileage": null,
-     "next_due_date": null,
-     "reasoning": "Explain why the service does not apply to this motorcycle and suggest appropriate alternatives if relevant."
-   }
+            Applicability rule:
+            - First, determine if the selected service actually applies to the given motorcycle brand/model.
+            - If the service is NOT applicable (e.g., carburetor service on a fuel-injected model, drum brake service on a disc brake setup, 2-stroke vs 4-stroke specifics, model design limitations, etc.), then set both fields to null and explain why in reasoning.
+            - Non-applicable response format in that case:
+            {
+                "next_due_mileage": null,
+                "next_due_date": null,
+                "reasoning": "Explain why the service does not apply to this motorcycle and suggest appropriate alternatives if relevant."
+            }
 
-Respond strictly in raw JSON with this format:
-{
-  "next_due_mileage": number,
-  "next_due_date": "YYYY-MM-DD",
-  "reasoning": "string"
-}
+            Respond strictly in raw JSON with this format:
+            {
+            "next_due_mileage": number,
+            "next_due_date": "YYYY-MM-DD",
+            "reasoning": "string"
+            }
 
-Motorcycle details:
-- Model: {$brand} {$model}
-- Current Mileage: {$currentMileage} km
+            Motorcycle details:
+            - Model: {$brand} {$model}
+            - Current Mileage: {$currentMileage} km
 
-Latest Maintenance:
-- Service Type: {$serviceType}
-- Mileage at Service: {$currentMileage} km
-- Date of Service: {$serviceDate}
-PROMPT;
+            Latest Maintenance:
+            - Service Type: {$serviceType}
+            - Mileage at Service: {$currentMileage} km
+            - Date of Service: {$serviceDate}
+            PROMPT;
     }
 
     protected function parseJsonStrict(?string $raw): ?array

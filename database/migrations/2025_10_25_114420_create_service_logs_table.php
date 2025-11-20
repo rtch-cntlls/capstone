@@ -13,19 +13,22 @@ return new class extends Migration
     {
         Schema::create('service_logs', function (Blueprint $table) {
             $table->id();
-            $table->string('customer_name')->nullable();
-            $table->string('contact_number')->nullable();
-            $table->string('gmail')->nullable();
-            $table->string('motorcycle_brand')->nullable();
-            $table->string('motorcycle_model')->nullable();
-            $table->integer('last_mileage')->nullable();
-            $table->date('last_service_date')->nullable();
+            $table->string('customer_name');
+            $table->string('contact_number');
+            $table->string('gmail');
+            $table->string('motorcycle_brand');
+            $table->string('motorcycle_model');
+            $table->integer('mileage');
+            $table->date('service_date');
             $table->unsignedBigInteger('service_id');
 
             $table->integer('next_due_mileage')->nullable();
             $table->date('next_due_date')->nullable();
             $table->text('ai_reasoning')->nullable();
             $table->text('remarks')->nullable();
+
+            $table->string('road_condition')->nullable();
+            $table->string('usage_frequency')->nullable();
 
             $table->timestamps(); 
 
