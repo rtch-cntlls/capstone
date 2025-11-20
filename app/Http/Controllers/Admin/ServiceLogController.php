@@ -8,6 +8,12 @@ use App\Services\Admin\ServiceLogService;
 use App\Models\ServiceLog;
 use App\Models\Service;
 use App\Services\Admin\ServiceLogPredictionService;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\CustomerAccountCreated;
+use App\Models\User;
+use App\Models\Customer;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class ServiceLogController extends Controller
 {
@@ -111,50 +117,54 @@ class ServiceLogController extends Controller
             'road_condition_other' => 'nullable|string|max:255',
             'usage_frequency' => 'nullable|string|max:255',
             'usage_frequency_other' => 'nullable|string|max:255',
-        ], [
-            'service_id.required' => 'The service type field is required.',
         ]);
-        
+    
+        $nameParts = explode(' ', $request->customer_name, 2);
+        $firstname = $nameParts[0] ?? '';
+        $lastname = $nameParts[1] ?? '';
+        $randomPassword = Str::random(12);
+        $user = User::firstOrCreate(
+            ['email' => $request->gmail],
+            [
+                'role_id'   => 2,
+                'firstname' => $firstname,
+                'lastname' => $lastname,
+                'password' => Hash::make($randomPassword),
+            ]
+        );
 
-        $data = $request->only([
-            'customer_name',
-            'contact_number',
-            'gmail',
-            'motorcycle_brand',
-            'motorcycle_model',
-            'mileage',
-            'service_date',
-            'service_id',
-            'road_condition',
-            'road_condition_other',
-            'usage_frequency',
-            'usage_frequency_other',
-        ]);
-        
-        $roadCondition = ($data['road_condition'] ?? null) === 'others'
-            ? ($data['road_condition_other'] ?? null)
-            : ($data['road_condition'] ?? null);
-        $usageFrequency = ($data['usage_frequency'] ?? null) === 'others'
-            ? ($data['usage_frequency_other'] ?? null)
-            : ($data['usage_frequency'] ?? null);
-        
-       $log = ServiceLog::create([
-            'customer_name' => $data['customer_name'],
-            'contact_number' => $data['contact_number'],
-            'gmail' => $data['gmail'],
-            'motorcycle_brand' => $data['motorcycle_brand'],
-            'motorcycle_model' => $data['motorcycle_model'],
-            'mileage' => $data['mileage'] ?? null,
-            'service_date' => $data['service_date'],
-            'service_id' => $data['service_id'],
+        Mail::to($user->email)->send(new CustomerAccountCreated($firstname, $user->email, $randomPassword));
+
+        $customer = Customer::firstOrCreate(
+            ['user_id' => $user->user_id],
+            ['phone' => $request->contact_number]
+        );
+
+        $roadCondition = ($request->road_condition === 'others')
+            ? $request->road_condition_other
+            : $request->road_condition;
+    
+        $usageFrequency = ($request->usage_frequency === 'others')
+            ? $request->usage_frequency_other
+            : $request->usage_frequency;
+
+        $log = ServiceLog::create([
+            'customer_name' => $request->customer_name,
+            'contact_number' => $request->contact_number,
+            'gmail' => $request->gmail,
+            'motorcycle_brand' => $request->motorcycle_brand,
+            'motorcycle_model' => $request->motorcycle_model,
+            'mileage' => $request->mileage,
+            'service_date' => $request->service_date,
+            'service_id' => $request->service_id,
             'road_condition' => $roadCondition,
             'usage_frequency' => $usageFrequency,
         ]);
 
         $predictionService->predict($log);
-
+    
         return redirect()->route('admin.service-logs.maintenance', $log)
-                         ->with('success', 'Service logged successfully and AI prediction generated.');
+                         ->with('success', 'Service logged successfully, AI prediction generated, and customer account created.');
     }
 
     public function maintenance(ServiceLog $serviceLog)

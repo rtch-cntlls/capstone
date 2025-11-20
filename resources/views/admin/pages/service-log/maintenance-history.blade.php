@@ -43,30 +43,30 @@
                             $publicPath = public_path($imagePath);
                             $imgUrl = file_exists($publicPath) ? asset($imagePath) : asset('images/motorcycle.jpg');
                         @endphp
-                        <div class="position-relative" style="width: 200px;">
-                            <a href="{{ route('admin.service-logs.maintenance', $m) }}" class="text-decoration-none">
-                                <div class="card border-0 shadow-sm {{ $isSelected ? 'ring ring-primary' : '' }} position-relative" style="width: 200px;">
-                                    @if($isSelected)
-                                        <span class="badge bg-primary position-absolute" style="top:6px; left:6px; z-index: 2;">Selected</span>
-                                    @endif
-                                    <div class="card-body p-2 d-flex flex-column align-items-center text-center">
-                                        <div class="w-100" style="height: 120px; overflow: hidden; border-radius: 8px;">
-                                            <img src="{{ $imgUrl }}" alt="{{ $m->motorcycle_brand }} {{ $m->motorcycle_model }}" style="width:100%;height:100%;object-fit:cover;display:block;">
-                                        </div>
-                                        <div class="mt-2">
-                                            <div class="fw-bold small">{{ $m->motorcycle_brand }} {{ $m->motorcycle_model }}</div>
+                            <div class="position-relative" style="width: 200px;">
+                                <a href="{{ route('admin.service-logs.maintenance', $m) }}" class="text-decoration-none">
+                                    <div class="card border-0 shadow-sm {{ $isSelected ? 'ring ring-primary' : '' }} position-relative" style="width: 200px;">
+                                        @if($isSelected)
+                                            <span class="badge bg-primary position-absolute" style="top:6px; left:6px; z-index: 2;">Selected</span>
+                                        @endif
+                                        <div class="card-body p-2 d-flex flex-column align-items-center text-center">
+                                            <div class="w-100" style="height: 120px; overflow: hidden; border-radius: 8px;">
+                                                <img src="{{ $imgUrl }}" alt="{{ $m->motorcycle_brand }} {{ $m->motorcycle_model }}" style="width:100%;height:100%;object-fit:cover;display:block;">
+                                            </div>
+                                            <div class="mt-2" style="height: 40px; overflow: hidden;">
+                                                <div class="fw-bold small text-truncate">{{ $m->motorcycle_brand }} {{ $m->motorcycle_model }}</div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </a>
-                            {{-- <form id="del-motor-{{ $m->id }}" action="{{ route('admin.service-logs.motor.destroy', $m) }}" method="POST" class="position-absolute" style="top:6px; right:6px; z-index:3;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-light border fw-bold" title="Delete motor" style="line-height:1; width:28px; height:28px; padding:0; display:flex; align-items:center; justify-content:center;" onclick="event.stopPropagation(); return confirm('Delete this motor and all its history?');">&times;</button>
-                            </form> --}}
-                        </div>
-                    @endforeach
-                </div>
+                                </a>
+                                {{-- <form id="del-motor-{{ $m->id }}" action="{{ route('admin.service-logs.motor.destroy', $m) }}" method="POST" class="position-absolute" style="top:6px; right:6px; z-index:3;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-light border fw-bold" title="Delete motor" style="line-height:1; width:28px; height:28px; padding:0; display:flex; align-items:center; justify-content:center;" onclick="event.stopPropagation(); return confirm('Delete this motor and all its history?');">&times;</button>
+                                </form> --}}
+                            </div>
+                        @endforeach
+                    </div>
             </div>
         @endif
     @endisset

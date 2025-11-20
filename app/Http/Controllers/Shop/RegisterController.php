@@ -69,7 +69,6 @@ class RegisterController extends Controller
     
             return back()->with('status', 'OTP sent to your phone via SMS.');
         } else {
-            // Treat as email
             if (!filter_var($login, FILTER_VALIDATE_EMAIL)) {
                 return back()->withErrors(['login' => 'Invalid email format.']);
             }
@@ -133,8 +132,7 @@ class RegisterController extends Controller
             $request->lastname,
             $request->phone
         );
-    
-        // Preserve any pending sessions
+
         $sessions = $request->only(['buy_now', 'wishlist_pending', 'cart_pending', 'booking_pending']);
         $request->session()->regenerate(true);
         foreach ($sessions as $key => $value) {
