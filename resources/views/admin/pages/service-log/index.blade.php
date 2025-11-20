@@ -1,5 +1,7 @@
 @extends('admin.layouts.admin')
 @section('content')
+@include('components.ModalAlertSuccess')
+@include('components.ModalAlertError')
 @include('components.ModalAlertWarning')
 @include('admin.pages.service-log.create')
 <div class="py-3 px-2">

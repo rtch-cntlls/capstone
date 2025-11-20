@@ -118,22 +118,33 @@ class ServiceLogController extends Controller
             'usage_frequency' => 'nullable|string|max:255',
             'usage_frequency_other' => 'nullable|string|max:255',
         ]);
-    
+
+        $existingCustomer = ServiceLog::where('customer_name', $request->customer_name)->first();
+
+        if ($existingCustomer) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'A customer with this name already exists.');
+        }
+
         $nameParts = explode(' ', $request->customer_name, 2);
         $firstname = $nameParts[0] ?? '';
         $lastname = $nameParts[1] ?? '';
         $randomPassword = Str::random(12);
+
         $user = User::firstOrCreate(
             ['email' => $request->gmail],
             [
                 'role_id'   => 2,
                 'firstname' => $firstname,
-                'lastname' => $lastname,
-                'password' => Hash::make($randomPassword),
+                'lastname'  => $lastname,
+                'password'  => Hash::make($randomPassword),
             ]
         );
 
-        Mail::to($user->email)->send(new CustomerAccountCreated($firstname, $user->email, $randomPassword));
+        if ($user->wasRecentlyCreated) {
+            Mail::to($user->email)->send(new CustomerAccountCreated($firstname, $user->email, $randomPassword));
+        }
 
         $customer = Customer::firstOrCreate(
             ['user_id' => $user->user_id],
@@ -143,28 +154,28 @@ class ServiceLogController extends Controller
         $roadCondition = ($request->road_condition === 'others')
             ? $request->road_condition_other
             : $request->road_condition;
-    
+
         $usageFrequency = ($request->usage_frequency === 'others')
             ? $request->usage_frequency_other
             : $request->usage_frequency;
 
         $log = ServiceLog::create([
-            'customer_name' => $request->customer_name,
-            'contact_number' => $request->contact_number,
-            'gmail' => $request->gmail,
-            'motorcycle_brand' => $request->motorcycle_brand,
-            'motorcycle_model' => $request->motorcycle_model,
-            'mileage' => $request->mileage,
-            'service_date' => $request->service_date,
-            'service_id' => $request->service_id,
-            'road_condition' => $roadCondition,
+            'customer_name'   => $request->customer_name,
+            'contact_number'  => $request->contact_number,
+            'gmail'           => $request->gmail,
+            'motorcycle_brand'=> $request->motorcycle_brand,
+            'motorcycle_model'=> $request->motorcycle_model,
+            'mileage'         => $request->mileage,
+            'service_date'    => $request->service_date,
+            'service_id'      => $request->service_id,
+            'road_condition'  => $roadCondition,
             'usage_frequency' => $usageFrequency,
         ]);
 
         $predictionService->predict($log);
-    
+
         return redirect()->route('admin.service-logs.maintenance', $log)
-                         ->with('success', 'Service logged successfully, AI prediction generated, and customer account created.');
+                        ->with('success', 'Service logged successfully, AI prediction generated, and customer account created/linked.');
     }
 
     public function maintenance(ServiceLog $serviceLog)
@@ -224,7 +235,7 @@ class ServiceLogController extends Controller
         return back()->with('success', 'Remarks updated successfully.');
     }
 
-    public function storeMaintenanceLog(Request $request, ServiceLog $serviceLog, ServiceLogPredictionService $predictionService ) 
+    public function storeMaintenanceLog(Request $request, ServiceLog $serviceLog, ServiceLogPredictionService $predictionService)
     {
         $data = $request->validate([
             'mileage' => 'nullable|integer|min:0',
@@ -235,13 +246,37 @@ class ServiceLogController extends Controller
             'usage_frequency' => 'nullable|string|max:255',
             'usage_frequency_other' => 'nullable|string|max:255',
         ]);
-
+    
         $roadCondition = ($data['road_condition'] ?? null) === 'others'
             ? ($data['road_condition_other'] ?? null)
             : ($data['road_condition'] ?? null);
+    
         $usageFrequency = ($data['usage_frequency'] ?? null) === 'others'
             ? ($data['usage_frequency_other'] ?? null)
             : ($data['usage_frequency'] ?? null);
+
+        $service = Service::find($data['service_id']);
+        $intervalMonths = $service->interval_months ?? 6;
+        $intervalKm = $service->interval_km ?? 2000;
+
+        $existingService = ServiceLog::where('customer_name', $serviceLog->customer_name)
+            ->where('motorcycle_brand', $serviceLog->motorcycle_brand)
+            ->where('motorcycle_model', $serviceLog->motorcycle_model)
+            ->where('service_id', $data['service_id'])
+            ->whereDate('service_date', $data['service_date'])
+            ->first();
+    
+            $nextDueDate = date('Y-m-d', strtotime(($existingService->service_date ?? $data['service_date']) . " +$intervalMonths months"));
+
+            if ($existingService) {
+                $existingService->update([
+                    'next_due_date' => $nextDueDate,
+                    'next_due_mileage' => ($existingService->mileage ?? 0) + $intervalKm,
+                    'remarks' => 'Service executed, next due scheduled.'
+                ]);
+        
+                return back()->with('warning', "This service was already done on this date. Next due date is {$nextDueDate}.");
+            }        
 
         $newLog = ServiceLog::create([
             'customer_name' => $serviceLog->customer_name,
@@ -254,12 +289,14 @@ class ServiceLogController extends Controller
             'service_id' => $data['service_id'],
             'road_condition' => $roadCondition,
             'usage_frequency' => $usageFrequency,
+            'next_due_date' => date('Y-m-d', strtotime($data['service_date'] . " +$intervalMonths months")),
+            'next_due_mileage' => ($data['mileage'] ?? 0) + $intervalKm,
         ]);
-
+    
         $predictionService->predict($newLog);
-
+    
         return back()->with('success', 'Maintenance log added and AI prediction updated.');
-    }
+    }    
 
     public function destroyMaintenanceLog(ServiceLog $log)
     {
@@ -318,6 +355,15 @@ class ServiceLogController extends Controller
             'usage_frequency' => 'nullable|string|max:255',
             'usage_frequency_other' => 'nullable|string|max:255',
         ]);
+
+        $existingMotor = ServiceLog::where('customer_name', $serviceLog->customer_name)
+            ->where('motorcycle_brand', $validated['motorcycle_brand'])
+            ->where('motorcycle_model', $validated['motorcycle_model'])
+            ->first();
+
+        if ($existingMotor) {
+            return back()->with('error', "This motorcycle ({$validated['motorcycle_brand']} {$validated['motorcycle_model']}) is already registered for this customer.");
+        }
 
         $roadCondition = ($validated['road_condition'] ?? null) === 'others'
             ? ($validated['road_condition_other'] ?? null)
